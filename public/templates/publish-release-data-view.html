@@ -1,15 +1,15 @@
 <div ng-controller="ng-publish-release-data-ctrl">
   <form >
       <div>
-        <button type="button" class="btn-sm" ng-click="syncToCloud()">
+        <button type="button" class="btn-sm btn-warning" ng-click="syncToCloud()">
             <span class="process-ring glyphicon glyphicon-refresh" aria-hidden="true" ng-class="{ active: isSyncingToCloud }" data-anim="rotating">
             </span> Sync to Cloud
         </button> 
-        <button type="button" class="btn-sm" ng-show="releaseContent" ng-click="addNewRelease()">
+        <button type="button" class="btn-sm btn-warning" ng-show="releaseContent" ng-click="addNewRelease()">
             <span class="process-ring glyphicon glyphicon-refresh" aria-hidden="true" ng-class="{ active: isAddingNew }" data-anim="rotating">
             </span> Add New Release
         </button> 
-        <button type="button" class="btn-sm" ng-show="releaseContent" ng-click="syncToOffical()">
+        <button type="button" class="btn-sm btn-danger" ng-show="releaseContent" ng-click="syncToOffical()">
             <span class="process-ring glyphicon glyphicon-refresh" aria-hidden="true" ng-class="{ active: isSyncingToOffical }" data-anim="rotating">
             </span> Sync to Offical
         </button>
@@ -29,12 +29,12 @@
         <br>
         <div class="input-group input-group-sm">
             <span class="input-group-addon">日期</span>
-            <input class="form-control" type="date" ng-model="releaseContent.lottery.date" ng-change="onReleaseDataChanged()">
+            <input class="form-control" type="date" ng-model="releaseContent.lottery.date.dateTime" ng-change="onReleaseDataChanged()">
         </div>
         <br>
         <div class="input-group input-group-sm">
-        <span class="input-group-addon">奖号</span>
-        <input class="form-control" type="text" placeholder="Format: 00 00 00 00 00 00+00" ng-model="releaseContent.lottery.scheme" ng-change="onReleaseDataChanged()">
+            <span class="input-group-addon">奖号</span>
+            <input class="form-control" type="text" placeholder="Format: 00 00 00 00 00 00+00" ng-model="releaseContent.lottery.scheme" ng-change="onReleaseDataChanged()">
         </div>
         <br>
         <div class="input-group input-group-sm">
@@ -159,20 +159,20 @@
         <br>
         <div class="input-group input-group-sm">
             <span class="input-group-addon">日期</span>
-            <input class="form-control" type="date" ng-model="releaseContent.next.date" ng-change="onReleaseDataChanged()">
+            <input class="form-control" type="date" ng-model="releaseContent.next.date.dateTime" ng-change="onReleaseDataChanged()">
         </div>
         <br>
         <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">截止</span>
-                    <input class="form-control" type="time" ng-model="releaseContent.next.cutOffTime" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="time" ng-model="releaseContent.next.cutOffTime.dateTime" ng-change="onReleaseDataChanged()">
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">开奖</span>
-                    <input class="form-control" type="time" ng-model="releaseContent.next.date" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="time" ng-model="releaseContent.next.date.dateTime" ng-change="onReleaseDataChanged()">
                 </div>
             </div>
         </div>
@@ -239,10 +239,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Save Release Data</h4>
+                    <h4 class="modal-title" id="myModalLabel" ng-model="commitStatus"></h4>
                 </div>
                 <div class="modal-body">
-                Do you make sure submit the changes on this release?
+                        
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

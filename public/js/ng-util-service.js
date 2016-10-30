@@ -41,9 +41,9 @@ angular.module('ng-index-app').service('util', function ($rootScope, $http) {
             $rootScope.originalReleaseContent = res.data;
             
             // convert string to date
-            $rootScope.originalReleaseContent.next.date = new Date($rootScope.originalReleaseContent.next.date);
-            $rootScope.originalReleaseContent.next.cutOffTime = new Date($rootScope.originalReleaseContent.next.cutOffTime);
-            $rootScope.originalReleaseContent.lottery.date = new Date($rootScope.originalReleaseContent.lottery.date);
+            $rootScope.originalReleaseContent.next.date.dateTime = new Date($rootScope.originalReleaseContent.next.date.dateTime);
+            $rootScope.originalReleaseContent.next.cutOffTime.dateTime = new Date($rootScope.originalReleaseContent.next.cutOffTime.dateTime);
+            $rootScope.originalReleaseContent.lottery.date.dateTime = new Date($rootScope.originalReleaseContent.lottery.date.dateTime);
 
             $rootScope.releaseContent = angular.copy($rootScope.originalReleaseContent);
             

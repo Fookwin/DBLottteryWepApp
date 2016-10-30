@@ -71,9 +71,9 @@ releaseMgr.prototype = {
                 var result = JSON.parse(body);
 
                 // correct the MS date string        
-                result.next.date = self.getDataFromMSTime(result.next.date);
-                result.next.cutOffTime = self.getDataFromMSTime(result.next.cutOffTime);
-                result.lottery.date = self.getDataFromMSTime(result.lottery.date);
+                result.next.date.dateTime = new Date(result.next.date.dateTime);
+                result.next.cutOffTime.dateTime = new Date(result.next.cutOffTime.dateTime);
+                result.lottery.date.dateTime = new Date(result.lottery.date.dateTime);
                 
                 console.log("SUCCESS: get latet release data" + body);
                 res.status (200).json({error: null, data: result});
@@ -119,8 +119,8 @@ releaseMgr.prototype = {
                 };
 
                 // correct the MS date string        
-                newReleaseData.next.date = self.getDataFromMSTime(newReleaseData.next.date);
-                newReleaseData.next.cutOffTime = self.getDataFromMSTime(newReleaseData.next.cutOffTime);
+                newReleaseData.next.date.dateTime = new Date(newReleaseData.next.date.dateTime);
+                newReleaseData.next.cutOffTime.dateTime = new Date(newReleaseData.next.cutOffTime.dateTime);
             
                 console.log("SUCCESS: get next release data" + newReleaseData);
                 res.status (200).json({error: null, data: newReleaseData});
@@ -154,7 +154,7 @@ releaseMgr.prototype = {
                 var result = body ? JSON.parse(body) : undefined;
                 
                 // correct the MS date string
-                result.date = self.getDataFromMSTime(result.date);
+                result.date.dateTime = new Date(result.date.dateTime);
 
                 console.log("SUCCESS: get offical lottery data" + body);
                 res.status (200).json({error: null, data: result});
@@ -193,6 +193,32 @@ releaseMgr.prototype = {
                 res.status (200).json({error: null, data: body});
             } else {
                 console.error("ERROR:" + 'Failed call on postNotification for code ' + response.statusCode);
+                res.status(response.statusCode).json({error: body});
+            }
+        });
+    },
+    commitRelease: function (req, res) {
+        self = this;  
+
+        var options = {
+            url: endPoint + '/CommitRelease',
+            method: 'POST',
+            json: req.body
+        };
+            
+        request(options, function postResponse(err, response, body) {
+        
+            if (err) {
+                console.error("ERROR:" + 'Failed to commit the release for: ' + err);
+                res.status(400).json({error: err});
+                return;
+            }
+            
+            if (response && response.statusCode === 200) {                
+                console.log("SUCCESS: " + 'Successful to commit the release with response: ' + body);
+                res.status (200).json({error: null, data: body});
+            } else {
+                console.error("ERROR:" + 'Failed to commit the release for ' + response.statusCode);
                 res.status(response.statusCode).json({error: body});
             }
         });

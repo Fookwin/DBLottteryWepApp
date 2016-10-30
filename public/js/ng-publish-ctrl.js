@@ -85,19 +85,38 @@ angular.module('ng-index-app').controller('ng-publish-release-data-ctrl', functi
 
     $scope.leaveReleaseData = function () {
         if ($scope.isReleaseDataChanged){
-            $('#submitReleaseDataModal').modal('show') 
+            $scope.commitStatus = "Committing release data ...";
+            $('#submitReleaseDataModal').modal('show');
+
+            $http.post('/commit', $rootScope.releaseContent).success(function (res) {
+                $scope.commitStatus = "Success to commit release data";
+
+                // display information
+
+            }).error(function(err) {
+                $scope.commitStatus = "Success to commit release data";
+            });
+
         } else {
             $location.url('/publish/notification');
         }
     }
 
     $scope.saveReleaseData = function () {
-        alert('done');
+        $scope.commitStatus = "Submitting release data ...";
+        $http.post('/submit', $rootScope.releaseContent).success(function (res) {
+                $scope.commitStatus = "Success to submit release data";
+                
+                $('#submitReleaseDataModal').modal('hide');
+                $('#submitReleaseDataModal').on('hidden.bs.modal', function (e) {
+                    $location.url('/publish/notification');
+                });
+
+            }).error(function(err) {
+                $scope.commitStatus = "Success to submit release data";
+            });
+
         $scope.isReleaseDataChanged = false;
-        $('#submitReleaseDataModal').modal('hide');
-        $('#submitReleaseDataModal').on('hidden.bs.modal', function (e) {
-            $location.url('/publish/notification');
-        });
     };
 
     $scope.RandomReds = function() {
@@ -160,7 +179,7 @@ angular.module('ng-index-app').controller('ng-publish-notification-ctrl', functi
         $scope.notification = $scope.selectedTemplate.notification;
 
         $scope.notify = function () {
-            $http.post('/notify', { platforms: [0,1,2], msg: $scope.notification }).then(function SuccessCallback(res) {
+            $http.post('/notify', { platforms: [0,1,2], msg: JSON.stringify($scope.notification) }).then(function SuccessCallback(res) {
                 alert(res.data.data);
             }, function errCallback(res) {
                 alert(res.data.err);

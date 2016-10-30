@@ -33,6 +33,7 @@ if ('development' == app.get('env')) {
 // initialize the server
 serverInitializer(app);
 
+app.get('/', routes.index);
 app.get('/index', routes.index);
 
 http.createServer(app).listen(app.get('port'), function () {
