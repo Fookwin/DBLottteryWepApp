@@ -27,4 +27,5 @@ module.exports = function(app) {
     app.get('/offical/:issue?', _releaseMgr.getOfficalLotteryData.bind(_releaseMgr));
     app.post('/new', _releaseMgr.buildNewReleaseData.bind(_releaseMgr));
     app.post('/notify', _releaseMgr.postNotification.bind(_releaseMgr));
+    app.post('/commit', _releaseMgr.commitRelease.bind(_releaseMgr));
 };
