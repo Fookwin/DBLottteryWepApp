@@ -1,0 +1,12 @@
+<div ng-controller="ng-commit-release-ctrl">
+    <form>
+        <legend>Pending Items</legend>
+
+        <div ng-repeat="fileName in pendingFiles">
+            <label class="input-group-addon">{{fileName}}</label>
+            <br>
+        </div>
+
+        <button type="submit" class="btn btn-primary" ng-click="saveReleaseData">Commit</button>
+    </form>
+</div>

@@ -105,39 +105,18 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
         $scope.onReleaseDataChanged();
     }
 
-    $scope.leaveReleaseData = function () {
+    $scope.postChanges = function () {
         if ($scope.isReleaseDataChanged){
-            $scope.commitStatus = "Committing release data ...";
-            $('#submitReleaseDataModal').modal('show');
 
             $http.post('/commit', $rootScope.releaseContent).success(function (res) {
-                $scope.commitStatus = "Success to commit release data";
+                $rootScope.pendingContainer = res.data.Container;
+                $rootScope.pendingFiles = res.data.Files;
 
-                // display information
-
+                $location.url('/publish/commit');
             }).error(function(err) {
-                $scope.commitStatus = "Success to commit release data";
+                alert("Failed : " + err);
             });
 
-        } else {
-            $location.url('/notification');
         }
     }
-
-    $scope.saveReleaseData = function () {
-        $scope.commitStatus = "Submitting release data ...";
-        $http.post('/submit', $rootScope.releaseContent).success(function (res) {
-                $scope.commitStatus = "Success to submit release data";
-                
-                $('#submitReleaseDataModal').modal('hide');
-                $('#submitReleaseDataModal').on('hidden.bs.modal', function (e) {
-                    $location.url('/notification');
-                });
-
-            }).error(function(err) {
-                $scope.commitStatus = "Success to submit release data";
-            });
-
-        $scope.isReleaseDataChanged = false;
-    };
 });
