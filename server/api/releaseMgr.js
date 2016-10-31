@@ -122,7 +122,7 @@ releaseMgr.prototype = {
                 newReleaseData.next.date.dateTime = new Date(newReleaseData.next.date.dateTime);
                 newReleaseData.next.cutOffTime.dateTime = new Date(newReleaseData.next.cutOffTime.dateTime);
             
-                console.log("SUCCESS: get next release data" + newReleaseData);
+                console.log("SUCCESS: get next release data" + JSON.stringify(newReleaseData));
                 res.status (200).json({error: null, data: newReleaseData});
             } else {
                 res.status(400).json({error: 'failed to get next release data.'});
@@ -215,7 +215,7 @@ releaseMgr.prototype = {
             }
             
             if (response && response.statusCode === 200) {                
-                console.log("SUCCESS: " + 'Successful to commit the release with response: ' + body);
+                console.log("SUCCESS: " + 'Successful to commit the release with response: ' + JSON.stringify(body));
                 res.status (200).json({error: null, data: body});
             } else {
                 console.error("ERROR:" + 'Failed to commit the release for ' + response.statusCode);

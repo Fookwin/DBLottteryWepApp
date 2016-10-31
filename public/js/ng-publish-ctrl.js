@@ -179,7 +179,7 @@ angular.module('ng-index-app').controller('ng-publish-notification-ctrl', functi
         $scope.notification = $scope.selectedTemplate.notification;
 
         $scope.notify = function () {
-            $http.post('/notify', { platforms: [0,1,2], msg: JSON.stringify($scope.notification) }).then(function SuccessCallback(res) {
+            $http.post('/notify', { platforms: [1,2,3], msg: JSON.stringify($scope.notification) }).then(function SuccessCallback(res) {
                 alert(res.data.data);
             }, function errCallback(res) {
                 alert(res.data.err);
