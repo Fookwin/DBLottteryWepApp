@@ -1,4 +1,4 @@
-var app = angular.module('ng-index-app', ['ngRoute']);
+var app = angular.module('ng-release-management-app', ['ngRoute']);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
@@ -6,7 +6,7 @@ app.config(['$routeProvider', function($routeProvider) {
         .when('/users', {templateUrl: '/templates/user-picker-view.html'})
         .when('/publish', {redirectTo:'/publish/release'})
         .when('/publish/release', {templateUrl: '/templates/publish-release-data-view.html'})
-        .when('/publish/notification', {templateUrl: '/templates/publish-notification-view.html'})
+        .when('/notification', {templateUrl: '/templates/publish-notification-view.html'})
         .otherwise({redirectTo:'/'});
 }]);
 
@@ -30,6 +30,7 @@ app.controller('ng-index-header-ctrl', function ($scope, $rootScope, $interval) 
         { title: 'HOME', href: '#/' },
         { title: 'USERS', href: '#/users' },
         { title: 'PUBLISH', href: '#/publish' },
+        { title: 'NOTIFICATION', href: '#/notification' },
    ];
 
    $scope.navigateTo = function (index) {

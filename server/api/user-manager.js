@@ -2,13 +2,13 @@ var azure = require('azure-storage'),
     async = require('async'),
     url = require('url');
     
-module.exports = UserList;
+module.exports = UserManager;
 
-function UserList(tb) {
+function UserManager(tb) {
     this.table = tb;
 }
 
-UserList.prototype = {
+UserManager.prototype = {
     getUsers: function(req, res) {
         self = this;
         

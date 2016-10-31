@@ -216,40 +216,15 @@
         <div ng-repeat="(label, number) in releaseContent.dataVersion track by label">
             <div class="input-group input-group-sm">
                 <span class="input-group-addon">{{label}}</span>
-                <input type="number" class="form-control" ng-model="releaseContent.dataVersion[label]" ng-change="onReleaseDataChanged()">
+                <input type="number" class="form-control" ng-model="releaseContent.dataVersion[label]" ng-change="onReleaseDataChanged(true)">
             </div>
             <br>
         </div>
 
     </div>
 
+    <button type="submit" class="btn btn-primary" ng-click="leaveReleaseData()">Publish</button>
+
   </form>
-
-  <nav>
-    <ul class="pager">
-        <li class="next">
-            <a ng-click="leaveReleaseData()">Next <span aria-hidden="true">&rarr;</span></a>
-        </li>
-    </ul>
-  </nav>
-
-  <!-- Modal -->
-    <div class="modal fade" id="submitReleaseDataModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel" ng-model="commitStatus"></h4>
-                </div>
-                <div class="modal-body">
-                        
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" ng-click="saveReleaseData()">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 </div>

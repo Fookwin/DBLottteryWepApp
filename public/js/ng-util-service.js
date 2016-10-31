@@ -1,4 +1,4 @@
-angular.module('ng-index-app').service('util', function ($rootScope, $http) {
+angular.module('ng-release-management-app').service('util', function ($rootScope, $http) {
 
     this.getRandomNumber = function random(max) {
         return Math.ceil(Math.ceil(Math.random() * max * 100) / 100);

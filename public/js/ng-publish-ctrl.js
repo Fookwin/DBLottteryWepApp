@@ -1,4 +1,4 @@
-angular.module('ng-index-app').controller('ng-publish-release-data-ctrl', function ($scope, $rootScope, $http, $location, util) {       
+angular.module('ng-release-management-app').controller('ng-publish-release-data-ctrl', function ($scope, $rootScope, $http, $location, util) {       
 
     // data for root scope
     $rootScope.selectedNavIndex = 2;
@@ -19,8 +19,14 @@ angular.module('ng-index-app').controller('ng-publish-release-data-ctrl', functi
         $scope.syncToCloud();
     }
     
-    $scope.onReleaseDataChanged = function () {
+    $scope.onReleaseDataChanged = function (changeOnVersion) {
         $scope.isReleaseDataChanged = true;
+
+        // increase the lottery version accordingly
+        if (!changeOnVersion && 
+            $rootScope.originalReleaseContent.dataVersion.latestLotteryVersion === $rootScope.releaseContent.dataVersion.latestLotteryVersion) {
+                $rootScope.releaseContent.dataVersion.latestLotteryVersion ++;
+        }
     }
 
     $scope.syncToOffical = function() {
@@ -36,7 +42,7 @@ angular.module('ng-index-app').controller('ng-publish-release-data-ctrl', functi
 
                 $rootScope.releaseContent.lottery.date = new Date($rootScope.releaseContent.lottery.date);
 
-                $scope.isReleaseDataChanged = true;
+                $scope.onReleaseDataChanged();
             }
 
             $scope.isSyncingToOffical = false;
@@ -83,6 +89,22 @@ angular.module('ng-index-app').controller('ng-publish-release-data-ctrl', functi
         $scope.isReleaseDataChanged = false;
     };
 
+    $scope.RandomReds = function() {
+        
+        var nums = util.getRandomNumbers(8, 33);
+        $rootScope.releaseContent.recommendation.redIncludes = nums.slice(0, 2).sort(function (a, b) { return a > b; });
+        $rootScope.releaseContent.recommendation.redExcludes = nums.slice(2).sort(function (a, b) { return a > b; });
+        $scope.onReleaseDataChanged();
+    }
+
+    $scope.RandomBlues = function() {
+        
+        var nums = util.getRandomNumbers(4, 16);
+        $rootScope.releaseContent.recommendation.blueIncludes = nums.slice(0, 1).sort(function (a, b) { return a > b; });
+        $rootScope.releaseContent.recommendation.blueExcludes = nums.slice(1).sort(function (a, b) { return a > b; });
+        $scope.onReleaseDataChanged();
+    }
+
     $scope.leaveReleaseData = function () {
         if ($scope.isReleaseDataChanged){
             $scope.commitStatus = "Committing release data ...";
@@ -98,7 +120,7 @@ angular.module('ng-index-app').controller('ng-publish-release-data-ctrl', functi
             });
 
         } else {
-            $location.url('/publish/notification');
+            $location.url('/notification');
         }
     }
 
@@ -109,7 +131,7 @@ angular.module('ng-index-app').controller('ng-publish-release-data-ctrl', functi
                 
                 $('#submitReleaseDataModal').modal('hide');
                 $('#submitReleaseDataModal').on('hidden.bs.modal', function (e) {
-                    $location.url('/publish/notification');
+                    $location.url('/notification');
                 });
 
             }).error(function(err) {
@@ -118,26 +140,10 @@ angular.module('ng-index-app').controller('ng-publish-release-data-ctrl', functi
 
         $scope.isReleaseDataChanged = false;
     };
-
-    $scope.RandomReds = function() {
-        
-        var nums = util.getRandomNumbers(8, 33);
-        $rootScope.releaseContent.recommendation.redIncludes = nums.slice(0, 2).sort(function (a, b) { return a > b; });
-        $rootScope.releaseContent.recommendation.redExcludes = nums.slice(2).sort(function (a, b) { return a > b; });
-        $scope.isReleaseDataChanged = true;
-    }
-
-    $scope.RandomBlues = function() {
-        
-        var nums = util.getRandomNumbers(4, 16);
-        $rootScope.releaseContent.recommendation.blueIncludes = nums.slice(0, 1).sort(function (a, b) { return a > b; });
-        $rootScope.releaseContent.recommendation.blueExcludes = nums.slice(1).sort(function (a, b) { return a > b; });
-        $scope.isReleaseDataChanged = true;
-    }
 });
 
-angular.module('ng-index-app').controller('ng-publish-notification-ctrl', function ($scope, $rootScope, $http, $location, util) {       
-    $rootScope.selectedNavIndex = 2;
+angular.module('ng-release-management-app').controller('ng-publish-notification-ctrl', function ($scope, $rootScope, $http, $location, util) {       
+    $rootScope.selectedNavIndex = 3;
 
     // call init to make sure the content is there.
     if (!$rootScope.releaseContent) {

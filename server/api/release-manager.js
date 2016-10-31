@@ -3,9 +3,9 @@ var url = require('url'),
     global = require('../config/global.js'),
     endPoint = require('../config/config.js')[global.env].endPoint;
 
-module.exports = releaseMgr;
+module.exports = ReleaseManager;
 
-function releaseMgr() {
+function ReleaseManager() {
     this.getEmptyLottery = function(issue, date) {
         return {
             issue: issue,
@@ -50,7 +50,7 @@ function releaseMgr() {
     } 
 }
 
-releaseMgr.prototype = {
+ReleaseManager.prototype = {
     getLastReleaseData: function (req, res) {
         self = this;
 

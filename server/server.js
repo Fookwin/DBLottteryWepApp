@@ -13,16 +13,15 @@ module.exports = function(app) {
     
     
     // initialize data modules
-    var UserList = require('./api/userList.js');
+    var UserManager = require('./api/user-manager.js');
     var UserTable = require('./modules/user-table.js');
-    var ReleaseManager = require('./api/releaseMgr.js');
+    var ReleaseManager = require('./api/release-manager.js');
     var _userTable = new UserTable(azure.createTableService(accountName, accountKey), userTableName);
-    var _list = new UserList(_userTable);
-    
+    var _userMgr = new UserManager(_userTable);    
     var _releaseMgr = new ReleaseManager();
     
     /** HTTP GET */
-    app.get('/users', _list.getUsers.bind(_list));
+    app.get('/users', _userMgr.getUsers.bind(_userMgr));
     app.get('/last', _releaseMgr.getLastReleaseData.bind(_releaseMgr));
     app.get('/offical/:issue?', _releaseMgr.getOfficalLotteryData.bind(_releaseMgr));
     app.post('/new', _releaseMgr.buildNewReleaseData.bind(_releaseMgr));

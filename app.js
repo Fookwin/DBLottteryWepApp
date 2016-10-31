@@ -9,7 +9,6 @@ var http = require('http');
 var path = require('path');
 
 var app = express();
-var serverInitializer = require('./server/init-azure.js')
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -31,7 +30,7 @@ if ('development' == app.get('env')) {
 }
 
 // initialize the server
-serverInitializer(app);
+var apiServer = require('./server/server.js')(app);
 
 app.get('/', routes.index);
 app.get('/index', routes.index);

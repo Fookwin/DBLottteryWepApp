@@ -1,4 +1,4 @@
-angular.module('ng-index-app').controller('ng-user-picker-ctrl', function ($scope, $rootScope, $timeout, $http) {
+angular.module('ng-release-management-app').controller('ng-user-picker-ctrl', function ($scope, $rootScope, $timeout, $http) {
 
     $scope.inLoadingData = false;
     $scope.platformList = [
