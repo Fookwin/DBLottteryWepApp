@@ -2,8 +2,22 @@
     <form>
         <legend>Pending Items</legend>
 
-        <div ng-repeat="fileName in pendingFiles">
-            <label class="input-group-addon">{{fileName}}</label>
+        <div class="panel" 
+                ng-class="{'panel-default': action.state === 'pending', 
+                        'panel-success': action.state === 'success',
+                        'panel-danger': action.state === 'error'}"
+                ng-repeat="action in commitPackage.actions">
+            <div class="panel-heading">
+                <div class="row">
+                    <label class="col-lg-11 col-md-11 col-xs-11">{{action.file}}</label>
+                    <span class="col-lg-1 col-md-1 col-xs-1 glyphicon" 
+                        ng-class="{'glyphicon-chevron-up': action.showContent, 'glyphicon-chevron-down': !action.showContent}" 
+                        ng-click="showFileContent(action, !action.showContent)"></span>
+                </div>
+            </div>
+            <p ng-show="action.showContent" class="panel-body">
+                {{action.content}}
+            </p>
             <br>
         </div>
 

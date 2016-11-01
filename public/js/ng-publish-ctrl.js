@@ -108,15 +108,27 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
     $scope.postChanges = function () {
         if ($scope.isReleaseDataChanged){
 
+            $scope.isCommitting = true;
             $http.post('/commit', $rootScope.releaseContent).success(function (res) {
-                $rootScope.pendingContainer = res.data.Container;
-                $rootScope.pendingFiles = res.data.Files;
+                $rootScope.commitPackage = {
+                    container: res.data.Container,
+                    actions: []
+                };
+
+                res.data.Files.forEach(function(fileName) {
+                    $rootScope.commitPackage.actions.push({
+                       file: fileName,
+                       content: undefined,
+                       state: 'pending'     
+                    }); 
+                });
+
+                $scope.isCommitting = false;
 
                 $location.url('/publish/commit');
             }).error(function(err) {
                 alert("Failed : " + err);
             });
-
         }
     }
 });

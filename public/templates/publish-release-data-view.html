@@ -223,7 +223,10 @@
 
     </div>
 
-    <button type="submit" class="btn btn-primary" ng-class="{disabled: !isReleaseDataChanged}" ng-click="postChanges()">Publish</button>
+    <button type="submit" class="btn btn-primary" ng-class="{disabled: !isReleaseDataChanged}" ng-click="postChanges()">
+        Publish
+    </button>
+    <span ng-show="isCommitting"> Committing ... </span>
 
   </form>
 

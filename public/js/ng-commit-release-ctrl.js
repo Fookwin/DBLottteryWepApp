@@ -10,4 +10,18 @@ angular.module('ng-release-management-app').controller('ng-commit-release-ctrl',
             alert("Failed : " + err);
         });
     };
+
+    $scope.showFileContent = function (action, show) {
+        
+        if (show) {
+            $http.get('/blob/?container=' + $rootScope.commitPackage.container + '&blob=' + action.file).success(function (res) {
+                action.showContent = true;
+                action.content = res.content;
+            }).error(function(err) {
+                alert("Failed : " + err);
+            });
+        } else {
+            action.showContent = false;
+        }        
+    }
 });

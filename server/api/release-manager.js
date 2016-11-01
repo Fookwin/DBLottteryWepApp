@@ -5,7 +5,9 @@ var url = require('url'),
 
 module.exports = ReleaseManager;
 
-function ReleaseManager() {
+function ReleaseManager(blobServer) {
+    this.blobServer = blobServer;
+
     this.getEmptyLottery = function(issue, date) {
         return {
             issue: issue,
@@ -69,11 +71,6 @@ ReleaseManager.prototype = {
             
             if (response && response.statusCode === 200) {
                 var result = JSON.parse(body);
-
-                // correct the MS date string        
-                result.next.date.dateTime = new Date(result.next.date.dateTime);
-                result.next.cutOffTime.dateTime = new Date(result.next.cutOffTime.dateTime);
-                result.lottery.date.dateTime = new Date(result.lottery.date.dateTime);
                 
                 console.log("SUCCESS: get latet release data" + body);
                 res.status (200).json({error: null, data: result});
@@ -117,10 +114,6 @@ ReleaseManager.prototype = {
                     },
                     dataVersion: undefined // leave emtpy for input.
                 };
-
-                // correct the MS date string        
-                newReleaseData.next.date.dateTime = new Date(newReleaseData.next.date.dateTime);
-                newReleaseData.next.cutOffTime.dateTime = new Date(newReleaseData.next.cutOffTime.dateTime);
             
                 console.log("SUCCESS: get next release data" + JSON.stringify(newReleaseData));
                 res.status (200).json({error: null, data: newReleaseData});
@@ -153,9 +146,6 @@ ReleaseManager.prototype = {
             if (response && response.statusCode === 200) {
                 var result = body ? JSON.parse(body) : undefined;
                 
-                // correct the MS date string
-                result.date.dateTime = new Date(result.date.dateTime);
-
                 console.log("SUCCESS: get offical lottery data" + body);
                 res.status (200).json({error: null, data: result});
             } else {
@@ -221,6 +211,24 @@ ReleaseManager.prototype = {
                 console.error("ERROR:" + 'Failed to commit the release for ' + response.statusCode);
                 res.status(response.statusCode).json({error: body});
             }
+        });
+    },
+    getBlobText: function (req, res) {
+        self = this;
+
+        // get issue
+        var urlParams = url.parse(req.originalUrl, true).query; 
+
+        var container = urlParams.container;
+        var blob = urlParams.blob;
+
+        self.blobServer.getBlobToText(container, blob, function (err, text) {
+            if (err) {
+                return res.status(400).json({error: err});
+            }
+
+            console.log("SUCCESS: get blob data of " + container + "/" + blob);
+            res.status (200).json({error: null, content: text});
         });
     }
 };
