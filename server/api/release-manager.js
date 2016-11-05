@@ -187,11 +187,11 @@ ReleaseManager.prototype = {
             }
         });
     },
-    commitRelease: function (req, res) {
+    preCommitRelease: function (req, res) {
         self = this;  
 
         var options = {
-            url: endPoint + '/CommitRelease',
+            url: endPoint + '/PrecommitRelease',
             method: 'POST',
             json: req.body
         };
@@ -207,6 +207,33 @@ ReleaseManager.prototype = {
             if (response && response.statusCode === 200) {                
                 console.log("SUCCESS: " + 'Successful to commit the release with response: ' + JSON.stringify(body));
                 res.status (200).json({error: null, data: body});
+            } else {
+                console.error("ERROR:" + 'Failed to commit the release for ' + response.statusCode);
+                res.status(response.statusCode).json({error: body});
+            }
+        });
+    },
+    commitRelease: function (req, res) {
+        self = this;  
+
+        var options = {
+            url: endPoint + '/ExecutePendingActions',
+            method: 'POST'
+        };
+            
+        request(options, function postResponse(err, response, body) {
+        
+            if (err) {
+                console.error("ERROR:" + 'Failed to commit the release for: ' + err);
+                res.status(400).json({error: err});
+                return;
+            }
+
+            var result = JSON.parse(body);
+            
+            if (response && response.statusCode === 200) {                
+                console.log("SUCCESS: " + 'Successful to commit the release with response: ' + body);
+                res.status (200).json({error: null, data: result});
             } else {
                 console.error("ERROR:" + 'Failed to commit the release for ' + response.statusCode);
                 res.status(response.statusCode).json({error: body});
@@ -229,6 +256,32 @@ ReleaseManager.prototype = {
 
             console.log("SUCCESS: get blob data of " + container + "/" + blob);
             res.status (200).json({error: null, content: text});
+        });
+    },
+    getPendingActions: function (req, res) {
+        self = this;
+
+        var options = {
+            'url': endPoint + '/GetPendingActions'
+        };
+            
+        request(options.url, function postResponse(err, response, body) {
+        
+            if (err) {
+                console.error("ERROR:" + 'Failed to get pending actions');
+                res.status(400).json({error: err});
+                return;
+            }
+
+            var pendingActions = JSON.parse(body);
+            
+            if (response && response.statusCode === 200) {                
+                console.log("SUCCESS: " + 'Successful to get pending actions: ' + body);
+                res.status (200).json({error: null, data: pendingActions});
+            } else {
+                console.error("ERROR:" + 'Failed to get pending actions.');
+                res.status(response.statusCode).json({error: body});
+            }
         });
     }
 };

@@ -109,7 +109,7 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
         if ($scope.isReleaseDataChanged){
 
             $scope.isCommitting = true;
-            $http.post('/commit', $rootScope.releaseContent).success(function (res) {
+            $http.post('/precommit', $rootScope.releaseContent).success(function (res) {
                 $rootScope.commitPackage = {
                     container: res.data.Container,
                     actions: []

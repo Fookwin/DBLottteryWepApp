@@ -29,6 +29,8 @@ module.exports = function(app) {
     app.get('/offical/:issue?', _releaseMgr.getOfficalLotteryData.bind(_releaseMgr));
     app.post('/new', _releaseMgr.buildNewReleaseData.bind(_releaseMgr));
     app.post('/notify', _releaseMgr.postNotification.bind(_releaseMgr));
-    app.post('/commit', _releaseMgr.commitRelease.bind(_releaseMgr));
+    app.post('/precommit', _releaseMgr.preCommitRelease.bind(_releaseMgr));
     app.get('/blob', _releaseMgr.getBlobText.bind(_releaseMgr));
+    app.get('/pending', _releaseMgr.getPendingActions.bind(_releaseMgr));
+    app.post('/commit', _releaseMgr.commitRelease.bind(_releaseMgr));
 };
