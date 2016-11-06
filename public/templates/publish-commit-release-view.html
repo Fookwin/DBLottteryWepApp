@@ -12,7 +12,7 @@
                     <label class="col-lg-11 col-md-11 col-xs-11">{{action.file}}</label>
                     <span class="col-lg-1 col-md-1 col-xs-1 glyphicon" 
                         ng-class="{'glyphicon-chevron-up': action.showContent, 'glyphicon-chevron-down': !action.showContent}" 
-                        ng-click="showFileContent(action, !action.showContent)"></span>
+                        ng-click="action.state === 'success' ? '' : showFileContent(action, !action.showContent)"></span>
                 </div>
             </div>
             <p ng-show="action.showContent" class="panel-body">
