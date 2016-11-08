@@ -33,4 +33,5 @@ module.exports = function(app) {
     app.get('/blob', _releaseMgr.getBlobText.bind(_releaseMgr));
     app.get('/pending', _releaseMgr.getPendingActions.bind(_releaseMgr));
     app.post('/commit', _releaseMgr.commitRelease.bind(_releaseMgr));
+    app.get('/notifications', _releaseMgr.getNotifications.bind(_releaseMgr));
 };

@@ -258,6 +258,29 @@ ReleaseManager.prototype = {
             res.status (200).json({error: null, content: text});
         });
     },
+    getNotifications : function (req, res) {
+        self = this;
+
+        var options = {
+            'url': endPoint + '/GetNotificationTemplates',
+        };
+            
+        request(options.url, function postResponse(err, response, body) {
+        
+            if (err) {
+                return res.status(400).json({error: err});
+            }
+            
+            if (response && response.statusCode === 200) {
+                var result = JSON.parse(body);
+                
+                console.log("SUCCESS: get notification templates " + body);
+                res.status (200).json({error: null, data: result});
+            } else {
+                res.status(400).json({error: 'failed to get notification templates.'});
+            }
+        });
+    },
     getPendingActions: function (req, res) {
         self = this;
 
