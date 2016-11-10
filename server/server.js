@@ -31,7 +31,8 @@ module.exports = function(app) {
     app.post('/notify', _releaseMgr.postNotification.bind(_releaseMgr));
     app.post('/precommit', _releaseMgr.preCommitRelease.bind(_releaseMgr));
     app.get('/blob', _releaseMgr.getBlobText.bind(_releaseMgr));
-    app.get('/pending', _releaseMgr.getPendingActions.bind(_releaseMgr));
+    app.get('/action/pending', _releaseMgr.getPendingActions.bind(_releaseMgr));
     app.post('/commit', _releaseMgr.commitRelease.bind(_releaseMgr));
     app.get('/notifications', _releaseMgr.getNotifications.bind(_releaseMgr));
+    app.delete('/action/remove', _releaseMgr.removePendingAction.bind(_releaseMgr));
 };

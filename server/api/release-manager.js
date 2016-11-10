@@ -306,6 +306,24 @@ ReleaseManager.prototype = {
                 res.status(response.statusCode).json({error: body});
             }
         });
+    },
+    removePendingAction: function (req, res) {
+        self = this;
+
+        // get issue
+        var urlParams = url.parse(req.originalUrl, true).query; 
+
+        var container = urlParams.container;
+        var blob = urlParams.blob;
+
+        self.blobServer.deleteBlob(container, blob, function (err, text) {
+            if (err) {
+                return res.status(400).json({error: err});
+            }
+
+            console.log("SUCCESS: delete blob data of " + container + "/" + blob);
+            res.status (200).json({error: null, content: text});
+        });
     }
 };
 

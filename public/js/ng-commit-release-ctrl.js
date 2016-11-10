@@ -6,7 +6,7 @@ angular.module('ng-release-management-app').controller('ng-commit-release-ctrl',
     if (!$rootScope.commitPackage)
     {
         // get the pending action from pending container
-        $http.get('/pending').success(function (res) {
+        $http.get('/action/pending').success(function (res) {
             $rootScope.commitPackage = {
                 container: res.data.Container,
                 actions: []
@@ -47,7 +47,19 @@ angular.module('ng-release-management-app').controller('ng-commit-release-ctrl',
         }        
     }
 
+    $scope.removeAction = function (action) {
+        $http.delete('/action/remove/?container=' + $rootScope.commitPackage.container + '&blob=' + action.file).success(function (res) {
+            var index = $rootScope.commitPackage.actions.indexOf(action);
+            if (index > -1) {
+                $rootScope.commitPackage.actions.splice(index, 1);
+            }
+        }).error(function(err) {
+            alert("Failed : " + err);
+        });
+    }
+
     $scope.commit = function () {
+        $scope.commitStatus = "commiting...";
         $http.post('/commit', $rootScope.releaseContent).success(function (res) {
             if (res.data.Files){
                 $rootScope.commitPackage.actions.forEach(function (action) {
@@ -58,9 +70,13 @@ angular.module('ng-release-management-app').controller('ng-commit-release-ctrl',
                     }
                 });
             }
+
+            $scope.commitStatus = undefined;
             
         }).error(function(err) {
             alert("Failed : " + err);
+
+            $scope.commitStatus = undefined;
         });
     }
 });
