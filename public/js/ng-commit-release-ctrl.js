@@ -59,7 +59,7 @@ angular.module('ng-release-management-app').controller('ng-commit-release-ctrl',
     }
 
     $scope.commit = function () {
-        $scope.commitStatus = "commiting...";
+        $scope.commitStatus = "pushing ...";
         $http.post('/commit', $rootScope.releaseContent).success(function (res) {
             if (res.data.Files){
                 $rootScope.commitPackage.actions.forEach(function (action) {

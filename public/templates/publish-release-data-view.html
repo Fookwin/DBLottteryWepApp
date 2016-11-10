@@ -20,45 +20,45 @@
       <br>
 
     <div ng-show="releaseContent">
-        <legend> Current Release </legend> 
+        <legend> LOTTERY DATA </legend> 
 
         <div class="input-group input-group-sm">
             <span class="input-group-addon">期号</span>
-            <input class="form-control" type="number" ng-model="releaseContent.lottery.issue" ng-change="onReleaseDataChanged()">
+            <input class="form-control" type="number" ng-model="releaseContent.lottery.issue" ng-change="onLotteryDataChanged()">
         </div>
         <br>
         <div class="input-group input-group-sm">
             <span class="input-group-addon">日期</span>
-            <input class="form-control" type="date" ng-model="releaseContent.lottery.date" ng-change="onReleaseDataChanged()">
+            <input class="form-control" type="date" ng-model="releaseContent.lottery.date" ng-change="onLotteryDataChanged()">
         </div>
         <br>
         <div class="input-group input-group-sm">
             <span class="input-group-addon">奖号</span>
-            <input class="form-control" type="text" placeholder="Format: 00 00 00 00 00 00+00" ng-model="releaseContent.lottery.scheme" ng-change="onReleaseDataChanged()">
+            <input class="form-control" type="text" placeholder="Format: 00 00 00 00 00 00+00" ng-model="releaseContent.lottery.scheme" ng-change="onLotteryDataChanged()">
         </div>
         <br>
         <div class="input-group input-group-sm">
             <span class="input-group-addon">奖池</span>
-            <input class="form-control" type="number" ng-model="releaseContent.lottery.pool" ng-change="onReleaseDataChanged()">
+            <input class="form-control" type="number" ng-model="releaseContent.lottery.pool" ng-change="onLotteryDataChanged()">
         </div>
         <br>
         <div class="input-group input-group-sm">
             <span class="input-group-addon">销售</span>
-            <input class="form-control" type="number" ng-model="releaseContent.lottery.bet" ng-change="onReleaseDataChanged()">
+            <input class="form-control" type="number" ng-model="releaseContent.lottery.bet" ng-change="onLotteryDataChanged()">
         </div>
         <br>
         <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">1 数量</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[0]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[0]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
 
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">1 奖金</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[1]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[1]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
         </div>
@@ -67,14 +67,14 @@
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">2 数量</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[2]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[2]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
 
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">2 奖金</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[3]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[3]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
         </div>
@@ -83,14 +83,14 @@
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">3 数量</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[4]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[4]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
 
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">3 奖金</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[5]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[5]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
         </div>
@@ -99,14 +99,14 @@
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">4 数量</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[6]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[6]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
 
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">4 奖金</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[7]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[7]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
         </div>
@@ -115,14 +115,14 @@
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">5 数量</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[8]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[8]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
 
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">5 奖金</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[9]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[9]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
         </div>
@@ -131,25 +131,25 @@
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">6 数量</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[10]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[10]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
 
             <div class="col-lg-6 col-md-6 col-xs-6">
                 <div class="input-group input-group-sm">
                     <span class="input-group-addon">6 奖金</span>
-                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[11]" ng-change="onReleaseDataChanged()">
+                    <input class="form-control" type="number" ng-model="releaseContent.lottery.bonus[11]" ng-change="onLotteryDataChanged()">
                 </div>
             </div>
         </div>
         <br>
         <div class="input-group">
             <span class="input-group-addon">详情</span>
-            <textarea class="form-control" rows="5" type="text" ng-model="releaseContent.lottery.details" ng-change="onReleaseDataChanged()"></textarea>
+            <textarea class="form-control" rows="5" type="text" ng-model="releaseContent.lottery.details" ng-change="onLotteryDataChanged()"></textarea>
         </div>
         <br>
 
-        <legend>Next Release</legend>
+        <legend>NEXT RELEASE</legend>
 
 
         <div class="input-group input-group-sm">
@@ -211,12 +211,12 @@
         </div>
         <br>
 
-        <legend>Data Version</legend>
+        <legend>DATA VERSION</legend>
 
         <div ng-repeat="(label, number) in releaseContent.dataVersion track by label">
             <div class="input-group input-group-sm">
                 <span class="input-group-addon">{{label}}</span>
-                <input type="number" class="form-control" ng-model="releaseContent.dataVersion[label]" ng-change="onReleaseDataChanged(true)">
+                <input type="number" class="form-control" ng-model="releaseContent.dataVersion[label]" ng-change="onDataVersionChanged()">
             </div>
             <br>
         </div>
@@ -224,7 +224,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary" ng-class="{disabled: !isReleaseDataChanged}" ng-click="postChanges()">
-        Publish
+        Commit
     </button>
     <span ng-show="isCommitting"> Committing ... </span>
 

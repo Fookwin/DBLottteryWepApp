@@ -1,6 +1,6 @@
 <div ng-controller="ng-commit-release-ctrl">
     <form>
-        <legend>Pending Items</legend>
+        <legend>PENDING ACTIONS</legend>
 
         <div class="panel" 
                 ng-class="{'panel-default': action.state === 'pending', 
@@ -19,6 +19,7 @@
             <br>
         </div>
 
-        <button type="submit" class="btn btn-primary" ng-click="commit()" ng-disabled="commitStatus">Commit  <span ng-show="commitStatus">{{commitStatus}}</span></button>
+        <button type="submit" class="btn btn-primary" ng-click="commit()" ng-disabled="commitStatus">Push </button>
+        <span ng-show="commitStatus"> {{commitStatus}} </span>
     </form>
 </div>

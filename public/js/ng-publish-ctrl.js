@@ -19,14 +19,26 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
         $scope.syncToCloud();
     }
     
-    $scope.onReleaseDataChanged = function (changeOnVersion) {
+    $scope.onLotteryDataChanged = function () {
         $scope.isReleaseDataChanged = true;
 
         // increase the lottery version accordingly
-        if (!changeOnVersion && 
-            $rootScope.originalReleaseContent.dataVersion.latestLotteryVersion === $rootScope.releaseContent.dataVersion.latestLotteryVersion) {
+        if ($rootScope.originalReleaseContent.dataVersion.latestLotteryVersion === $rootScope.releaseContent.dataVersion.latestLotteryVersion) {
                 $rootScope.releaseContent.dataVersion.latestLotteryVersion ++;
         }
+    }
+
+    $scope.onReleaseDataChanged = function () {
+        $scope.isReleaseDataChanged = true;
+
+        // increase the lottery version accordingly
+        if ($rootScope.originalReleaseContent.dataVersion.releaseDataVersion === $rootScope.releaseContent.dataVersion.releaseDataVersion) {
+                $rootScope.releaseContent.dataVersion.releaseDataVersion ++;
+        }
+    }
+
+    $scope.onDataVersionChanged = function () {
+        $scope.isReleaseDataChanged = true;
     }
 
     $scope.syncToOffical = function() {
@@ -42,7 +54,7 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
 
                 $rootScope.releaseContent.lottery.date = new Date($rootScope.releaseContent.lottery.date);
 
-                $scope.onReleaseDataChanged();
+                $scope.onLotteryDataChanged(); // should only be detail changed.
             }
 
             $scope.isSyncingToOffical = false;
@@ -74,6 +86,8 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
                 $rootScope.releaseContent.dataVersion = angular.copy($rootScope.originalReleaseContent.dataVersion);
                 $rootScope.releaseContent.dataVersion.latestIssue = $rootScope.originalReleaseContent.next.issue;
                 $rootScope.releaseContent.dataVersion.latestLotteryVersion = 1; // set 1 as the init version.
+                $rootScope.releaseContent.dataVersion.attributeDataVersion = 1; // set 1 as the init version.
+                $rootScope.releaseContent.dataVersion.releaseDataVersion = 1; // set 1 as the init version.
             }
 
             $scope.isAddingNew = false;

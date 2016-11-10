@@ -1,22 +1,22 @@
 <div ng-controller="ng-notification-ctrl">
     
     <form>
-        <legend>Notification</legend>
+        <legend>PUSH NOTIFICATION</legend>
 
         <div class="input-group">
             <span class="input-group-addon">模板</span>
             <select class="form-control" ng-model="selectedTemplate" ng-options="template.Key for template in templateList" 
-                ng-change="notification = selectedTemplate.Value"></select>
+                ng-change="notification = selectedTemplate.Value" ng-disabled="!templateList"></select>
         </div>
         <br>
         <div class="input-group">
             <span class="input-group-addon">标题</span>
-            <textarea class="form-control" rows="3" type="text" ng-model="notification.Title"></textarea>
+            <textarea class="form-control" rows="3" type="text" ng-model="notification.Title" ng-disabled="!notification"></textarea>
         </div>
         <br>
         <div class="input-group">
             <span class="input-group-addon">内容</span>
-            <textarea class="form-control" rows="3" type="text" ng-model="notification.Content"></textarea>
+            <textarea class="form-control" rows="3" type="text" ng-model="notification.Content" ng-disabled="!notification"></textarea>
         </div>
 
         <div class="checkbox">
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" ng-click="notify()">Notify</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="!notification" ng-click="notify()">Notify</button>
 
     </form>
 </div>
