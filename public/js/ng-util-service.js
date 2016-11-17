@@ -35,6 +35,31 @@ angular.module('ng-release-management-app').service('util', function ($rootScope
         return output;
     }
 
+    this.formateDate = function (dateTime, format) {
+
+        if (!format) format = "yyyy-MM-dd hh:mm:ss";
+
+        var date = {
+              "M+": dateTime.getMonth() + 1,
+              "d+": dateTime.getDate(),
+              "h+": dateTime.getHours(),
+              "m+": dateTime.getMinutes(),
+              "s+": dateTime.getSeconds(),
+              "q+": Math.floor((dateTime.getMonth() + 3) / 3),
+              "S+": dateTime.getMilliseconds()
+       };
+       if (/(y+)/i.test(format)) {
+              format = format.replace(RegExp.$1, (dateTime.getFullYear() + '').substr(4 - RegExp.$1.length));
+       }
+       for (var k in date) {
+              if (new RegExp("(" + k + ")").test(format)) {
+                     format = format.replace(RegExp.$1, RegExp.$1.length == 1
+                            ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+              }
+       }
+       return format;
+    }
+
     this.syncReleaseDateToCloud = function(callback) {
         var self = this;
         $http.get('/last').success(function (res) {

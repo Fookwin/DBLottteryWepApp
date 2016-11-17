@@ -123,7 +123,14 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
         if ($scope.isReleaseDataChanged){
 
             $scope.isCommitting = true;
-            $http.post('/precommit', $rootScope.releaseContent).success(function (res) {
+
+            // have convert the date object to formated date string
+            var tempContent = angular.copy($rootScope.releaseContent);
+            tempContent.next.date = util.formateDate(tempContent.next.date);
+            tempContent.next.cutOffTime = util.formateDate(tempContent.next.cutOffTime);
+            tempContent.lottery.date = util.formateDate(tempContent.lottery.date);
+
+            $http.post('/precommit', tempContent).success(function (res) {
                 $rootScope.commitPackage = {
                     container: res.data.Container,
                     actions: []
