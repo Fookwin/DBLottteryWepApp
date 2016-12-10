@@ -1,7 +1,10 @@
-angular.module('ng-release-management-app').controller('ng-publish-release-data-ctrl', function ($scope, $rootScope, $http, $location, util) {       
+angular.module('ng-release-management-app').controller('ng-publish-release-data-ctrl', 
+    function ($scope, $http, $location, util, session) {       
 
     // data for root scope
-    $rootScope.selectedNavIndex = 2;
+    $scope.releaseContent = session.data.releaseContent;
+
+    session.data.selectedNavIndex = 2;
 
     $scope.syncToCloud = function() {
         if ($scope.isSyncingToCloud)
@@ -14,7 +17,7 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
         });
     }
 
-    if (!$rootScope.originalReleaseContent) {
+    if (!session.data.originalReleaseContent) {
         // initialize the original data from cloud.
         $scope.syncToCloud();
     }
@@ -23,8 +26,8 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
         $scope.isReleaseDataChanged = true;
 
         // increase the lottery version accordingly
-        if ($rootScope.originalReleaseContent.dataVersion.latestLotteryVersion === $rootScope.releaseContent.dataVersion.latestLotteryVersion) {
-                $rootScope.releaseContent.dataVersion.latestLotteryVersion ++;
+        if (session.data.originalReleaseContent.dataVersion.latestLotteryVersion === session.data.releaseContent.dataVersion.latestLotteryVersion) {
+            session.data.releaseContent.dataVersion.latestLotteryVersion ++;
         }
     }
 
@@ -32,8 +35,8 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
         $scope.isReleaseDataChanged = true;
 
         // increase the lottery version accordingly
-        if ($rootScope.originalReleaseContent.dataVersion.releaseDataVersion === $rootScope.releaseContent.dataVersion.releaseDataVersion) {
-                $rootScope.releaseContent.dataVersion.releaseDataVersion ++;
+        if (session.data.originalReleaseContent.dataVersion.releaseDataVersion === session.data.releaseContent.dataVersion.releaseDataVersion) {
+            session.data.releaseContent.dataVersion.releaseDataVersion ++;
         }
     }
 
@@ -47,12 +50,12 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
 
         $scope.isSyncingToOffical = true;
 
-        $http.get('/offical/?issue=' + $rootScope.originalReleaseContent.lottery.issue).success(function (res) {
+        $http.get('/offical/?issue=' + session.data.originalReleaseContent.lottery.issue).success(function (res) {
             
             if (res.data) {
-                $rootScope.releaseContent.lottery = res.data;
+                session.data.releaseContent.lottery = res.data;
 
-                $rootScope.releaseContent.lottery.date = new Date($rootScope.releaseContent.lottery.date);
+                session.data.releaseContent.lottery.date = new Date(session.data.releaseContent.lottery.date);
 
                 $scope.onLotteryDataChanged(); // should only be detail changed.
             }
@@ -70,24 +73,24 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
         $scope.isAddingNew = true;
 
         $http.post('/new', {
-            issue: $rootScope.originalReleaseContent.next.issue, 
-            date: $rootScope.originalReleaseContent.next.date
+            issue: session.data.originalReleaseContent.next.issue, 
+            date: session.data.originalReleaseContent.next.date
         }).success(function (res) {
             
             if (res.data) {
-                $rootScope.releaseContent = res.data;
+                session.data.releaseContent = res.data;
 
                 // convert string to date
-                $rootScope.releaseContent.next.date = new Date($rootScope.releaseContent.next.date);
-                $rootScope.releaseContent.next.cutOffTime = new Date($rootScope.releaseContent.next.cutOffTime);
-                $rootScope.releaseContent.lottery.date = new Date($rootScope.releaseContent.lottery.date);
+                session.data.releaseContent.next.date = new Date(session.data.releaseContent.next.date);
+                session.data.releaseContent.next.cutOffTime = new Date(session.data.releaseContent.next.cutOffTime);
+                session.data.releaseContent.lottery.date = new Date(session.data.releaseContent.lottery.date);
 
                 // copy the current version, but change the latest issue and lottery version
-                $rootScope.releaseContent.dataVersion = angular.copy($rootScope.originalReleaseContent.dataVersion);
-                $rootScope.releaseContent.dataVersion.latestIssue = $rootScope.originalReleaseContent.next.issue;
-                $rootScope.releaseContent.dataVersion.latestLotteryVersion = 1; // set 1 as the init version.
-                $rootScope.releaseContent.dataVersion.attributeDataVersion = 1; // set 1 as the init version.
-                $rootScope.releaseContent.dataVersion.releaseDataVersion = 1; // set 1 as the init version.
+                session.data.releaseContent.dataVersion = angular.copy(session.data.originalReleaseContent.dataVersion);
+                session.data.releaseContent.dataVersion.latestIssue = session.data.originalReleaseContent.next.issue;
+                session.data.releaseContent.dataVersion.latestLotteryVersion = 1; // set 1 as the init version.
+                session.data.releaseContent.dataVersion.attributeDataVersion = 1; // set 1 as the init version.
+                session.data.releaseContent.dataVersion.releaseDataVersion = 1; // set 1 as the init version.
             }
 
             $scope.isAddingNew = false;
@@ -99,23 +102,23 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
     }
 
     $scope.resetReleaseData = function () {
-        $rootScope.releaseContent = angular.copy($rootScope.originalReleaseContent);
+        session.data.releaseContent = angular.copy(session.data.originalReleaseContent);
         $scope.isReleaseDataChanged = false;
     };
 
     $scope.RandomReds = function() {
         
         var nums = util.getRandomNumbers(8, 33);
-        $rootScope.releaseContent.recommendation.redIncludes = nums.slice(0, 2).sort(function (a, b) { return a > b; });
-        $rootScope.releaseContent.recommendation.redExcludes = nums.slice(2).sort(function (a, b) { return a > b; });
+        session.data.releaseContent.recommendation.redIncludes = nums.slice(0, 2).sort(function (a, b) { return a > b; });
+        session.data.releaseContent.recommendation.redExcludes = nums.slice(2).sort(function (a, b) { return a > b; });
         $scope.onReleaseDataChanged();
     }
 
     $scope.RandomBlues = function() {
         
         var nums = util.getRandomNumbers(4, 16);
-        $rootScope.releaseContent.recommendation.blueIncludes = nums.slice(0, 1).sort(function (a, b) { return a > b; });
-        $rootScope.releaseContent.recommendation.blueExcludes = nums.slice(1).sort(function (a, b) { return a > b; });
+        session.data.releaseContent.recommendation.blueIncludes = nums.slice(0, 1).sort(function (a, b) { return a > b; });
+        session.data.releaseContent.recommendation.blueExcludes = nums.slice(1).sort(function (a, b) { return a > b; });
         $scope.onReleaseDataChanged();
     }
 
@@ -125,19 +128,19 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
             $scope.isCommitting = true;
 
             // have convert the date object to formated date string
-            var tempContent = angular.copy($rootScope.releaseContent);
+            var tempContent = angular.copy(session.data.releaseContent);
             tempContent.next.date = util.formateDate(tempContent.next.date);
             tempContent.next.cutOffTime = util.formateDate(tempContent.next.cutOffTime);
             tempContent.lottery.date = util.formateDate(tempContent.lottery.date);
 
             $http.post('/precommit', tempContent).success(function (res) {
-                $rootScope.commitPackage = {
+                session.data.commitPackage = {
                     container: res.data.Container,
                     actions: []
                 };
 
                 res.data.Files.forEach(function(fileName) {
-                    $rootScope.commitPackage.actions.push({
+                    session.data.commitPackage.actions.push({
                        file: fileName,
                        content: undefined,
                        state: 'pending'     

@@ -1,4 +1,4 @@
-angular.module('ng-release-management-app').service('util', function ($rootScope, $http) {
+angular.module('ng-release-management-app').service('util', function ($http, session) {
 
     this.getRandomNumber = function random(max) {
         return Math.ceil(Math.ceil(Math.random() * max * 100) / 100);
@@ -63,14 +63,14 @@ angular.module('ng-release-management-app').service('util', function ($rootScope
     this.syncReleaseDateToCloud = function(callback) {
         var self = this;
         $http.get('/last').success(function (res) {
-            $rootScope.originalReleaseContent = res.data;
+            session.data.originalReleaseContent = res.data;
             
             // convert string to date
-            $rootScope.originalReleaseContent.next.date = new Date($rootScope.originalReleaseContent.next.date);
-            $rootScope.originalReleaseContent.next.cutOffTime = new Date($rootScope.originalReleaseContent.next.cutOffTime);
-            $rootScope.originalReleaseContent.lottery.date = new Date($rootScope.originalReleaseContent.lottery.date);
+            session.data.originalReleaseContent.next.date = new Date(session.data.originalReleaseContent.next.date);
+            session.data.originalReleaseContent.next.cutOffTime = new Date(session.data.originalReleaseContent.next.cutOffTime);
+            session.data.originalReleaseContent.lottery.date = new Date(session.data.originalReleaseContent.lottery.date);
 
-            $rootScope.releaseContent = angular.copy($rootScope.originalReleaseContent);
+            session.data.releaseContent = angular.copy(session.data.originalReleaseContent);
             
             callback();
         });

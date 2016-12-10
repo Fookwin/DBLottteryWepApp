@@ -1,3 +1,3 @@
-angular.module('ng-release-management-app').controller('ng-home-ctrl', function ($scope, $rootScope, $timeout, $http) {
-    $rootScope.selectedNavIndex = 0;
+angular.module('ng-release-management-app').controller('ng-home-ctrl', function ($scope, $timeout, $http, session) {
+    $scope.session = session.data;
 });

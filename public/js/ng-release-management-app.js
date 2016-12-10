@@ -1,53 +1,63 @@
 var app = angular.module('ng-release-management-app', ['ngRoute']);
+app.run(function () {
+    //window.onload = function () {
+    WebPullToRefresh.init({
+        loadingFunction: function () {
+            return new Promise(function (resolve, reject) {
+                // Run some async loading code here
+                if (true /* if the loading worked */) {
+                    resolve();
+                } else {
+                    //reject();
+                }
+            });
+        }
+    });
+});
 
-app.config(['$routeProvider', function($routeProvider) {
+app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
-        .when('/', {templateUrl: '/templates/home.html'})
-        .when('/users', {templateUrl: '/templates/user-picker-view.html'})
-        .when('/publish', {redirectTo:'/publish/release'})
-        .when('/publish/release', {templateUrl: '/templates/publish-release-data-view.html'})
-        .when('/publish/commit', {templateUrl: '/templates/publish-commit-release-view.html'})
-        .when('/notification', {templateUrl: '/templates/notification-view.html'})
-        .otherwise({redirectTo:'/'});
+        .when('/', { templateUrl: '/templates/home.html' })
+        .when('/users', { templateUrl: '/templates/user-picker-view.html' })
+        .when('/publish', { redirectTo: '/publish/release' })
+        .when('/publish/release', { templateUrl: '/templates/publish-release-data-view.html' })
+        .when('/publish/commit', { templateUrl: '/templates/publish-commit-release-view.html' })
+        .when('/notification', { templateUrl: '/templates/notification-view.html' })
+        .otherwise({ redirectTo: '/' });
 }]);
 
 app.directive("ngGeneralHeaderDirective", function () {
     return {
-        restrict : 'EAC',
+        restrict: 'EAC',
         controller: 'ng-index-header-ctrl',
         templateUrl: '/templates/header.html'
     };
 });
 
-app.controller('ng-index-header-ctrl', function ($scope, $rootScope, $interval) {
-   $rootScope.title = 'Lottery Data Management';
-   $rootScope.selectedNavIndex = -1;
+app.controller('ng-index-header-ctrl', function ($scope, $interval, session) {
+    $scope.session = session.data;
 
-   $interval(function(){
-       $rootScope.time = new Date().toLocaleString();   
-   }, 1000);
-
-   $scope.navButtons = [
+    $scope.navButtons = [
         { title: 'HOME', href: '#/' },
         { title: 'USERS', href: '#/users' },
         { title: 'PUBLISH', href: '#/publish' },
         { title: 'NOTIFICATION', href: '#/notification' },
-   ];
+    ];
 
-   $scope.navigateTo = function (index) {
-       $scope.selectedNavIndex = index;
-   };
+    $scope.navigateTo = function (index) {
+        session.data.selectedNavIndex = index;
+    };
 });
 
 app.controller('ng-index-footer-ctrl', function ($scope, $http) {
-    $http.get('/templates/footer.html').then(function(res) {
-         $scope.footer = res.data;
+    $http.get('/templates/footer.html').then(function (res) {
+        $scope.footer = res.data;
     });
 });
 
 app.directive("ngUserPickerView", function () {
     return {
-        restrict : 'EAC',
+        restrict: 'EAC',
         controller: 'ng-user-picker-ctrl',
         templateUrl: '/templates/user-picker-view.html'
     };
