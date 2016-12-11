@@ -35,6 +35,9 @@
         <div class="input-group input-group-sm">
             <span class="input-group-addon">奖号</span>
             <input class="form-control" type="text" placeholder="Format: 00 00 00 00 00 00+00" ng-model="releaseContent.lottery.scheme" ng-change="onLotteryDataChanged()">
+            <span class="input-group-btn">
+                <button class="btn btn-default glyphicon glyphicon-wrench" type="button" ng-click="formatScheme()"></button>
+            </span>
         </div>
         <br>
         <div class="input-group input-group-sm">

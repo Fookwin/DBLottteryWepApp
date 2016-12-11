@@ -17,7 +17,7 @@ app.run(function () {
 
 app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
-        .when('/', { templateUrl: '/templates/home.html' })
+        .when('/', { redirectTo: '/publish/release' })
         .when('/users', { templateUrl: '/templates/user-picker-view.html' })
         .when('/publish', { redirectTo: '/publish/release' })
         .when('/publish/release', { templateUrl: '/templates/publish-release-data-view.html' })
@@ -38,10 +38,10 @@ app.controller('ng-index-header-ctrl', function ($scope, $interval, session) {
     $scope.session = session.data;
 
     $scope.navButtons = [
-        { title: 'HOME', href: '#/' },
-        { title: 'USERS', href: '#/users' },
         { title: 'PUBLISH', href: '#/publish' },
+        { title: 'COMMIT', href: '#/publish/commit' },
         { title: 'NOTIFICATION', href: '#/notification' },
+        { title: 'USERS', href: '#/users' },
     ];
 
     $scope.navigateTo = function (index) {

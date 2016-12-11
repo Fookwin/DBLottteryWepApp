@@ -1,6 +1,6 @@
 angular.module('ng-release-management-app').controller('ng-notification-ctrl', 
 function ($scope, $http, $location, util, session) {
-    session.data.selectedNavIndex = 3;
+    session.data.selectedNavIndex = 2;
 
     $http.get('/notifications').then(function SuccessCallback(res) {
         $scope.templateList = res.data.data;

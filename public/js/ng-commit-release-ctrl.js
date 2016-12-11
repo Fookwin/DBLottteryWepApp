@@ -4,7 +4,7 @@ angular.module('ng-release-management-app').controller('ng-commit-release-ctrl',
     // data for root scope
     $scope.commitPackage = session.data.commitPackage;
 
-    session.data.selectedNavIndex = 2;
+    session.data.selectedNavIndex = 1;
 
     if (!$scope.commitPackage)
     {
@@ -27,14 +27,6 @@ angular.module('ng-release-management-app').controller('ng-commit-release-ctrl',
             alert("Failed : " + err);
         });
     }
-
-    $scope.saveReleaseData = function () {
-        $http.post('/submit', session.data.releaseContent).success(function (res) {
-           $location.url('/notification');
-        }).error(function(err) {
-            alert("Failed : " + err);
-        });
-    };
 
     $scope.showFileContent = function (action, show) {
         
@@ -64,6 +56,7 @@ angular.module('ng-release-management-app').controller('ng-commit-release-ctrl',
     $scope.commit = function () {
         $scope.commitStatus = "pushing ...";
         $http.post('/commit', session.data.releaseContent).success(function (res) {
+
             if (res.data.Files){
                 $scope.commitPackage.actions.forEach(function (action) {
                     if (res.data.Files.find(function (name) { return name === action.file})) {

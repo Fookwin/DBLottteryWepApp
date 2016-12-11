@@ -59,20 +59,4 @@ angular.module('ng-release-management-app').service('util', function ($http, ses
        }
        return format;
     }
-
-    this.syncReleaseDateToCloud = function(callback) {
-        var self = this;
-        $http.get('/last').success(function (res) {
-            session.data.originalReleaseContent = res.data;
-            
-            // convert string to date
-            session.data.originalReleaseContent.next.date = new Date(session.data.originalReleaseContent.next.date);
-            session.data.originalReleaseContent.next.cutOffTime = new Date(session.data.originalReleaseContent.next.cutOffTime);
-            session.data.originalReleaseContent.lottery.date = new Date(session.data.originalReleaseContent.lottery.date);
-
-            session.data.releaseContent = angular.copy(session.data.originalReleaseContent);
-            
-            callback();
-        });
-    }
 });
