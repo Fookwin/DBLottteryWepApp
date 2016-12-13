@@ -101,6 +101,8 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
                     session.data.releaseContent.dataVersion.latestLotteryVersion = 1; // set 1 as the init version.
                     session.data.releaseContent.dataVersion.attributeDataVersion = 1; // set 1 as the init version.
                     session.data.releaseContent.dataVersion.releaseDataVersion = 1; // set 1 as the init version.
+
+                    $scope.releaseContent = session.data.releaseContent;
                 }
 
                 $scope.isAddingNew = false;
@@ -113,6 +115,7 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
 
         $scope.resetReleaseData = function () {
             session.data.releaseContent = angular.copy(session.data.originalReleaseContent);
+            $scope.releaseContent = session.data.releaseContent;
             $scope.isReleaseDataChanged = false;
         };
 
