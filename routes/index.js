@@ -5,3 +5,7 @@
 exports.manage = function (req, res) {
     res.render('manage.html');
 };
+
+exports.diagram = function (req, res) {
+    res.render('diagram.html');
+};

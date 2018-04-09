@@ -36,6 +36,8 @@ app.get('/', function (req, res) {
     res.status(200).send('In building...');
 });
 
+app.get('/diagram', routes.diagram);
+
 app.get('/fookwin.management', routes.manage);
 
 http.createServer(app).listen(app.get('port'), function () {

@@ -1,0 +1,14 @@
+html body {
+    display: block;
+    margin: 1px;
+    text-align: center;
+}
+
+#viewer {
+    display: inline-block;
+    width: 99%;
+    height: 100%;
+    margin: 1px;
+    border: 1px solid black;
+}
+
