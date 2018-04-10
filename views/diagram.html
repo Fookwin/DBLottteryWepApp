@@ -138,7 +138,13 @@
 			[2016131, 03, 17, 21, 23, 27, 28, 01]
 		];
 
-		var cell_width = 30;
+		var cell_width = 30,
+			odd_color = 'white',
+			even_color = 'lightgrey',
+			grid_line_width = 0.5,
+			grid_line_color = 'grey',
+			header_back_color = 'darkred',
+			header_text_color = 'white';
 
 		drawGrids('#cornerBlock', cornerGrids);
 		drawGrids('#headerBlock', headerGrids);
@@ -148,20 +154,13 @@
 		function drawGrids(container, defination) {
 		
 			let	overall_width = defination.width * cell_width;
-				overall_height = defination.height * cell_width,
-				cell_color = 'white';
+				overall_height = defination.height * cell_width;
 	
 			let svg = d3.select(container).append("svg")
 				.style("float", "left")			
 				.attr("width", overall_width)
 				.attr("height", overall_height)
 				.append("g");
-
-			let background = svg.append("rect")
-				.style("stroke", "darkgrey")
-				.style("stroke-width", "2px")
-				.attr("width", overall_width)
-				.attr("height", overall_height);
 
 			let scale_x = d3.scaleBand()
 				.domain(d3.range(defination.width))
@@ -177,20 +176,22 @@
 				.enter().append("g")
 				.attr("class", "header_cell")
 				.attr("transform", function(d) { return "translate(" + scale_x(d.pos[0]) + "," + scale_y(d.pos[1]) + ")"; })
-				.style("fill", function(d, i) { return cell_color; });
+				.style("fill", grid_line_color);
 				
 			// draw rect for the cell
 			header_cells.append('rect')
-				.attr("width", function(d, i) { return scale_x.bandwidth() * d.pos[2]; })
-				.attr("height", function(d, i) { return scale_y.bandwidth() * d.pos[3]; })
-				.style("stroke-width", 0);
+				.attr("width", function(d) { return scale_x.bandwidth() * d.pos[2]; })
+				.attr("height", function(d) { return scale_y.bandwidth() * d.pos[3]; })
+				.attr("fill", header_back_color)
+				.style("stroke-width", grid_line_width)
+				.style("stroke", grid_line_color);
 
 			header_cells.append("text")
 				.attr("dy", ".36em")
 				.attr("x", function(d) { return scale_x.bandwidth() * d.pos[2] / 2; })
 				.attr("y", function(d) { return scale_y.bandwidth() * d.pos[3] / 2; })
 				.attr("text-anchor", "middle")
-				.style("fill", 'grey')
+				.style("fill", header_text_color)
 				.text(function(d, i) { return d.title; });
 		}
 
@@ -198,9 +199,7 @@
 
 			let	issue_count = data.length,
 				overall_width = cell_width * 9, // column 0
-				overall_height = cell_width * issue_count,
-				odd_color = 'white',
-				even_color = 'lightgrey';
+				overall_height = cell_width * issue_count;
 		
 			if(!data){
 				throw new Error('Please pass data');
@@ -219,12 +218,6 @@
 			let scale_y = d3.scaleBand()
 				.domain(d3.range(issue_count))
 				.range([0, overall_height]);
-
-			let background = svg.append("rect")
-				.style("stroke", "darkgrey")
-				.style("stroke-width", "2px")
-				.attr("width", overall_width)
-				.attr("height", overall_height);
 
 			// define rows
 			let data_rows = svg.selectAll(".row")
@@ -249,7 +242,8 @@
 				.attr("x", offset_x)
 				.attr("width", issue_width)
 				.attr("height", scale_y.bandwidth())
-				.style("stroke-width", 0);
+				.style("stroke-width", grid_line_width)
+				.style("stroke", grid_line_color);
 
 			issue_cell.append("text")
 				.attr("dy", ".36em")
@@ -272,7 +266,8 @@
 				.attr("x", offset_x)
 				.attr("width", lotto_width)
 				.attr("height", scale_y.bandwidth())
-				.style("stroke-width", 0);
+				.style("stroke-width", grid_line_width)
+				.style("stroke", grid_line_color);
 
 			let lotto_text = lotto_cell.append("text")
 				.attr("dy", ".36em")
@@ -292,11 +287,8 @@
 			let red_cell_count = 33,
 				issue_count = data.length;
 
-			let	red_field_width = cell_width * red_cell_count,
-				overall_width = red_field_width,
-				overall_height = cell_width * issue_count,
-				odd_color = 'white',
-				even_color = 'lightgrey';
+			let	overall_width = cell_width * red_cell_count,
+				overall_height = cell_width * issue_count;
 		
 			if(!data){
 				throw new Error('Please pass data');
@@ -316,11 +308,9 @@
 				.domain(d3.range(issue_count))
 				.range([0, overall_height]);
 
-			let background = svg.append("rect")
-				.style("stroke", "darkgrey")
-				.style("stroke-width", "2px")
-				.attr("width", overall_width)
-				.attr("height", overall_height);
+			let red_field_scale_x = d3.scaleBand()
+				.domain(d3.range(red_cell_count))
+				.range([0, overall_width]);
 
 			// define rows
 			let data_rows = svg.selectAll(".row")
@@ -330,14 +320,9 @@
 				.attr("transform", function(d, i) { return "translate(0," + scale_y(i) + ")"; })
 				.style("fill", function(d, i) { return i % 2 === 0 ? odd_color : even_color; });
 
-			let red_field_scale_x = d3.scaleBand()
-				.domain(d3.range(red_cell_count))
-				.range([0, red_field_width]);
-
-			drawRedField(data_rows, red_field_scale_x, scale_y);
-
 			// draw the connection lines
 			drawRedConnection(svg, data, red_field_scale_x, scale_y);
+			drawRedField(data_rows, red_field_scale_x, scale_y);
 		}
 
 		function drawRedConnection(svg, data, scale_x, scale_y) {
@@ -400,7 +385,8 @@
 			red_cell.append('rect')
 				.attr("width", scale_x.bandwidth())
 				.attr("height", scale_y.bandwidth())
-				.style("stroke-width", 0);
+				.style("stroke-width", grid_line_width)
+				.style("stroke", grid_line_color);
 
 			red_cell.append("text")
 				.attr("dy", ".36em")
