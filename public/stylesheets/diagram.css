@@ -2,6 +2,8 @@ html body {
     display: block;
     margin: 1px;
     text-align: center;
+    height:100%;
+    overflow:hidden;
 }
 
 #viewer {

@@ -15,13 +15,13 @@
 </head>
 
 <body>
-	<div style="display:inline-block; overflow: auto;">
-		<div style="display:inline-block;">
-			<div style="display:inline-block;" id="cornerBlock"></div>
-			<div style="display:inline-block;" id="headerBlock"></div>
-		</div>
-		<div style="float:left;" id="issuesBlock"></div>
-		<div style="float:left;" id="contentBlock"></div>
+	<div style="height:95px;">
+		<div style="float:left; width:270px; " id="cornerBlock"></div>
+		<div style="float:left; width:calc(100% - 270px); overflow:hidden;" id="headerBlock"></div>
+	</div>
+	<div style="clear:left; height:calc(100% - 95px);">
+		<div style="float:left; width:270px; max-height:calc(100vh - 95px); overflow:hidden;" id="issuesBlock"></div>
+		<div style="float:left; width:calc(100% - 270px); overflow:auto; max-height:calc(100vh - 95px);" id="contentBlock"></div>
 		<!-- <embed id="viewer" type="image/svg+xml" src="imgs/4001.svg"></embed> -->
 	</div>
 </body>
@@ -130,8 +130,8 @@
 
 		drawGrids('#cornerBlock', cornerGrids);
 		drawGrids('#headerBlock', headerGrids);
-		leftColumn('#issuesBlock', lotteryHistory_30);
-		Matrix('#contentBlock', lotteryHistory_30);
+		drawLeftColumn('#issuesBlock', lotteryHistory_30);
+		drawContent('#contentBlock', lotteryHistory_30);
 
 		function drawGrids(container, defination) {
 		
@@ -140,6 +140,7 @@
 				cell_color = 'white';
 	
 			let svg = d3.select(container).append("svg")
+				.style("float", "left")			
 				.attr("width", overall_width)
 				.attr("height", overall_height)
 				.append("g");
@@ -181,10 +182,10 @@
 				.text(function(d, i) { return d.title; });
 		}
 
-		function leftColumn(container, data) {
+		function drawLeftColumn(container, data) {
 
 			let	issue_count = data.length,
-				issue_width = cell_width * 3, // column 0
+				overall_width = cell_width * 9, // column 0
 				overall_height = cell_width * issue_count,
 				odd_color = 'white',
 				even_color = 'lightgrey';
@@ -198,7 +199,8 @@
 			}
 	
 			let svg = d3.select(container).append("svg")
-				.attr("width", issue_width)
+				.style("float", "left")
+				.attr("width", overall_width)
 				.attr("height", overall_height)
 				.append("g");
 				
@@ -209,7 +211,7 @@
 			let background = svg.append("rect")
 				.style("stroke", "darkgrey")
 				.style("stroke-width", "2px")
-				.attr("width", issue_width)
+				.attr("width", overall_width)
 				.attr("height", overall_height);
 
 			// define rows
@@ -220,16 +222,66 @@
 				.attr("transform", function(d, i) { return "translate(0," + scale_y(i) + ")"; })
 				.style("fill", function(d, i) { return i % 2 === 0 ? odd_color : even_color; });
 
-			drawIssueColumn(data_rows, issue_width, scale_y);
+			drawIssuecolumn(data_rows, cell_width * 3, 0, scale_y);
+			drawLottoColumn(data_rows, cell_width * 6, cell_width * 3, scale_y);
 		}
 
-		function Matrix(container, data) {
+		function drawIssuecolumn(rows, issue_width, offset_x, scale_y) {
+			var issue_cell = rows.selectAll(".issue_cell")
+				.data(function(d) { return [ d[0] ]; })
+				.enter().append("g")
+				.attr("class", "issue_cell");
+		
+			// draw rect for the cell
+			issue_cell.append('rect')
+				.attr("x", offset_x)
+				.attr("width", issue_width)
+				.attr("height", scale_y.bandwidth())
+				.style("stroke-width", 0);
+
+			issue_cell.append("text")
+				.attr("dy", ".36em")
+				.attr("x", offset_x + issue_width / 2)
+				.attr("y", scale_y.bandwidth() / 2)
+				.attr("text-anchor", "middle")
+				.style("fill", 'grey')
+				.text(function(d) { return d; });
+		}
+
+		function drawLottoColumn(rows, lotto_width, offset_x, scale_y) {
+
+			var lotto_cell = rows.selectAll(".lotto_cell")
+				.data(function(d) { return [ { reds: getLottoStr(d.slice(1, 7)), blue: formatNumberAs00(d[7]) } ]; })
+				.enter().append("g")
+				.attr("class", "lotto_cell");
+		
+			// draw rect for the cell
+			lotto_cell.append('rect')
+				.attr("x", offset_x)
+				.attr("width", lotto_width)
+				.attr("height", scale_y.bandwidth())
+				.style("stroke-width", 0);
+
+			let lotto_text = lotto_cell.append("text")
+				.attr("dy", ".36em")
+				.attr("x", offset_x + lotto_width / 2)
+				.attr("y", scale_y.bandwidth() / 2)
+				.attr("text-anchor", "middle")
+				.style("fill", 'grey')
+				.text(function(d, i) { return d.reds; });
+
+			lotto_text.append("tspan")
+				.attr("text-anchor", "left")
+				.style("fill", 'darkblue')
+				.text(function(d, i) { return d.blue; });
+		}
+
+		function drawContent(container, data) {
 			let red_cell_count = 33,
 				issue_count = data.length;
 
-			let	lotto_width = cell_width * 6, // column 1
-				red_field_width = cell_width * red_cell_count, // column 2
-				overall_width = lotto_width + red_field_width,
+			let	red_field_width = cell_width * red_cell_count,
+				overall_width = red_field_width,
 				overall_height = cell_width * issue_count,
 				odd_color = 'white',
 				even_color = 'lightgrey';
@@ -243,6 +295,7 @@
 			}
 	
 			let svg = d3.select(container).append("svg")
+				.style("float", "left")
 				.attr("width", overall_width)
 				.attr("height", overall_height)
 				.append("g");
@@ -267,62 +320,12 @@
 
 			let red_field_scale_x = d3.scaleBand()
 				.domain(d3.range(red_cell_count))
-				.range([lotto_width, lotto_width + red_field_width]);
+				.range([0, red_field_width]);
 
-			drawLottoColumn(data_rows, lotto_width, scale_y);
 			drawRedField(data_rows, red_field_scale_x, scale_y);
 
 			// draw the connection lines
 			drawRedConnection(svg, data, red_field_scale_x, scale_y);
-		}
-
-		function drawIssueColumn(rows, issue_width, scale_y) {
-
-			var issue_cell = rows.selectAll(".issue_cell")
-				.data(function(d) { return [ d[0] ]; })
-				.enter().append("g")
-				.attr("class", "issue_cell");
-		
-			// draw rect for the cell
-			issue_cell.append('rect')
-				.attr("width", issue_width)
-				.attr("height", scale_y.bandwidth())
-				.style("stroke-width", 0);
-
-			issue_cell.append("text")
-				.attr("dy", ".36em")
-				.attr("x", issue_width / 2)
-				.attr("y", scale_y.bandwidth() / 2)
-				.attr("text-anchor", "middle")
-				.style("fill", 'grey')
-				.text(function(d, i) { return d; });
-		}
-
-		function drawLottoColumn(rows, lotto_width, scale_y) {
-
-			var lotto_cell = rows.selectAll(".lotto_cell")
-				.data(function(d) { return [ { reds: getLottoStr(d.slice(1, 7)), blue: formatNumberAs00(d[7]) } ]; })
-				.enter().append("g")
-				.attr("class", "lotto_cell");
-		
-			// draw rect for the cell
-			lotto_cell.append('rect')
-				.attr("width", lotto_width)
-				.attr("height", scale_y.bandwidth())
-				.style("stroke-width", 0);
-
-			let lotto_text = lotto_cell.append("text")
-				.attr("dy", ".36em")
-				.attr("x", lotto_width / 2)
-				.attr("y", scale_y.bandwidth() / 2)
-				.attr("text-anchor", "middle")
-				.style("fill", 'grey')
-				.text(function(d, i) { return d.reds; });
-
-			lotto_text.append("tspan")
-				.attr("text-anchor", "left")
-				.style("fill", 'darkblue')
-				.text(function(d, i) { return d.blue; });
 		}
 
 		function drawRedConnection(svg, data, scale_x, scale_y) {
