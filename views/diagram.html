@@ -21,7 +21,7 @@
 	</div>
 	<div style="clear:left; height:calc(100% - 95px);">
 		<div style="float:left; width:270px; max-height:calc(100vh - 95px); overflow:hidden;" id="issuesBlock"></div>
-		<div style="float:left; width:calc(100% - 270px); overflow:auto; max-height:calc(100vh - 95px);" id="contentBlock"></div>
+		<div style="float:left; width:calc(100% - 270px); overflow:auto; max-height:calc(100vh - 95px);" id="contentBlock" onscroll="onContentScroll()"></div>
 		<!-- <embed id="viewer" type="image/svg+xml" src="imgs/4001.svg"></embed> -->
 	</div>
 </body>
@@ -37,6 +37,18 @@
 		// 		});
 		// 	});
 		// });
+
+		function onContentScroll() {
+			// get the position of content scroll
+			var left = $("#contentBlock").scrollLeft(),
+				top = $("#contentBlock").scrollTop();
+
+			//console.log("left: " + left + " top:" + top);
+
+			// adjust the position of the header and left colummn
+			$("#headerBlock").scrollLeft(left);
+			$("#issuesBlock").scrollTop(top);
+		}
 
 		var cornerGrids = {
 			width: 9,
