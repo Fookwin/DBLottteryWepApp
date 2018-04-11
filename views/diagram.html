@@ -15,13 +15,13 @@
 </head>
 
 <body>
-	<div style="height:95px;">
-		<div style="float:left; width:270px; " id="cornerBlock"></div>
-		<div style="float:left; width:calc(100% - 270px); overflow:hidden;" id="headerBlock"></div>
+	<div>
+		<div style="float:left; width:60px; " id="cornerBlock"></div>
+		<div style="float:left; width:calc(100% - 60px); overflow:hidden;" id="headerBlock"></div>
 	</div>
-	<div style="clear:left; height:calc(100% - 95px);">
-		<div style="float:left; width:270px; max-height:calc(100vh - 95px); overflow:hidden;" id="issuesBlock"></div>
-		<div style="float:left; width:calc(100% - 270px); overflow:auto; max-height:calc(100vh - 95px);" id="contentBlock" onscroll="onContentScroll()"></div>
+	<div style="clear:left;">
+		<div style="float:left; width:60px; max-height:calc(100vh - 60px); overflow:hidden;" id="issuesBlock"></div>
+		<div style="float:left; width:calc(100% - 60px); overflow:auto; max-height:calc(100vh - 60px);" id="contentBlock" onscroll="onContentScroll()"></div>
 		<!-- <embed id="viewer" type="image/svg+xml" src="imgs/4001.svg"></embed> -->
 	</div>
 </body>
@@ -50,56 +50,64 @@
 			$("#issuesBlock").scrollTop(top);
 		}
 
+		var cell_width = 20,	
+			odd_color = 'white',
+			even_color = 'lightgrey',
+			grid_line_width = 0.5,
+			grid_line_color = 'grey',
+			header_back_color = 'darkred',
+			header_text_color = 'white';
+
 		var cornerGrids = {
-			width: 9,
+			width: 3,
 			height: 3,
 			data: [
-				{title: 'ISSUE', pos: [0,0,3,3] },
-				{title: 'LOTTE', pos: [3,0,6,3] }
+				{title: 'ISSUE', pos: [0,0,3,3] }
 			]
 		};
 
 		var headerGrids = {
-			width: 33,
+			width: 38,
 			height: 3,
 			data: [
-				{title: 'RED', pos: [0,0,33,1] },
-				{title: 'FRONT AREA', pos: [0,1,11,1] },
-				{title: 'MIDDLE AREA', pos: [11,1,11,1] },
-				{title: 'BACK AREA', pos: [22,1,11,1] }, 
-				{title: '01', pos: [0,2,1,1] }, 
-				{title: '02', pos: [1,2,1,1] }, 
-				{title: '03', pos: [2,2,1,1] }, 
-				{title: '04', pos: [3,2,1,1] }, 
-				{title: '05', pos: [4,2,1,1] }, 
-				{title: '06', pos: [5,2,1,1] }, 
-				{title: '07', pos: [6,2,1,1] }, 
-				{title: '08', pos: [7,2,1,1] }, 
-				{title: '09', pos: [8,2,1,1] }, 
-				{title: '10', pos: [9,2,1,1] }, 
-				{title: '11', pos: [10,2,1,1] }, 
-				{title: '12', pos: [11,2,1,1] }, 
-				{title: '13', pos: [12,2,1,1] }, 
-				{title: '14', pos: [13,2,1,1] }, 
-				{title: '15', pos: [14,2,1,1] }, 
-				{title: '16', pos: [15,2,1,1] }, 
-				{title: '17', pos: [16,2,1,1] }, 
-				{title: '18', pos: [17,2,1,1] }, 
-				{title: '19', pos: [18,2,1,1] }, 
-				{title: '20', pos: [19,2,1,1] }, 
-				{title: '21', pos: [20,2,1,1] }, 
-				{title: '22', pos: [21,2,1,1] }, 
-				{title: '23', pos: [22,2,1,1] }, 
-				{title: '24', pos: [23,2,1,1] }, 
-				{title: '25', pos: [24,2,1,1] }, 
-				{title: '26', pos: [25,2,1,1] }, 
-				{title: '27', pos: [26,2,1,1] }, 
-				{title: '28', pos: [27,2,1,1] }, 
-				{title: '29', pos: [28,2,1,1] }, 
-				{title: '30', pos: [29,2,1,1] }, 
-				{title: '31', pos: [30,2,1,1] }, 
-				{title: '32', pos: [31,2,1,1] }, 
-				{title: '33', pos: [32,2,1,1] }
+				{title: 'LOTTE', pos: [0,0,5,3] },
+				{title: 'RED', pos: [5,0,33,1] },
+				{title: 'FRONT AREA', pos: [5,1,11,1] },
+				{title: 'MIDDLE AREA', pos: [16,1,11,1] },
+				{title: 'BACK AREA', pos: [27,1,11,1] }, 
+				{title: '01', pos: [5,2,1,1] }, 
+				{title: '02', pos: [6,2,1,1] }, 
+				{title: '03', pos: [7,2,1,1] }, 
+				{title: '04', pos: [8,2,1,1] }, 
+				{title: '05', pos: [9,2,1,1] }, 
+				{title: '06', pos: [10,2,1,1] }, 
+				{title: '07', pos: [11,2,1,1] }, 
+				{title: '08', pos: [12,2,1,1] }, 
+				{title: '09', pos: [13,2,1,1] }, 
+				{title: '10', pos: [14,2,1,1] }, 
+				{title: '11', pos: [15,2,1,1] }, 
+				{title: '12', pos: [16,2,1,1] }, 
+				{title: '13', pos: [17,2,1,1] }, 
+				{title: '14', pos: [18,2,1,1] }, 
+				{title: '15', pos: [19,2,1,1] }, 
+				{title: '16', pos: [20,2,1,1] }, 
+				{title: '17', pos: [21,2,1,1] }, 
+				{title: '18', pos: [22,2,1,1] }, 
+				{title: '19', pos: [23,2,1,1] }, 
+				{title: '20', pos: [24,2,1,1] }, 
+				{title: '21', pos: [25,2,1,1] }, 
+				{title: '22', pos: [26,2,1,1] }, 
+				{title: '23', pos: [27,2,1,1] }, 
+				{title: '24', pos: [28,2,1,1] }, 
+				{title: '25', pos: [29,2,1,1] }, 
+				{title: '26', pos: [30,2,1,1] }, 
+				{title: '27', pos: [31,2,1,1] }, 
+				{title: '28', pos: [32,2,1,1] }, 
+				{title: '29', pos: [33,2,1,1] }, 
+				{title: '30', pos: [34,2,1,1] }, 
+				{title: '31', pos: [35,2,1,1] }, 
+				{title: '32', pos: [36,2,1,1] }, 
+				{title: '33', pos: [37,2,1,1] }
 			]
 		};
 
@@ -137,14 +145,6 @@
 			[2016130, 03, 17, 21, 23, 27, 28, 01],
 			[2016131, 03, 17, 21, 23, 27, 28, 01]
 		];
-
-		var cell_width = 30,
-			odd_color = 'white',
-			even_color = 'lightgrey',
-			grid_line_width = 0.5,
-			grid_line_color = 'grey',
-			header_back_color = 'darkred',
-			header_text_color = 'white';
 
 		drawGrids('#cornerBlock', cornerGrids);
 		drawGrids('#headerBlock', headerGrids);
@@ -187,6 +187,7 @@
 				.style("stroke", grid_line_color);
 
 			header_cells.append("text")
+				.attr("font-size", "10px")
 				.attr("dy", ".36em")
 				.attr("x", function(d) { return scale_x.bandwidth() * d.pos[2] / 2; })
 				.attr("y", function(d) { return scale_y.bandwidth() * d.pos[3] / 2; })
@@ -198,7 +199,7 @@
 		function drawLeftColumn(container, data) {
 
 			let	issue_count = data.length,
-				overall_width = cell_width * 9, // column 0
+				overall_width = cell_width * 3,
 				overall_height = cell_width * issue_count;
 		
 			if(!data){
@@ -227,8 +228,7 @@
 				.attr("transform", function(d, i) { return "translate(0," + scale_y(i) + ")"; })
 				.style("fill", function(d, i) { return i % 2 === 0 ? odd_color : even_color; });
 
-			drawIssuecolumn(data_rows, cell_width * 3, 0, scale_y);
-			drawLottoColumn(data_rows, cell_width * 6, cell_width * 3, scale_y);
+			drawIssuecolumn(data_rows, overall_width, 0, scale_y);
 		}
 
 		function drawIssuecolumn(rows, issue_width, offset_x, scale_y) {
@@ -246,6 +246,7 @@
 				.style("stroke", grid_line_color);
 
 			issue_cell.append("text")
+				.attr("font-size", "8px")
 				.attr("dy", ".36em")
 				.attr("x", offset_x + issue_width / 2)
 				.attr("y", scale_y.bandwidth() / 2)
@@ -270,11 +271,12 @@
 				.style("stroke", grid_line_color);
 
 			let lotto_text = lotto_cell.append("text")
+				.attr("font-size", "8px")
 				.attr("dy", ".36em")
 				.attr("x", offset_x + lotto_width / 2)
 				.attr("y", scale_y.bandwidth() / 2)
 				.attr("text-anchor", "middle")
-				.style("fill", 'grey')
+				.style("fill", 'darkred')
 				.text(function(d, i) { return d.reds; });
 
 			lotto_text.append("tspan")
@@ -284,10 +286,10 @@
 		}
 
 		function drawContent(container, data) {
-			let red_cell_count = 33,
-				issue_count = data.length;
-
-			let	overall_width = cell_width * red_cell_count,
+			let lotte_width = cell_width * 5,
+				red_cell_count = 33,
+				issue_count = data.length,
+				overall_width = cell_width * red_cell_count + lotte_width,
 				overall_height = cell_width * issue_count;
 		
 			if(!data){
@@ -308,10 +310,6 @@
 				.domain(d3.range(issue_count))
 				.range([0, overall_height]);
 
-			let red_field_scale_x = d3.scaleBand()
-				.domain(d3.range(red_cell_count))
-				.range([0, overall_width]);
-
 			// define rows
 			let data_rows = svg.selectAll(".row")
 				.data(data)
@@ -320,9 +318,14 @@
 				.attr("transform", function(d, i) { return "translate(0," + scale_y(i) + ")"; })
 				.style("fill", function(d, i) { return i % 2 === 0 ? odd_color : even_color; });
 
+			let red_field_scale_x = d3.scaleBand()
+				.domain(d3.range(red_cell_count))
+				.range([lotte_width, overall_width]);
+
 			// draw the connection lines
 			drawRedConnection(svg, data, red_field_scale_x, scale_y);
 			drawRedField(data_rows, red_field_scale_x, scale_y);
+			drawLottoColumn(data_rows, lotte_width, 0, scale_y);
 		}
 
 		function drawRedConnection(svg, data, scale_x, scale_y) {
@@ -389,6 +392,7 @@
 				.style("stroke", grid_line_color);
 
 			red_cell.append("text")
+				.attr("font-size", "10px")
 				.attr("dy", ".36em")
 				.attr("x", scale_x.bandwidth() / 2)
 				.attr("y", scale_y.bandwidth() / 2)
@@ -417,6 +421,7 @@
 				.style("fill", 'darkred');
 
 			hint_red_cell.append("text")
+				.attr("font-size", "10px")
 				.attr("dy", ".36em")
 				.attr("x", scale_x.bandwidth() / 2)
 				.attr("y", scale_y.bandwidth() / 2)
