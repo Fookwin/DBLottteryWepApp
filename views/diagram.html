@@ -46,8 +46,11 @@
 			//console.log("left: " + left + " top:" + top);
 
 			// adjust the position of the header and left colummn
-			$("#headerBlock").scrollLeft(left);
-			$("#issuesBlock").scrollTop(top);
+			if ($("#headerBlock").scrollLeft() !== left)
+				$("#headerBlock").scrollLeft(left);
+
+			if ($("#issuesBlock").scrollTop() !== top)
+				$("#issuesBlock").scrollTop(top);
 		}
 
 		var cell_width = 20,	
