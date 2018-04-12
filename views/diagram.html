@@ -43,14 +43,9 @@
 			var left = $("#contentBlock").scrollLeft(),
 				top = $("#contentBlock").scrollTop();
 
-			//console.log("left: " + left + " top:" + top);
-
 			// adjust the position of the header and left colummn
-			if ($("#headerBlock").scrollLeft() !== left)
-				$("#headerBlock").scrollLeft(left);
-
-			if ($("#issuesBlock").scrollTop() !== top)
-				$("#issuesBlock").scrollTop(top);
+			$("#headerBlock").scrollLeft(left);
+			$("#issuesBlock").scrollTop(top);
 		}
 
 		var cell_width = 20,	
@@ -70,7 +65,7 @@
 		};
 
 		var headerGrids = {
-			width: 38,
+			width: 54,
 			height: 3,
 			data: [
 				{title: 'LOTTE', pos: [0,0,5,3] },
@@ -110,7 +105,26 @@
 				{title: '30', pos: [34,2,1,1] }, 
 				{title: '31', pos: [35,2,1,1] }, 
 				{title: '32', pos: [36,2,1,1] }, 
-				{title: '33', pos: [37,2,1,1] }
+				{title: '33', pos: [37,2,1,1] },
+				{title: 'BLUE', pos: [38,0,16,1] },
+				{title: 'SMALL', pos: [38,1,8,1] },
+				{title: 'BIG', pos: [46,1,8,1] },
+				{title: '01', pos: [38,2,1,1] }, 
+				{title: '02', pos: [39,2,1,1] }, 
+				{title: '03', pos: [40,2,1,1] }, 
+				{title: '04', pos: [41,2,1,1] }, 
+				{title: '05', pos: [42,2,1,1] }, 
+				{title: '06', pos: [43,2,1,1] }, 
+				{title: '07', pos: [44,2,1,1] }, 
+				{title: '08', pos: [45,2,1,1] }, 
+				{title: '09', pos: [46,2,1,1] }, 
+				{title: '10', pos: [47,2,1,1] }, 
+				{title: '11', pos: [48,2,1,1] }, 
+				{title: '12', pos: [49,2,1,1] }, 
+				{title: '13', pos: [50,2,1,1] }, 
+				{title: '14', pos: [51,2,1,1] }, 
+				{title: '15', pos: [52,2,1,1] }, 
+				{title: '16', pos: [53,2,1,1] }
 			]
 		};
 
@@ -291,8 +305,9 @@
 		function drawContent(container, data) {
 			let lotte_width = cell_width * 5,
 				red_cell_count = 33,
+				blue_cell_count = 16,
 				issue_count = data.length,
-				overall_width = cell_width * red_cell_count + lotte_width,
+				overall_width = cell_width * (red_cell_count + blue_cell_count) + lotte_width,
 				overall_height = cell_width * issue_count;
 		
 			if(!data){
@@ -323,24 +338,29 @@
 
 			let red_field_scale_x = d3.scaleBand()
 				.domain(d3.range(red_cell_count))
-				.range([lotte_width, overall_width]);
+				.range([lotte_width, lotte_width + cell_width * red_cell_count]);
+
+			let blue_field_scale_x = d3.scaleBand()
+				.domain(d3.range(blue_cell_count))
+				.range([lotte_width + red_cell_count * cell_width, overall_width]);
 
 			// draw the connection lines
-			drawRedConnection(svg, data, red_field_scale_x, scale_y);
+			drawBlueConnection(svg, data, blue_field_scale_x, scale_y);
 			drawRedField(data_rows, red_field_scale_x, scale_y);
+			drawBlueField(data_rows, blue_field_scale_x, scale_y);
 			drawLottoColumn(data_rows, lotte_width, 0, scale_y);
 		}
 
-		function drawRedConnection(svg, data, scale_x, scale_y) {
+		function drawBlueConnection(svg, data, scale_x, scale_y) {
 			// form the data for connection
 			let connection_data = [],
 				offset_y = scale_y.bandwidth() / 2,
-				offset_x = - scale_x.bandwidth() / 2,
+				offset_x = scale_x.bandwidth() / 2,
 				shorter_len = scale_y.bandwidth() - 4;
 
 			data.forEach(function (val, index) {
 				if (index > 0) {
-					connection_data[index - 1] = calculateLinePoints(scale_x(data[index - 1][1]), 0, scale_x(val[1]), scale_y.bandwidth(), shorter_len);
+					connection_data[index - 1] = calculateLinePoints(scale_x(data[index - 1][7] - 1), 0, scale_x(val[7] - 1), scale_y.bandwidth(), shorter_len);
 				}
 			});
 
@@ -433,10 +453,74 @@
 				.text(function(d, i) { return formatNumberAs00(d); });
 		}
 
+		function drawBlueField(rows, scale_x, scale_y) {
+		
+			// define the blue number cells
+			let blue_cell = rows.selectAll(".blue_cell")
+				.data(function(d) { return buildBlueFieldData(d[7]); })
+				.enter().append("g")
+				.attr("class", "blue_cell")
+				.attr("transform", function(d, i) { return "translate(" + scale_x(i) + ", 0)"; });
+
+			// draw rect for cell
+			blue_cell.append('rect')
+				.attr("width", scale_x.bandwidth())
+				.attr("height", scale_y.bandwidth())
+				.style("stroke-width", grid_line_width)
+				.style("stroke", grid_line_color);
+
+			blue_cell.append("text")
+				.attr("font-size", "10px")
+				.attr("dy", ".36em")
+				.attr("x", scale_x.bandwidth() / 2)
+				.attr("y", scale_y.bandwidth() / 2)
+				.attr("text-anchor", "middle")
+				.style("fill", 'grey')
+				.text(function(d, i) { return formatNumberAs00(d); });
+			
+			// draw circle for hint number
+			let hint_blue_cell = rows.selectAll(".hint_blue_cell")
+				.data(function(d) { return [d[7]]; })
+				.enter().append("g")
+				.attr("class", "hint_blue_cell")
+				.attr("transform", function(d, i) { return "translate(" + scale_x(d - 1) + ", 0)"; })
+				.on('mouseover', function(d) {
+					d3.select(this).select("circle").style("fill", 'grey');
+				})
+				.on('mouseout', function(d) {
+					d3.select(this).select("circle").style("fill", 'darkblue');
+				});
+
+			hint_blue_cell.append('circle')	
+				.attr("cx", scale_x.bandwidth() / 2)
+				.attr("cy", scale_y.bandwidth() / 2)
+				.attr("r", scale_x.bandwidth() / 2 - 2)
+				.style("stroke-width", 0)
+				.style("fill", 'darkblue');
+
+			hint_blue_cell.append("text")
+				.attr("font-size", "10px")
+				.attr("dy", ".36em")
+				.attr("x", scale_x.bandwidth() / 2)
+				.attr("y", scale_y.bandwidth() / 2)
+				.attr("text-anchor", "middle")
+				.style("fill", 'white')
+				.text(function(d) { return formatNumberAs00(d); });
+		}
+
 		function buildRedFieldData(d) {
 			let data = new Array(33).fill(0);
 			data.forEach(function (val, index) {
 				data[index] = d.indexOf(index + 1) >= 0 ? 0 : Math.floor(Math.random() * 99) + 1;
+			});
+
+			return data;
+		}
+
+		function buildBlueFieldData(blue) {
+			let data = new Array(16).fill(0);
+			data.forEach(function (val, index) {
+				data[index] = blue === index + 1 ? 0 : Math.floor(Math.random() * 99) + 1;
 			});
 
 			return data;
