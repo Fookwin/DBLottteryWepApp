@@ -16,12 +16,15 @@ module.exports = function(app) {
     var UserManager = require('./api/user-manager.js');
     var UserTable = require('./modules/user-table.js');
     var ReleaseManager = require('./api/release-manager.js');
+    var SqlManager = require('./api/sql-manager.js');
 
     var _userTable = new UserTable(azure.createTableService(accountName, accountKey), userTableName);
     var _userMgr = new UserManager(_userTable);   
 
     var _blobServer = azure.createBlobService(accountName, accountKey) 
     var _releaseMgr = new ReleaseManager(_blobServer);
+
+    var _sqlManager = new SqlManager();
     
     /** HTTP GET */
     app.get('/users', _userMgr.getUsers.bind(_userMgr));
@@ -35,4 +38,5 @@ module.exports = function(app) {
     app.post('/commit', _releaseMgr.commitRelease.bind(_releaseMgr));
     app.get('/notifications', _releaseMgr.getNotifications.bind(_releaseMgr));
     app.delete('/action/remove', _releaseMgr.removePendingAction.bind(_releaseMgr));
+    app.get('/sql/obmission/:count?', _sqlManager.getObmission.bind(_sqlManager));
 };
