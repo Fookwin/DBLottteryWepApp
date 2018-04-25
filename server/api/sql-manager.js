@@ -1,3 +1,5 @@
+'use strict';
+
 const Connection = require('tedious').Connection;
 const Request = require('tedious').Request;
 
