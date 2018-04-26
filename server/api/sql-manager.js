@@ -1,9 +1,7 @@
-'use strict';
+var Connection = require('tedious').Connection;
+var Request = require('tedious').Request;
 
-const Connection = require('tedious').Connection;
-const Request = require('tedious').Request;
-
-const config = {
+var config = {
   userName: 'pi3011314',
   password: 'zzx&jjj1314',
   server: 'ppuvjzarol.database.windows.net',
@@ -20,16 +18,16 @@ function SqlManager() {
     this.buildObmissionPromise = function (count, IsRed) {
         return new Promise ((resolve, reject) => {
 
-            let connection = new Connection(config);
+            var connection = new Connection(config);
             connection.on('connect', err => {
               return err ? console.log(err) : _execute();
             });
 
             function _execute() {
-                const query = 'SELECT TOP ' + count + ' * FROM ' + (IsRed ? 'dbo.RedObmission' : 'dbo.BlueObmission') + ' ORDER BY Issue DESC';
+                var query = 'SELECT TOP ' + count + ' * FROM ' + (IsRed ? 'dbo.RedObmission' : 'dbo.BlueObmission') + ' ORDER BY Issue DESC';
                 
-                let data = [];
-                const request = new Request(query, (err, rowCount, rows) => {
+                var data = [];
+                var request = new Request(query, (err, rowCount, rows) => {
                     if (err) {
                         console.log(err);
                         reject(err);
@@ -40,7 +38,7 @@ function SqlManager() {
                 });
                 
                 request.on('row', columns => {
-                    let row = [];
+                    var row = [];
                     columns.forEach(column => row.push(column.value));
                     data.push(row);
                 });
