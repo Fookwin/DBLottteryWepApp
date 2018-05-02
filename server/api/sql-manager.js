@@ -1,7 +1,7 @@
-var Connection = require('tedious').Connection;
-var Request = require('tedious').Request;
+const Connection = require('tedious').Connection;
+const Request = require('tedious').Request;
 
-var config = {
+const config = {
   userName: 'pi3011314',
   password: 'zzx&jjj1314',
   server: 'ppuvjzarol.database.windows.net',
