@@ -24,16 +24,18 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
     var cell_width = 20,	
         odd_color = 'white',
         even_color = 'lightgrey',
-        grid_line_width = 0.5,
-        grid_line_color = 'grey',
-        header_back_color = 'darkred',
-        header_text_color = 'white';
+        grid_line_width = 0.3,
+        content_grid_line_color = 'grey',
+        head_grid_line_color = 'grey',
+        grid_separate_line_width = 1,
+        header_back_color = 'lightyellow',
+        header_text_color = 'black';
 
     var cornerGrids = {
         width: 3,
         height: 3,
         data: [
-            {title: 'ISSUE', pos: [0,0,3,3] }
+            {title: '期号', pos: [0,0,3,3] }
         ]
     };
 
@@ -41,11 +43,11 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
         width: 54,
         height: 3,
         data: [
-            {title: 'LOTTE', pos: [0,0,5,3] },
-            {title: 'RED', pos: [5,0,33,1] },
-            {title: 'FRONT AREA', pos: [5,1,11,1] },
-            {title: 'MIDDLE AREA', pos: [16,1,11,1] },
-            {title: 'BACK AREA', pos: [27,1,11,1] }, 
+            {title: '开奖号码', pos: [0,0,5,3] },
+            {title: '红球', pos: [5,0,33,1] },
+            {title: '前区', pos: [5,1,11,1] },
+            {title: '中区', pos: [16,1,11,1] },
+            {title: '后区', pos: [27,1,11,1] }, 
             {title: '01', pos: [5,2,1,1] }, 
             {title: '02', pos: [6,2,1,1] }, 
             {title: '03', pos: [7,2,1,1] }, 
@@ -79,9 +81,9 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
             {title: '31', pos: [35,2,1,1] }, 
             {title: '32', pos: [36,2,1,1] }, 
             {title: '33', pos: [37,2,1,1] },
-            {title: 'BLUE', pos: [38,0,16,1] },
-            {title: 'SMALL', pos: [38,1,8,1] },
-            {title: 'BIG', pos: [46,1,8,1] },
+            {title: '篮球', pos: [38,0,16,1] },
+            {title: '前区', pos: [38,1,8,1] },
+            {title: '后区', pos: [46,1,8,1] },
             {title: '01', pos: [38,2,1,1] }, 
             {title: '02', pos: [39,2,1,1] }, 
             {title: '03', pos: [40,2,1,1] }, 
@@ -100,41 +102,6 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
             {title: '16', pos: [53,2,1,1] }
         ]
     };
-
-    var lotteryHistory_30 = [
-        [2016100, 03, 10, 22, 23, 27, 29, 04],
-        [2016101, 01, 03, 19, 24, 32, 33, 01],
-        [2016102, 05, 08, 10, 14, 17, 30, 13],
-        [2016103, 01, 05, 13, 19, 24, 27, 11],
-        [2016104, 05, 09, 11, 18, 30, 31, 04],
-        [2016105, 08, 10, 19, 27, 28, 31, 16],
-        [2016106, 04, 05, 13, 22, 25, 30, 04],
-        [2016107, 06, 11, 18, 26, 27, 32, 01],
-        [2016108, 02, 03, 07, 08, 19, 26, 16],
-        [2016109, 09, 11, 15, 16, 27, 33, 05],
-        [2016110, 05, 07, 28, 31, 32, 33, 08],
-        [2016111, 02, 04, 07, 14, 15, 32, 04],
-        [2016112, 06, 12, 14, 15, 18, 25, 12],
-        [2016113, 01, 11, 16, 17, 20, 26, 14],
-        [2016114, 05, 16, 20, 22, 27, 29, 09],
-        [2016115, 06, 08, 20, 22, 26, 27, 09],
-        [2016116, 07, 18, 20, 23, 27, 31, 13],
-        [2016117, 03, 10, 14, 17, 28, 33, 02],
-        [2016118, 09, 14, 22, 23, 31, 33, 14],
-        [2016119, 09, 19, 21, 30, 31, 32, 04],
-        [2016120, 02, 05, 06, 21, 25, 28, 09],
-        [2016121, 02, 03, 10, 23, 25, 28, 09],
-        [2016122, 15, 22, 23, 24, 28, 29, 08],
-        [2016123, 07, 09, 12, 14, 20, 27, 16],
-        [2016124, 09, 15, 21, 24, 27, 32, 10],
-        [2016125, 01, 06, 08, 20, 27, 30, 03],
-        [2016126, 02, 06, 12, 17, 18, 19, 10],
-        [2016127, 07, 12, 17, 26, 29, 31, 16],
-        [2016128, 04, 09, 11, 17, 26, 27, 13],
-        [2016129, 05, 06, 08, 21, 31, 33, 14],
-        [2016130, 03, 17, 21, 23, 27, 28, 01],
-        [2016131, 03, 17, 21, 23, 27, 28, 01]
-    ];
 
     drawGrids('#cornerBlock', cornerGrids);
     drawGrids('#headerBlock', headerGrids);
@@ -174,7 +141,7 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
             .enter().append("g")
             .attr("class", "header_cell")
             .attr("transform", function(d) { return "translate(" + scale_x(d.pos[0]) + "," + scale_y(d.pos[1]) + ")"; })
-            .style("fill", grid_line_color);
+            .style("fill", head_grid_line_color);
             
         // draw rect for the cell
         header_cells.append('rect')
@@ -182,7 +149,7 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
             .attr("height", function(d) { return scale_y.bandwidth() * d.pos[3]; })
             .attr("fill", header_back_color)
             .style("stroke-width", grid_line_width)
-            .style("stroke", grid_line_color);
+            .style("stroke", head_grid_line_color);
 
         header_cells.append("text")
             .attr("font-size", "10px")
@@ -241,7 +208,7 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
             .attr("width", issue_width)
             .attr("height", scale_y.bandwidth())
             .style("stroke-width", grid_line_width)
-            .style("stroke", grid_line_color);
+            .style("stroke", content_grid_line_color);
 
         issue_cell.append("text")
             .attr("font-size", "8px")
@@ -266,7 +233,7 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
             .attr("width", lotto_width)
             .attr("height", scale_y.bandwidth())
             .style("stroke-width", grid_line_width)
-            .style("stroke", grid_line_color);
+            .style("stroke", content_grid_line_color);
 
         let lotto_text = lotto_cell.append("text")
             .attr("font-size", "8px")
@@ -358,8 +325,8 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
             .attr("x2", function(d) { return d.x2; })
             .attr("y2", function(d) { return d.y2; })
             .attr("transform-origin", "center")
-            .style("stroke-width", 2)
-            .style('stroke', 'darkred');
+            .style("stroke-width", 1)
+            .style('stroke', 'darkblue');
 
         function calculateLinePoints(x1, y1, x2, y2, shorter) {
             let disX = x2 - x1,
@@ -393,7 +360,7 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
             .attr("width", scale_x.bandwidth())
             .attr("height", scale_y.bandwidth())
             .style("stroke-width", grid_line_width)
-            .style("stroke", grid_line_color);
+            .style("stroke", content_grid_line_color);
 
         red_cell.append("text")
             .attr("font-size", "10px")
@@ -448,7 +415,7 @@ app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
             .attr("width", scale_x.bandwidth())
             .attr("height", scale_y.bandwidth())
             .style("stroke-width", grid_line_width)
-            .style("stroke", grid_line_color);
+            .style("stroke", content_grid_line_color);
 
         blue_cell.append("text")
             .attr("font-size", "10px")

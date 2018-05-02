@@ -5,7 +5,10 @@
   "main": "app.js",
   "author": {
     "name": "zhangze",
-    "email": ""
+    "email": "pi3011314@126.com"
+  },
+  "engines" : { 
+    "node" : ">=6.11" 
   },
   "dependencies": {
     "async": "^2.0.0-rc.5",
