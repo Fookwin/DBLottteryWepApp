@@ -18,16 +18,16 @@ function SqlManager() {
     this.buildObmissionPromise = function (count, IsRed) {
         return new Promise ((resolve, reject) => {
 
-            var connection = new Connection(config);
+            let connection = new Connection(config);
             connection.on('connect', err => {
               return err ? console.log(err) : _execute();
             });
 
             function _execute() {
-                var query = 'SELECT TOP ' + count + ' * FROM ' + (IsRed ? 'dbo.RedObmission' : 'dbo.BlueObmission') + ' ORDER BY Issue DESC';
+                let query = 'SELECT TOP ' + count + ' * FROM ' + (IsRed ? 'dbo.RedObmission' : 'dbo.BlueObmission') + ' ORDER BY Issue DESC';
                 
-                var data = [];
-                var request = new Request(query, (err, rowCount, rows) => {
+                let data = [];
+                let request = new Request(query, (err, rowCount, rows) => {
                     if (err) {
                         console.log(err);
                         reject(err);
@@ -38,7 +38,7 @@ function SqlManager() {
                 });
                 
                 request.on('row', columns => {
-                    var row = [];
+                    let row = [];
                     columns.forEach(column => row.push(column.value));
                     data.push(row);
                 });
@@ -57,7 +57,7 @@ SqlManager.prototype = {
             return res.status (200).json({data: self.obmissionCache});
         }
 
-        var count = req.query.count || 30;
+        let count = req.query.count || 30;
 
         self.buildObmissionPromise(count, true).then((red_data) => {
             self.buildObmissionPromise(count, false).then((blue_data) => {
@@ -65,7 +65,7 @@ SqlManager.prototype = {
                 // build the data by merging two table
                 self.obmissionCache = [];
                 red_data.forEach(function (red_row, index) {
-                    var row = [red_row[0]]; // index
+                    let row = [red_row[0]]; // index
     
                     // get the lottery
                     row = row.concat(red_row.map(function (x, index) { 
