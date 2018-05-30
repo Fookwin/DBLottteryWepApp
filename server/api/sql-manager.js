@@ -15,36 +15,28 @@ module.exports = SqlManager;
 
 function SqlManager() {
     this.obmissionCache = undefined;
-    this.buildObmissionPromise = function (count, IsRed) {
+    this.buildObmissionPromise = function (connection, count, IsRed) {
         return new Promise ((resolve, reject) => {
-
-            let connection = new Connection(config);
-            connection.on('connect', err => {
-              return err ? console.log(err) : _execute();
+            let query = 'SELECT TOP ' + count + ' * FROM ' + (IsRed ? 'dbo.RedObmission' : 'dbo.BlueObmission') + ' ORDER BY Issue DESC';
+            
+            let data = [];
+            let request = new Request(query, (err, rowCount, rows) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    console.log('rowCount:' + rowCount);
+                    resolve(data);
+                }
             });
-
-            function _execute() {
-                let query = 'SELECT TOP ' + count + ' * FROM ' + (IsRed ? 'dbo.RedObmission' : 'dbo.BlueObmission') + ' ORDER BY Issue DESC';
-                
-                let data = [];
-                let request = new Request(query, (err, rowCount, rows) => {
-                    if (err) {
-                        console.log(err);
-                        reject(err);
-                    } else {
-                        console.log('rowCount:' + rowCount);
-                        resolve(data);
-                    }
-                });
-                
-                request.on('row', columns => {
-                    let row = [];
-                    columns.forEach(column => row.push(column.value));
-                    data.push(row);
-                });
-                
-                connection.execSql(request);
-            };
+            
+            request.on('row', columns => {
+                let row = [];
+                columns.forEach(column => row.push(column.value));
+                data.push(row);
+            });
+            
+            connection.execSql(request);
         });
     };
 }
@@ -59,34 +51,45 @@ SqlManager.prototype = {
 
         let count = req.query.count || 30;
 
-        self.buildObmissionPromise(count, true).then((red_data) => {
-            self.buildObmissionPromise(count, false).then((blue_data) => {
-    
-                // build the data by merging two table
-                self.obmissionCache = [];
-                red_data.forEach(function (red_row, index) {
-                    let row = [red_row[0]]; // index
-    
-                    // get the lottery
-                    row = row.concat(red_row.map(function (x, index) { 
-                        return (x === 0 || x === '0') ? index - 1 : 0; 
-                    }).filter(function (x) { 
-                        return x !== 0;
-                    }));
-    
-                    row = row.concat(blue_data[index].map(function (x, index) { 
-                        return (x === 0 || x === '0') ? index - 2 : 0; 
-                    }).filter(function (x) { 
-                        return x !== 0;
-                    }));
-    
-                    row = row.concat(red_row.slice(2, 35));
-                    row = row.concat(blue_data[index].slice(3, 19));
-                    self.obmissionCache.push(row);
-                });
-    
-                return res.status (200).json({data: self.obmissionCache.reverse()});
-            });
+        // build a connection for each query
+        let connection = new Connection(config);
+        connection.on('connect', err => {
+            return err ? console.log(err) : _execute();
         });
+
+        function _execute() {
+            self.buildObmissionPromise(connection, count, true).then((red_data) => {
+                self.buildObmissionPromise(connection, count, false).then((blue_data) => {
+        
+                    // build the data by merging two table
+                    self.obmissionCache = [];
+                    red_data.forEach(function (red_row, index) {
+                        let row = [red_row[0]]; // index
+        
+                        // get the lottery
+                        row = row.concat(red_row.map(function (x, index) { 
+                            return (x === 0 || x === '0') ? index - 1 : 0; 
+                        }).filter(function (x) { 
+                            return x !== 0;
+                        }));
+        
+                        row = row.concat(blue_data[index].map(function (x, index) { 
+                            return (x === 0 || x === '0') ? index - 2 : 0; 
+                        }).filter(function (x) { 
+                            return x !== 0;
+                        }));
+        
+                        row = row.concat(red_row.slice(2, 35));
+                        row = row.concat(blue_data[index].slice(3, 19));
+                        self.obmissionCache.push(row);
+                    });
+
+                    // close the connection when done
+                    connection.close();
+        
+                    return res.status (200).json({data: self.obmissionCache.reverse()});
+                });
+            });
+        }
     }
 };
