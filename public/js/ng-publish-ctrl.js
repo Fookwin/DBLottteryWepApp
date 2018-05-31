@@ -147,6 +147,50 @@ angular.module('ng-release-management-app').controller('ng-publish-release-data-
 
                 $scope.releaseContent.lottery.scheme = newText;
             }
+
+            if (!$scope.validate())
+                alert("invalid");
+        }
+
+        $scope.validate = function () {
+            //formatScheme(); // format scheme first
+
+            var scheme = $scope.releaseContent.lottery.scheme;
+            
+            // the scheme must be the format as xx xx xx xx xx xx+xx
+            if (scheme.length !== 20)
+                return false;
+
+            if (scheme[17] !== '+')
+                return false;
+
+            var nums = scheme.split(/[ +]+/).map(n => Number(n));
+            if (nums.length !== 7)
+                return false;
+
+            // check each number
+            var validated = nums.filter((n, i) => {
+                if (!n)
+                    return false;
+
+                if (i === 6) {
+                    return n > 0 && n <= 16;
+                } else {
+                    if (n < 1 || n > 33)
+                        return false;
+                    
+                    if (i !== 0) {
+                        return n > nums[i - 1];
+                    }
+
+                    return true;
+                }
+            });
+
+            if (validated.length !== 7)
+                return false;  
+                
+            return true;
         }
 
         $scope.postChanges = function () {
