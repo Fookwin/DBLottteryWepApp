@@ -5,49 +5,30 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="stylesheet" href="libs/bootstrap/bootstrap-3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" href="stylesheets/index.css">
+	<link rel="stylesheet" href="stylesheets/management.css">
+	<link rel="stylesheet" href="stylesheets/header.css">
 	<link rel="stylesheet" href="stylesheets/process-ring.css">
 	<link rel="stylesheet" href="libs/genericons/genericons.css">
-	<link rel="stylesheet" href="libs/wptr.css">
 	<script src="libs/jquery/jquery.min.js"></script>
 	<script src="libs/bootstrap/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 	<script src="libs/angular.js/angular.min.js"></script>
 	<script src="libs/angular-route/angular-route.min.js"></script>
-	<script type="text/javascript" src="/js/ng-release-management-app.js"></script>
-	<script type="text/javascript" src="/js/ng-session-service.js"></script>
-	<script type="text/javascript" src="/js/ng-util-service.js"></script>
-	<script type="text/javascript" src="/js/ng-notification-ctrl.js"></script>
-	<script type="text/javascript" src="/js/ng-user-picker-ctrl.js"></script>
-	<script type="text/javascript" src="/js/ng-publish-ctrl.js"></script>
-	<script type="text/javascript" src="/js/ng-commit-release-ctrl.js"></script>
+	<script type="text/javascript" src="/js/management/ng-release-management-app.js"></script>
+	<script type="text/javascript" src="/js/management/ng-util-service.js"></script>
+	<script type="text/javascript" src="/js/management/ng-notification-ctrl.js"></script>
+	<script type="text/javascript" src="/js/management/ng-user-picker-ctrl.js"></script>
+	<script type="text/javascript" src="/js/management/ng-publish-ctrl.js"></script>
+	<script type="text/javascript" src="/js/management/ng-commit-release-ctrl.js"></script>
 </head>
 
 <body ng-app="ng-release-management-app">
-	<div id="ptr" class="ptr-reset">
-		<div class="pulling">
-			<span class="genericon genericon-next"></span>
-			<label class="refresh-text">下拉刷新</label>
-		</div>
-
-		<div class="loading">
-			<span id="l1"></span>
-			<span id="l2"></span>
-			<span id="l3"></span>
-		</div>
-	</div>
-
-	<div id="content" class="row-fluid">
-		<div class="container-fluid">
-			<ng-general-header-directive></ng-general-header-directive>
-
-			<div ng-view></div>
-
-			<h4 ng-controller="ng-index-footer-ctrl">{{footer}}</h4>
-		</div>
-	</div>
-
-	<script src="libs/hammer.2.0.4.js"></script>
-	<script src="libs/wptr.1.1.js"></script>
+	<ng-general-header-directive></ng-general-header-directive>
+	<ul class="nav nav-tabs">
+		<li ng-class="{active: $index == session.selectedNavIndex }" ng-repeat="navBtn in navButtons" ng-click="navigateTo($index)">
+			<a href="{{navBtn.href}}">{{navBtn.title}}</a>
+		</li>
+	</ul>
+	<div id="management_view" ng-view></div>
 </body>
 
 </html>

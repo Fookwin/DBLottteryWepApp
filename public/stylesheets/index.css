@@ -1,0 +1,7 @@
+html body {
+    display: block;
+    margin: 5px;
+    text-align: center;
+    height:100%;
+    overflow:hidden;
+}

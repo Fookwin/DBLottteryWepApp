@@ -1,11 +1,5 @@
-<div class="page-header" ng-controller="ng-index-header-ctrl">
+<div class="page-header-bar" ng-controller="ng-index-header-ctrl">
 
-    <h2>{{session.title}}</h2>
+    <span class="title">{{session.title}}</span>
 
-    <ul class="nav nav-tabs">
-        <li ng-class="{active: $index == session.selectedNavIndex }" ng-repeat="navBtn in navButtons" ng-click="navigateTo($index)">
-            <a href="{{navBtn.href}}">{{navBtn.title}}</a>
-        </li>
-    </ul>
 </div>
-    

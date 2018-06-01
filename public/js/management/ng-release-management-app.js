@@ -1,18 +1,15 @@
 var app = angular.module('ng-release-management-app', ['ngRoute']);
 app.run(function () {
-    //window.onload = function () {
-    WebPullToRefresh.init({
-        loadingFunction: function () {
-            return new Promise(function (resolve, reject) {
-                // Run some async loading code here
-                if (true /* if the loading worked */) {
-                    resolve();
-                } else {
-                    //reject();
-                }
-            });
-        }
-    });
+});
+
+app.service('session', function () {
+    this.data = {
+        originalReleaseContent : undefined,
+        releaseContent : undefined,
+        commitPackage : undefined,
+        selectedNavIndex : 0,
+        title : '管理'        
+    }; 
 });
 
 app.config(['$routeProvider', function ($routeProvider) {

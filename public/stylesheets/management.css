@@ -1,0 +1,12 @@
+html body {
+    display: block;
+    margin: 0px;
+    text-align: center;
+    height:100%;
+    overflow:auto;
+}
+
+#management_view {
+    text-align: center;
+    margin: 10px;
+}

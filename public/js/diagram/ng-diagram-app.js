@@ -12,12 +12,30 @@ function onContentScroll() {
     $("#issuesBlock").scrollTop(top);
 }
 
+app.service('session', function () {
+    this.data = {
+        title : '走势图'        
+    }; 
+});
+
 app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when('/', { redirectTo: '/general' })
         .when('/general', { templateUrl: '/templates/diagram-view.html' })
         .otherwise({ redirectTo: '/' });
 }]);
+
+app.directive("ngGeneralHeaderDirective", function () {
+    return {
+        restrict: 'EAC',
+        controller: 'ng-index-header-ctrl',
+        templateUrl: '/templates/header.html'
+    };
+});
+
+app.controller('ng-index-header-ctrl', function ($scope, $interval, session) {
+    $scope.session = session.data;
+});
 
 app.controller('ng-diagram-ctrl', function ($scope, $http, $interval) {
 
