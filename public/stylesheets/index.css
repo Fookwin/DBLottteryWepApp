@@ -5,6 +5,7 @@ html, body {
 .navbar {
     background-color: darkred;
     border: none;
+    margin-bottom: 0px;
 }
 
 .navbar a{
@@ -34,4 +35,8 @@ html, body {
 .nav li > a:focus, .nav .open > a:focus,
 .nav li > a:active, .nav .open > a:active {
     background-color: rgba(126, 169, 39, 0.3);
+}
+
+.panel {
+    margin: 5px;
 }
