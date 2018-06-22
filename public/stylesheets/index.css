@@ -1,7 +1,37 @@
-html body {
-    display: block;
-    margin: 5px;
-    text-align: center;
-    height:100%;
-    overflow:hidden;
+html, body {
+    height: 100%;
+}
+
+.navbar {
+    background-color: darkred;
+    border: none;
+}
+
+.navbar a{
+    color: #FFFFFF;
+}
+
+.navbar .nav{
+    margin: 1px;
+}
+
+.navbar .nav.wide-screen{
+    float: right!important;
+}
+
+/* Hamburger */
+.navbar-toggle {
+    background-color: transparent;
+    border: none;
+}
+.navbar-toggle .icon-bar,
+.navbar-toggle .icon-bar + .icon-bar {
+    background-color: #FFFFFF;
+}
+
+/* Colors */
+.nav li > a:hover, .nav .open > a:hover,
+.nav li > a:focus, .nav .open > a:focus,
+.nav li > a:active, .nav .open > a:active {
+    background-color: rgba(126, 169, 39, 0.3);
 }

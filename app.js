@@ -32,9 +32,7 @@ if ('development' == app.get('env')) {
 // initialize the server
 var apiServer = require('./server/server.js')(app);
 
-app.get('/', function (req, res) {
-    res.status(200).send('In building...');
-});
+app.get('/', routes.index);
 
 app.get('/diagram', routes.diagram);
 
