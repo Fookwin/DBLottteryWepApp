@@ -2,6 +2,11 @@ html, body {
     height: 100%;
 }
 
+body {
+    background-image: url("../imgs/background.png");
+    background-repeat: repeat;
+}
+
 .navbar {
     background-color: darkred;
     border: none;

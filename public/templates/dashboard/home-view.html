@@ -1,15 +1,28 @@
 <div ng-controller="ng-home-view-ctrl">
 
-    <div class="panel panel-primary">
+    <div class="panel" id="time-countdown">
+        <div class="panel-body">
+            <div class="row">
+                <label>第<span class="text-highlight">{{timeCountDown.issue}}</span>期</label>
+                <label class="text-highlight">开奖统计中</label>
+                <label> 距离本期开奖还有</label>
+            </div>
+            <div class="row">
+                <label class="time-panel">{{timeCountDown.restTime}}</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
         <div class="panel-heading">
-            <span class="glyphicon glyphicon-bell panel-title"> 最新开奖</span>
+            最新开奖
         </div>
         <div class="panel-body">
 
         </div>
         <div class="panel-footer">
             <a href="#">
-                <span class="glyphicon glyphicon-menu-hamburger pull-right"></span> 历史开奖
+                更多开奖 <span class="glyphicon glyphicon-chevron-right"></span>
             </a>
         </div>
     </div>
