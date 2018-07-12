@@ -14,7 +14,7 @@
 .panel .time-panel {
     padding: 5px 20px;
     border-radius: 3px;
-    background-color: rgba(139,0,0,0.6); 
+    background-color: rgb(190, 50, 0); 
     color: white;
     font-size: 25px;
 }
@@ -24,11 +24,11 @@
 }
 
 .panel .text-highlight {
-    color: darkred;
+    color: rgb(190, 50, 0);
 }
 
 .panel-heading {
-    background-color: darkred;
+    background-color: rgb(190, 50, 0);
     color: yellow;
     border-radius: 0px;
 }

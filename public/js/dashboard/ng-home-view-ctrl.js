@@ -65,7 +65,7 @@ angular.module('ng-dashboard-app').controller('ng-home-view-ctrl', function ($sc
     }
 
     function checkTime(i) {
-        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        if (i >= 0 && i < 10) {i = "0" + i};  // add zero in front of numbers < 10
         return i;
     }
 
