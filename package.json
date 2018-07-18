@@ -1,14 +1,7 @@
 {
-  "name": "dblottery-ssq-web-app",
+  "name": "dblottery-ssq-api-server",
   "version": "0.1.0",
-  "description": "DBWebApp",
-  "scripts": {
-    "start": "npm i & concurrently \"npm run server\" \"npm run client\"",
-    "server": "node app.js",
-    "client": "node start-client.js",
-    "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1",
-    "lint": "eslint ."
-  },
+  "description": "dblottery ssq api server",
   "author": {
     "name": "zhangze",
     "email": "pi3011314@126.com"
@@ -20,7 +13,6 @@
     "async": "^2.0.0-rc.5",
     "azure": "*",
     "azure-storage": "^1.0.1",
-    "concurrently": "^3.6.0",
     "ejs": "*",
     "express": "3.4.4",
     "hammer": "0.0.5",
