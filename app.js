@@ -23,6 +23,7 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 // development only
 if ('development' == app.get('env')) {
@@ -37,6 +38,10 @@ app.get('/', routes.index);
 app.get('/diagram', routes.diagram);
 
 app.get('/fookwin.management', routes.manage);
+
+app.get('/site', function (req, res) {
+    res.sendfile(path.join(__dirname, 'client/build', 'index.html'));
+  });
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
