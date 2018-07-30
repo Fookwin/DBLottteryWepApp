@@ -3,3 +3,4 @@ obj/
 node_modules/lodash/mean.js
 node_modules/
 .vscode/launch.json
+client/build/
