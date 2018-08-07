@@ -9,7 +9,7 @@
     "react-scripts": "1.1.4"
   },
   "engines": {
-    "node": ">=6.11"
+    "node": "6.11.2"
   },
   "scripts": {
     "start": "react-scripts start",
