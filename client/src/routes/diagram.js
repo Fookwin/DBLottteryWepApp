@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import '../styles/diagram.css'
+import '../styles/diagram.css';
 import DrawDiagram from './diagram-provider'
 import $ from 'jquery';
 
@@ -32,12 +32,12 @@ class Diagram extends Component {
         return (
             <div>
                 <div>
-                    <div style={{float:'left', width:60}} id="cornerBlock"></div>
-                    <div style={{float:'left', width:'calc(100% - 60px)', overflow:'hidden'}} id="headerBlock"></div>
+                    <div id="cornerBlock"></div>
+                    <div id="headerBlock"></div>
                 </div>
-                <div style={{clear:'left'}}>
-                    <div style={{float:'left', width:60, 'maxHeight':'calc(100vh - 60)px', overflow:'hidden'}} id="issuesBlock"></div>
-                    <div style={{float:'left', width:'calc(100% - 60px)', overflow:'auto', 'maxHeight':'calc(100vh - 60px)'}} id="contentBlock" onScroll={this.onContentScroll}></div>
+                <div id="contentContainer">
+                    <div id="issuesBlock"></div>
+                    <div id="contentBlock" onScroll={this.onContentScroll}></div>
                 </div>  
             </div>
         );

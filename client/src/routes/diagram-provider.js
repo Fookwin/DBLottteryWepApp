@@ -7,7 +7,6 @@ var cell_width = 20,
     grid_line_width = 0.3,
     content_grid_line_color = 'grey',
     head_grid_line_color = 'grey',
-    grid_separate_line_width = 1,
     header_back_color = 'lightyellow',
     header_text_color = 'black';
 
@@ -421,24 +420,6 @@ function drawBlueField(rows, scale_x, scale_y) {
         .attr("text-anchor", "middle")
         .style("fill", 'white')
         .text(function (d) { return formatNumberAs00(d); });
-}
-
-function buildRedFieldData(d) {
-    let data = new Array(33).fill(0);
-    data.forEach(function (val, index) {
-        data[index] = d.indexOf(index + 1) >= 0 ? 0 : Math.floor(Math.random() * 99) + 1;
-    });
-
-    return data;
-}
-
-function buildBlueFieldData(blue) {
-    let data = new Array(16).fill(0);
-    data.forEach(function (val, index) {
-        data[index] = blue === index + 1 ? 0 : Math.floor(Math.random() * 99) + 1;
-    });
-
-    return data;
 }
 
 function formatNumberAs00(num) {
