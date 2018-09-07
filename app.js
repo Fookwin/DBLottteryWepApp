@@ -11,7 +11,7 @@ var path = require('path');
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3001);
+app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -33,15 +33,15 @@ if ('development' == app.get('env')) {
 // initialize the server
 var apiServer = require('./server/server.js')(app);
 
-app.get('/', routes.index);
+//app.get('/', routes.index);
 
-app.get('/diagram', routes.diagram);
+//app.get('/diagram', routes.diagram);
 
-app.get('/fookwin.management', routes.manage);
+//app.get('/fookwin.management', routes.manage);
 
-app.get('/site', function (req, res) {
+app.get('/', function (req, res) {
     res.sendfile(path.join(__dirname, 'client/build', 'index.html'));
-  });
+});
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

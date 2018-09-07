@@ -7,7 +7,10 @@ const config = {
   server: 'ppuvjzarol.database.windows.net',
   options: {
     database: 'dbhistory',
-    encrypt: true
+    encrypt: true,
+    connectTimeout: 3000000,
+    requestTimeout: 3000000,
+    cancelTimeout: 3000000
   }
 };
 
