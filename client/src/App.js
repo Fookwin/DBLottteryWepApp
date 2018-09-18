@@ -1,11 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Diagram from "./routes/diagram";
+import Management from "./routes/management";
 import 'antd/dist/antd.css';
 import './App.css';
 import { Layout, Menu, Icon } from 'antd';
 
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 class App extends React.Component {
   state = {
@@ -21,25 +22,26 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-        <Layout>
-          <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-            <div className="logo" />
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-              <Menu.Item key="2">
-                <Icon type="user" /><span><Link to="/">Home</Link></span>
+        <Layout style={{ height: '100%' }}>
+          <Sider theme="light" trigger={null} collapsible collapsed={this.state.collapsed}>
+            <Icon className="trigger" type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle} />
+            <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
+              <Menu.Item key="home">
+                <Link to="/home"><Icon type="user" /><span>Home</span></Link>
               </Menu.Item>
-              <Menu.Item key="1">
-                <Icon type="user" /><span><Link to="/diagram">Diagram</Link></span>
+              <Menu.Item key="management">
+                <Link to="/management"><Icon type="user" /><span>Management</span></Link>
+              </Menu.Item>
+              <Menu.Item key="diagram">
+                <Link to="/diagram"><Icon type="user" /><span>Diagram</span></Link>
               </Menu.Item>
             </Menu>
           </Sider>
           <Layout>
-            <Header style={{ background: '#fff', padding: 0 }}>
-              <Icon className="trigger" type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle} />
-            </Header>
-            <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-              <Route exact path="/" component={Home} />
+            <Content style={{ margin: '2px', padding: 0, background: '#fff', height: '100%' }}>
+              <Route exact path="/home" component={Home} />
               <Route path="/diagram" component={Diagram} />
+              <Route path="/management" component={Management} />
             </Content>
           </Layout>
         </Layout>
