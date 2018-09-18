@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import '../styles/diagram.css';
+import './diagram.css';
 import DrawDiagram from './diagram-provider'
 import $ from 'jquery';
 

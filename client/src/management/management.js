@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import '../styles/management.css';
 import { Steps, Button, message } from 'antd';
+import './management.css';
 
 const Step = Steps.Step;
 
