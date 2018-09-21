@@ -1,18 +1,36 @@
-import React, { Component } from "react";
+import React, { Component, Components } from "react";
 import { Steps, Button, message } from 'antd';
 import './management.css';
+
+const Information = () => (
+  <div>
+    <h2>Information</h2>
+  </div>
+);
+
+const Comfirmation = () => (
+  <div>
+    <h2>Comfirmation</h2>
+  </div>
+);
+
+const Notification = () => (
+  <div>
+    <h2>Notification</h2>
+  </div>
+);
 
 const Step = Steps.Step;
 
 const steps = [{
   title: 'Information',
-  content: 'information-content',
+  component: <Information />
 }, {
   title: 'Confirmation',
-  content: 'confirmation-content',
+  component: <Comfirmation />
 }, {
   title: 'Notification',
-  content: 'notification-content',
+  component: <Notification />
 }];
 
 class Management extends Component {
@@ -41,23 +59,13 @@ class Management extends Component {
         <Steps current={current}>
           {steps.map(item => <Step key={item.title} title={item.title} />)}
         </Steps>
-        <div className="steps-content">{steps[current].content}</div>
+        <div className="steps-content">{steps[current].component}</div>
         <div className="steps-action">
           {
-            current < steps.length - 1
-            && <Button type="primary" onClick={() => this.next()}>Next</Button>
+            current > 0 && <Button onClick={() => this.prev()}>Back to {steps[current - 1].title}</Button>
           }
           {
-            current === steps.length - 1
-            && <Button type="primary" onClick={() => message.success('Processing complete!')}>Done</Button>
-          }
-          {
-            current > 0
-            && (
-              <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-                Previous
-                </Button>
-            )
+            current < steps.length - 1 && <Button type="primary" style={{ marginLeft: 10 }} onClick={() => this.next()}>Go to {steps[current + 1].title}</Button>
           }
         </div>
       </div>
