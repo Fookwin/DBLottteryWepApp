@@ -1,6 +1,7 @@
 import React, { Component, Components } from "react";
 import { Steps, Button, message } from 'antd';
 import './management.css';
+import Notification from './notification/notification';
 
 const Information = () => (
   <div>
@@ -11,12 +12,6 @@ const Information = () => (
 const Comfirmation = () => (
   <div>
     <h2>Comfirmation</h2>
-  </div>
-);
-
-const Notification = () => (
-  <div>
-    <h2>Notification</h2>
   </div>
 );
 
