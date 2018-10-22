@@ -4,44 +4,81 @@ import Diagram from "../diagram/diagram";
 import Management from "../management/management";
 import 'antd/dist/antd.css';
 import './App.css';
-import { Layout, Menu, Icon } from 'antd';
+import { Affix, Drawer, Button, Layout, Menu, Icon } from 'antd';
 
-const { Sider, Content } = Layout;
+const { Content } = Layout;
+
+const routers = [{
+  key: "home",
+  name: "Home",
+  path: "/home",
+  icon: "user",
+  component: Home
+}, {
+  key: "management",
+  name: "Management",
+  path: "/management",
+  icon: "user",
+  component: Management
+}, {
+  key: "diagram",
+  name: "Diagram",
+  path: "/diagram",
+  icon: "user",
+  component: Diagram
+},
+];
 
 class App extends React.Component {
-  state = {
-    collapsed: false,
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false,
+    };
+  }
+
+  showDrawer = () => {
+    this.setState({
+      visible: !this.state.visible,
+    });
   };
 
-  toggle = () => {
+  onClose = () => {
     this.setState({
-      collapsed: !this.state.collapsed,
+      visible: false,
     });
+  };
+
+  getDefaultMenuKey = () => {
+    let selectedItem = routers.find((item) => item.path === window.location.pathname);
+
+    return selectedItem ? selectedItem.key : "home";
   }
 
   render() {
     return (
       <Router>
-        <Layout style={{ height: '100%' }}>
-          <Sider theme="light" trigger={null} collapsible collapsed={this.state.collapsed}>
-            <Icon className="trigger" type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle} />
-            <Menu theme="light" mode="inline" defaultSelectedKeys={['home']}>
-              <Menu.Item key="home">
-                <Link to="/home"><Icon type="user" /><span>Home</span></Link>
-              </Menu.Item>
-              <Menu.Item key="management">
-                <Link to="/management"><Icon type="user" /><span>Management</span></Link>
-              </Menu.Item>
-              <Menu.Item key="diagram">
-                <Link to="/diagram"><Icon type="user" /><span>Diagram</span></Link>
-              </Menu.Item>
+        <Layout style={{ height: '100%' }} className="scrollable-container" ref={(node) => { this.container = node; }}>
+          <Drawer title="福盈双色球" placement="left" closable={false} onClose={this.onClose} visible={this.state.visible}>
+            <Menu theme="light" mode="inline" defaultSelectedKeys={[this.getDefaultMenuKey()]} onClick={this.onClose}>
+              {
+                routers.map((item) =>
+                  <Menu.Item key={item.key}>
+                    <Link to={item.path}><Icon type={item.icon} /><span>{item.name}</span></Link>
+                  </Menu.Item>
+                )
+              }
             </Menu>
-          </Sider>
+          </Drawer>
           <Layout>
             <Content style={{ margin: '2px', padding: 0, background: '#fff', height: '100%' }}>
-              <Route exact path="/home" component={Home} />
-              <Route path="/diagram" component={Diagram} />
-              <Route path="/management" component={Management} />
+              {
+                routers.map((item) => <Route key={item.key} path={item.path} component={item.component} />)
+              }
+              <Affix style={{ position: 'absolute', left: 'calc(100% - 60px)', top: 'calc(100% - 40px)' }}>
+                <Button onClick={this.showDrawer}><Icon type={!this.state.visible ? 'menu-unfold' : 'menu-fold'} /></Button>
+              </Affix>
             </Content>
           </Layout>
         </Layout>

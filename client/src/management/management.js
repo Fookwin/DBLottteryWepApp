@@ -2,12 +2,7 @@ import React, { Component, Components } from "react";
 import { Steps, Button, message } from 'antd';
 import './management.css';
 import Notification from './notification/notification';
-
-const Information = () => (
-  <div>
-    <h2>Information</h2>
-  </div>
-);
+import Modification from './modification/modification';
 
 const Comfirmation = () => (
   <div>
@@ -18,8 +13,8 @@ const Comfirmation = () => (
 const Step = Steps.Step;
 
 const steps = [{
-  title: 'Information',
-  component: <Information />
+  title: 'Modification',
+  component: <Modification />
 }, {
   title: 'Confirmation',
   component: <Comfirmation />
