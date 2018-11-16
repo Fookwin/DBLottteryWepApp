@@ -15,9 +15,9 @@
 
 #issuesBlock {
     float: left;
-     width: 60px;
-     max-height: calc(100vh - 60px);
-     overflow: hidden;
+    width: 60px;
+    max-height: calc(100vh - 60px);
+    overflow: hidden;
 }
 
 #contentBlock {

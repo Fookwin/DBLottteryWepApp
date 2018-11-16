@@ -47,7 +47,7 @@ class Notification extends Component {
         });
     }
 
-    handleProvinceChange = (e) => {
+    handleTemplateChange = (e) => {
         let temp = this.state.templates.find(temp => temp.Key === e);
         if (temp) {
             this.props.form.setFieldsValue({
@@ -75,7 +75,7 @@ class Notification extends Component {
             <Form style={{ padding: 10 }} onSubmit={this.handleSubmit}>
 
                 <FormItem {...formItemLayout} label="Template">
-                    <Select onChange={this.handleProvinceChange} placeholder={ this.state.templates_status } disabled={this.state.templates_disabled}>
+                    <Select onChange={this.handleTemplateChange} placeholder={ this.state.templates_status } disabled={this.state.templates_disabled}>
                         {
                             this.state.templates.map(temp => <Option key={temp.Key} value={temp.Key}>{temp.Key}</Option>)
                         }

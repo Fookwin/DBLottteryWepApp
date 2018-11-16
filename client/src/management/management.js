@@ -46,9 +46,6 @@ class Management extends Component {
     const { current } = this.state;
     return (
       <div>
-        <Steps current={current}>
-          {steps.map(item => <Step key={item.title} title={item.title} />)}
-        </Steps>
         <div className="steps-content">{steps[current].component}</div>
         <div className="steps-action">
           {
