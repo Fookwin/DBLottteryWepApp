@@ -1,5 +1,5 @@
-import React, { Component, Components } from "react";
-import { Steps, Button, message } from 'antd';
+import React, { Component } from "react";
+import { Button } from 'antd';
 import './management.css';
 import Notification from './notification/notification';
 import Modification from './modification/modification';
@@ -9,8 +9,6 @@ const Comfirmation = () => (
     <h2>Comfirmation</h2>
   </div>
 );
-
-const Step = Steps.Step;
 
 const steps = [{
   title: 'Modification',

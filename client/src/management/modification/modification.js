@@ -1,89 +1,30 @@
 import React, { Component } from "react";
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, DatePicker, TimePicker, InputNumber } from 'antd';
+import { Form, Input, Icon, Row, Col, Button, DatePicker, TimePicker } from 'antd';
 import moment from 'moment';
+import { isArray } from "util";
 import AipHelper from '../management-provider'
-import { FormComponentProps } from 'antd/lib/form';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
-const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
-const { MonthPicker } = DatePicker;
 const time_format = 'HH:mm';
-
-
-const testData = {
-    "dataVersion": {
-        "attributeDataVersion": 1,
-        "attributeTemplateVersion": 2,
-        "helpContentVersion": 1,
-        "historyDataVersion": 8,
-        "latestIssue": 2018124,
-        "latestLotteryVersion": 3,
-        "matrixDataVersion": 2,
-        "releaseDataVersion": 1
-    },
-    "lottery": {
-        "bet": 378069006,
-        "bonus": [
-            4,
-            9291791,
-            127,
-            168968,
-            1887,
-            3000,
-            89987,
-            200,
-            1604786,
-            10,
-            11942343,
-            5
-        ],
-        "date": "2018-10-23 00:00:00",
-        "details": "出球顺序：091322191425+02。本期一等奖中奖地：山东1注湖南1注广东1注青海1注。",
-        "issue": 2018124,
-        "pool": 894677451,
-        "scheme": "09 13 14 19 22 25+02"
-    },
-    "next": {
-        "cutOffTime": "2018-10-25 20:00:00",
-        "date": "2018-10-25 21:15:00",
-        "issue": 2018125
-    },
-    "recommendation": {
-        "blueExcludes": [
-            3,
-            4,
-            7
-        ],
-        "blueIncludes": [
-            9
-        ],
-        "redExcludes": [
-            3,
-            7,
-            9,
-            15,
-            30,
-            31
-        ],
-        "redIncludes": [
-            12,
-            16
-        ]
-    }
-};
 
 const bonous = [1, 2, 3, 4, 5, 6];
 const versions = [
-    "attributeDataVersion",
-    "attributeTemplateVersion",
-    "helpContentVersion",
-    "historyDataVersion",
-    "latestIssue",
-    "latestLotteryVersion",
-    "matrixDataVersion",
-    "releaseDataVersion"
+    ["latestIssue", "最新期号"],
+    ["latestLotteryVersion", "最新开奖"],
+    ["releaseDataVersion", "发布数据"],
+    ["historyDataVersion", "历史数据"],
+    ["attributeDataVersion", "属性数据"],
+    ["attributeTemplateVersion", "属性模板"],
+    ["helpContentVersion", "帮助文档"],
+    ["matrixDataVersion", "旋转矩阵"]    
+];
+
+const recommandationCategories = [
+    ["blueExcludes", "蓝杀"],
+    ["blueIncludes", "蓝胆"],
+    ["redExcludes", "红杀"],
+    ["redIncludes", "红胆"]
 ];
 
 class LottoDetail extends React.Component {
@@ -127,7 +68,7 @@ class LottoDetail extends React.Component {
     }
 
     handleNumberChange = (vname, value) => {
-        let number = parseInt(value);
+        let number = parseInt(value, 10);
         if (isNaN(number)) {
             return;
         }
@@ -143,7 +84,7 @@ class LottoDetail extends React.Component {
     }
 
     handleBonuChange = (index, value) => {
-        let number = parseInt(value);
+        let number = parseInt(value, 10);
         if (isNaN(number)) {
             return;
         }
@@ -212,7 +153,7 @@ class LottoDetail extends React.Component {
                 <Row gutter={8}>
                     <Col span={20}>
                         <Input addonBefore="奖号" placeholder="00 00 00 00 00 00+00" defaultValue={this.state.scheme}
-                            onChange={(e) => this.handleSchemeChange("scheme", e.target.value)}
+                            onChange={(e) => this.handleStringChange("scheme", e.target.value)}
                         />
                     </Col>
                     <Col span={4}>
@@ -220,7 +161,7 @@ class LottoDetail extends React.Component {
                     </Col>
                 </Row>
                 <Input type="number" addonBefore="奖池" placeholder="奖池" defaultValue={this.state.pool} onChange={(e) => this.handleNumberChange("pool", e.target.value)} />
-                <Input type="number" addonBefore="销售" placeholder="销售" defaultValue={this.state.bet} onChange={(e) => this.handleNumberChange("bat", e.target.value)} />
+                <Input type="number" addonBefore="销售" placeholder="销售" defaultValue={this.state.bet} onChange={(e) => this.handleNumberChange("bet", e.target.value)} />
                 奖金分布：
                 {
                     bonous.map((index) =>
@@ -274,7 +215,7 @@ class LottoVersions extends React.Component {
     }
 
     handleNumberChange = (vname, value) => {
-        let number = parseInt(value);
+        let number = parseInt(value, 10);
         if (isNaN(number)) {
             return;
         }
@@ -302,10 +243,201 @@ class LottoVersions extends React.Component {
         return (
             <div>
                 {
-                    versions.map((version_name) =>
-                        <Input type="number" key={version_name}
-                            addonBefore={version_name} defaultValue={this.state[version_name]}
-                            onChange={(e) => this.handleNumberChange(version_name, e.target.value)}
+                    versions.map((version) =>
+                        <Input type="number" key={version[0]}
+                            addonBefore={version[1]} defaultValue={this.state[version[0]]}
+                            onChange={(e) => this.handleNumberChange(version[0], e.target.value)}
+                        />
+                    )
+                }
+            </div>
+        );
+    }
+}
+
+class LottoNextInfo extends React.Component {
+    static getDerivedStateFromProps(nextProps) {
+        // Should be a controlled component.
+        if ('value' in nextProps) {
+            let newProps = {
+                ...(nextProps.value || {}),
+            };
+            return newProps;
+        }
+        return null;
+    }
+
+    constructor(props) {
+        super(props);
+
+        const value = props.value || {};
+        this.state = {
+            "cutOffTime": value.cutOffTime,
+            "date": value.date,
+            "issue": value.issue
+        };
+    }
+
+    handleStringChange = (vname, strVal) => {
+
+        let changedValue = {};
+        changedValue[vname] = strVal;
+
+        if (!('value' in this.props)) {
+            this.setState(changedValue);
+        }
+
+        this.triggerChange(changedValue);
+    }
+
+    handleTimeChange = (vname, time) => {
+
+        if (!time || !time.isValid()) {
+            return;
+        }
+
+        let preDate = moment(this.state[vname]);
+        preDate.set({
+            'hour': time.get('hour'),
+            'minute': time.get('minute')
+        });
+
+        let changedValue = {};
+        changedValue[vname] = preDate._d;
+
+        if (!('value' in this.props)) {
+            this.setState(changedValue);
+        }
+
+        this.triggerChange(changedValue);
+    }
+
+    handleDateChange = (date) => {
+
+        if (!date || !date.isValid()) {
+            return;
+        }
+
+        // need to change both date and cutoff
+        let newDate = moment(this.state.date).set({
+            'year': date.year(),
+            'month': date.month(),
+            'date': date.date()
+        });
+
+        let newCutoff = moment(this.state.cutOffTime).set({
+            'year': date.year(),
+            'month': date.month(),
+            'date': date.date()
+        });
+
+        let changedValue = {
+            'date': newDate._d,
+            'cutOffTime': newCutoff._d
+        };
+
+        if (!('value' in this.props)) {
+            this.setState(changedValue);
+        }
+
+        this.triggerChange(changedValue);
+    }
+
+    triggerChange = (changedValue) => {
+        // Should provide an event to pass value to Form.
+        const onChange = this.props.onChange;
+        if (onChange) {
+            onChange(Object.assign({}, this.state, changedValue));
+        }
+    }
+
+    render() {
+
+        return (
+            <div>
+                <Row gutter={8}>
+                    <Col span={12}>
+                        <Input type="number" placeholder="期号" addonBefore="期号" defaultValue={this.state.issue} onChange={(e) => this.handleStringChange("issue", e.target.value)} />
+                    </Col>
+                    <Col span={12}>
+                        <DatePicker placeholder="开奖时间" defaultValue={moment(this.state.date)} onChange={(e) => this.handleDateChange(e)} />
+                    </Col>
+                </Row>
+                <Row gutter={8}>
+                    <Col span={12}>
+                        截止:<TimePicker defaultValue={moment(this.state.cutOffTime)} format={time_format} onChange={(e) => this.handleTimeChange("cutOffTime", e)} />
+                    </Col>
+                    <Col span={12}>
+                        开奖:<TimePicker defaultValue={moment(this.state.date)} format={time_format} onChange={(e) => this.handleTimeChange("date", e)} />
+                    </Col>
+                </Row>
+            </div >
+        );
+    }
+}
+
+class LottoRecommendation extends React.Component {
+    static getDerivedStateFromProps(nextProps) {
+        // Should be a controlled component.
+        if ('value' in nextProps) {
+            let newProps = {
+                ...(nextProps.value || {}),
+            };
+            return newProps;
+        }
+        return null;
+    }
+
+    constructor(props) {
+        super(props);
+
+        const value = props.value || {};
+        this.state = {
+            "blueExcludes": value.blueExcludes || [],
+            "blueIncludes": value.blueIncludes || [],
+            "redExcludes": value.redExcludes || [],
+            "redIncludes": value.redIncludes || []
+        };
+    }
+
+    handleNubmerArrayChange = (vname, strVal) => {
+
+        try {
+            let arrayVal = JSON.parse("[" + strVal + "]");
+            if (!isArray(arrayVal))
+                return;
+
+            let changedValue = {};
+            changedValue[vname] = arrayVal;
+
+            if (!('value' in this.props)) {
+                this.setState(changedValue);
+            }
+
+            this.triggerChange(changedValue);
+        }
+        catch (ex) {
+
+        }
+    }
+
+    triggerChange = (changedValue) => {
+        // Should provide an event to pass value to Form.
+        const onChange = this.props.onChange;
+        if (onChange) {
+            onChange(Object.assign({}, this.state, changedValue));
+        }
+    }
+
+    render() {
+
+        return (
+            <div>
+                {
+                    recommandationCategories.map((cat) =>
+                        <Input key={cat[0]}
+                            addonBefore={cat[1]} defaultValue={this.state[cat[0]]}
+                            onChange={(e) => this.handleNubmerArrayChange(cat[0], e.target.value)}
                         />
                     )
                 }
@@ -319,11 +451,17 @@ class Modification extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
+        this.state = {};
 
-        };
+        this.queryLast();
+    }
 
-        //this.queryTemplates();
+    queryLast = (e) => {
+        AipHelper.getLatestIssueInfo(info => {
+            if (info) {
+                this.setState(info);
+            }
+        });
     }
 
     handleSubmit = (e) => {
@@ -360,89 +498,37 @@ class Modification extends Component {
                 <FormItem {...formItemLayout} label="当期">
                     {
                         getFieldDecorator("lottery", {
+                            initialValue: this.state.lottery,
                             rules: [{ required: true, message: 'Please input the lottery!' }]
                         })(
                             <LottoDetail />
                         )
                     }
                 </FormItem>
+                <FormItem {...formItemLayout} label="推荐">
+                    {
+                        getFieldDecorator("recommendation", {
+                            initialValue: this.state.recommendation,
+                            rules: [{ required: true, message: 'Please input the recommendation!' }]
+                        })(
+                            <LottoRecommendation />
+                        )
+                    }
+                </FormItem>
                 <FormItem {...formItemLayout} label="下期">
-                    <Row gutter={8}>
-                        <Col span={12}>
-                            {
-                                getFieldDecorator('next_issue', {
-                                    rules: [{ required: true, message: 'Please input the issue!' }]
-                                })(
-                                    <Input addonBefore="期号" placeholder="0" />
-                                )
-                            }
-                        </Col>
-                        <Col span={12}>
-                            {
-                                getFieldDecorator('next_date', {
-                                    rules: [{ type: 'object', required: true, message: 'Please input the date!' }]
-                                })(
-                                    <DatePicker placeholder="0000/00/00" />
-                                )
-                            }
-                        </Col>
-                    </Row>
-                    <Row gutter={8}>
-                        <Col span={12}>
-                            {
-                                getFieldDecorator('next_cutoff_time', {
-                                    rules: [{ required: true, message: 'Please input the cutoff time!' }]
-                                })(
-                                    <div>
-                                        截止:<TimePicker defaultValue={moment('20:00', time_format)} format={time_format} />
-                                    </div>
-                                )
-                            }
-                        </Col>
-                        <Col span={12}>
-                            {
-                                getFieldDecorator('next_release_time', {
-                                    rules: [{ required: true, message: 'Please input the release time!' }]
-                                })(
-                                    <div>
-                                        开奖:<TimePicker defaultValue={moment('21:15', time_format)} format={time_format} />
-                                    </div>
-                                )
-                            }
-                        </Col>
-                    </Row>
                     {
-                        getFieldDecorator('next_recommended_reds', {
-                            rules: [{ required: true, message: 'Please input 红胆!' }]
+                        getFieldDecorator("next", {
+                            initialValue: this.state.next,
+                            rules: [{ required: true, message: 'Please input the next release info!' }]
                         })(
-                            <Input addonBefore="红胆" placeholder="0" />
-                        )
-                    }
-                    {
-                        getFieldDecorator('next_killed_reds', {
-                            rules: [{ required: true, message: 'Please input 红杀!' }]
-                        })(
-                            <Input addonBefore="红杀" placeholder="0" />
-                        )
-                    }
-                    {
-                        getFieldDecorator('next_recommended_blues', {
-                            rules: [{ required: true, message: 'Please input 蓝胆!' }]
-                        })(
-                            <Input addonBefore="蓝胆" placeholder="0" />
-                        )
-                    }
-                    {
-                        getFieldDecorator('next_killed_blues', {
-                            rules: [{ required: true, message: 'Please input 蓝杀!' }]
-                        })(
-                            <Input addonBefore="蓝杀" placeholder="0" />
+                            <LottoNextInfo />
                         )
                     }
                 </FormItem>
                 <FormItem {...formItemLayout} label="版本">
                     {
                         getFieldDecorator("dataVersion", {
+                            initialValue: this.state.dataVersion,
                             rules: [{ required: true, message: 'Please input the version!' }]
                         })(
                             <LottoVersions />

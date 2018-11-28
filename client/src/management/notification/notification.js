@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Form, Input, Select, Button } from 'antd';
 import AipHelper from '../management-provider'
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
 
 class Notification extends Component {
 

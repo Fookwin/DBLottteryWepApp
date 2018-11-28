@@ -2,24 +2,17 @@
 import $ from 'jquery';
 import axios from 'axios';
 
-function getLatestIssue(cb) {
-  return $.getJSON(`/last`, {
-    accept: "application/json"
-  })
-    //.then(checkStatus)
-    //.then(parseJSON)
-    .then(cb);
-}
+function getLatestIssueInfo(cb) {
 
-function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  }
-  const error = new Error(`HTTP Error ${response.statusText}`);
-  error.status = response.statusText;
-  error.response = response;
-  console.log(error); // eslint-disable-line no-console
-  throw error;
+  axios.get('/last')
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
 }
 
 function getNotificationTemplates(cb) {
@@ -43,5 +36,5 @@ function notify(content, cb) {
   });
 }
 
-const ManagementAPIHelper = { getLatestIssue, getNotificationTemplates, notify };
+const ManagementAPIHelper = { getLatestIssueInfo, getNotificationTemplates, notify };
 export default ManagementAPIHelper;

@@ -8,6 +8,12 @@ import { Affix, Drawer, Button, Layout, Menu, Icon } from 'antd';
 
 const { Content } = Layout;
 
+const Home = () => (
+  <div>
+    <h2>Home</h2>
+  </div>
+);
+
 const routers = [{
   key: "home",
   name: "Home",
@@ -86,11 +92,5 @@ class App extends React.Component {
     );
   }
 }
-
-const Home = () => (
-  <div>
-    <h2>Home</h2>
-  </div>
-);
 
 export default App;
