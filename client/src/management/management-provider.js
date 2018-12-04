@@ -4,7 +4,33 @@ import axios from 'axios';
 
 function getLatestIssueInfo(cb) {
 
-  axios.get('/last')
+  axios.get('/lotto/last')
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
+function syncLottoDetailFromWeb(issue, cb) {
+
+  axios.get('/lotto/offical/?issue=' + issue)
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
+function createNewLottoRelease(nextLottoData, cb) {
+
+  axios.post('/lotto/new', nextLottoData)
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -36,5 +62,5 @@ function notify(content, cb) {
   });
 }
 
-const ManagementAPIHelper = { getLatestIssueInfo, getNotificationTemplates, notify };
+const ManagementAPIHelper = { getLatestIssueInfo, syncLottoDetailFromWeb, createNewLottoRelease, getNotificationTemplates, notify };
 export default ManagementAPIHelper;

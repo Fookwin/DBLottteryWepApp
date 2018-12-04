@@ -28,9 +28,9 @@ module.exports = function(app) {
     
     /** HTTP GET */
     app.get('/users', _userMgr.getUsers.bind(_userMgr));
-    app.get('/last', _releaseMgr.getLastReleaseData.bind(_releaseMgr));
-    app.get('/offical/:issue?', _releaseMgr.getOfficalLotteryData.bind(_releaseMgr));
-    app.post('/new', _releaseMgr.buildNewReleaseData.bind(_releaseMgr));
+    app.get('/lotto/last', _releaseMgr.getLastReleaseData.bind(_releaseMgr));
+    app.get('/lotto/offical/:issue?', _releaseMgr.getOfficalLotteryData.bind(_releaseMgr));
+    app.post('/lotto/new', _releaseMgr.buildNewReleaseData.bind(_releaseMgr));
     app.post('/notify', _releaseMgr.postNotification.bind(_releaseMgr));
     app.post('/precommit', _releaseMgr.preCommitRelease.bind(_releaseMgr));
     app.get('/blob', _releaseMgr.getBlobText.bind(_releaseMgr));

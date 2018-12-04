@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Icon, Row, Col, Button, DatePicker, TimePicker } from 'antd';
+import { Form, Input, Icon, Row, Col, Button, DatePicker, TimePicker, Modal, Spin } from 'antd';
 import moment from 'moment';
 import { isArray } from "util";
 import AipHelper from '../management-provider'
@@ -7,6 +7,7 @@ import AipHelper from '../management-provider'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const time_format = 'HH:mm';
+const ButtonGroup = Button.Group;
 
 const bonous = [1, 2, 3, 4, 5, 6];
 const versions = [
@@ -17,7 +18,7 @@ const versions = [
     ["attributeDataVersion", "属性数据"],
     ["attributeTemplateVersion", "属性模板"],
     ["helpContentVersion", "帮助文档"],
-    ["matrixDataVersion", "旋转矩阵"]    
+    ["matrixDataVersion", "旋转矩阵"]
 ];
 
 const recommandationCategories = [
@@ -144,15 +145,15 @@ class LottoDetail extends React.Component {
             <div>
                 <Row gutter={8}>
                     <Col span={12}>
-                        <Input type="number" placeholder="期号" addonBefore="期号" defaultValue={this.state.issue} onChange={(e) => this.handleStringChange("issue", e.target.value)} />
+                        <Input type="number" placeholder="期号" addonBefore="期号" value={this.state.issue} onChange={(e) => this.handleStringChange("issue", e.target.value)} />
                     </Col>
                     <Col span={12}>
-                        <DatePicker placeholder="开奖时间" defaultValue={moment(this.state.date)} onChange={(e) => this.handleDateChange("date", e)} />
+                        <DatePicker placeholder="开奖时间" value={moment(this.state.date)} onChange={(e) => this.handleDateChange("date", e)} />
                     </Col>
                 </Row>
                 <Row gutter={8}>
                     <Col span={20}>
-                        <Input addonBefore="奖号" placeholder="00 00 00 00 00 00+00" defaultValue={this.state.scheme}
+                        <Input addonBefore="奖号" placeholder="00 00 00 00 00 00+00" value={this.state.scheme}
                             onChange={(e) => this.handleStringChange("scheme", e.target.value)}
                         />
                     </Col>
@@ -160,19 +161,19 @@ class LottoDetail extends React.Component {
                         <Button><Icon type="check" /></Button>
                     </Col>
                 </Row>
-                <Input type="number" addonBefore="奖池" placeholder="奖池" defaultValue={this.state.pool} onChange={(e) => this.handleNumberChange("pool", e.target.value)} />
-                <Input type="number" addonBefore="销售" placeholder="销售" defaultValue={this.state.bet} onChange={(e) => this.handleNumberChange("bet", e.target.value)} />
+                <Input type="number" addonBefore="奖池" placeholder="奖池" value={this.state.pool} onChange={(e) => this.handleNumberChange("pool", e.target.value)} />
+                <Input type="number" addonBefore="销售" placeholder="销售" value={this.state.bet} onChange={(e) => this.handleNumberChange("bet", e.target.value)} />
                 奖金分布：
                 {
                     bonous.map((index) =>
                         <Row key={"row" + index} gutter={8}>
                             <Col span={12}>
-                                <Input type="number" defaultValue={this.state.bonus[(index - 1) * 2]} addonBefore={"数量" + index}
+                                <Input type="number" value={this.state.bonus[(index - 1) * 2]} addonBefore={"数量" + index}
                                     onChange={(e) => this.handleBonuChange((index - 1) * 2, e.target.value)}
                                 />
                             </Col>
                             <Col span={12}>
-                                <Input type="number" defaultValue={this.state.bonus[(index - 1) * 2 + 1]} addonBefore={"奖金" + index}
+                                <Input type="number" value={this.state.bonus[(index - 1) * 2 + 1]} addonBefore={"奖金" + index}
                                     onChange={(e) => this.handleBonuChange((index - 1) * 2 + 1, e.target.value)}
                                 />
                             </Col>
@@ -180,7 +181,7 @@ class LottoDetail extends React.Component {
                     )
                 }
                 开奖详情:
-                <TextArea placeholder="详情" defaultValue={this.state.details} onChange={(e) => this.handleStringChange("details", e.target.value)} />
+                <TextArea placeholder="详情" value={this.state.details} onChange={(e) => this.handleStringChange("details", e.target.value)} />
             </div>
         );
     }
@@ -245,7 +246,7 @@ class LottoVersions extends React.Component {
                 {
                     versions.map((version) =>
                         <Input type="number" key={version[0]}
-                            addonBefore={version[1]} defaultValue={this.state[version[0]]}
+                            addonBefore={version[1]} value={this.state[version[0]]}
                             onChange={(e) => this.handleNumberChange(version[0], e.target.value)}
                         />
                     )
@@ -357,18 +358,18 @@ class LottoNextInfo extends React.Component {
             <div>
                 <Row gutter={8}>
                     <Col span={12}>
-                        <Input type="number" placeholder="期号" addonBefore="期号" defaultValue={this.state.issue} onChange={(e) => this.handleStringChange("issue", e.target.value)} />
+                        <Input type="number" placeholder="期号" addonBefore="期号" value={this.state.issue} onChange={(e) => this.handleStringChange("issue", e.target.value)} />
                     </Col>
                     <Col span={12}>
-                        <DatePicker placeholder="开奖时间" defaultValue={moment(this.state.date)} onChange={(e) => this.handleDateChange(e)} />
+                        <DatePicker placeholder="开奖时间" value={moment(this.state.date)} onChange={(e) => this.handleDateChange(e)} />
                     </Col>
                 </Row>
                 <Row gutter={8}>
                     <Col span={12}>
-                        截止:<TimePicker defaultValue={moment(this.state.cutOffTime)} format={time_format} onChange={(e) => this.handleTimeChange("cutOffTime", e)} />
+                        截止:<TimePicker value={moment(this.state.cutOffTime)} format={time_format} onChange={(e) => this.handleTimeChange("cutOffTime", e)} />
                     </Col>
                     <Col span={12}>
-                        开奖:<TimePicker defaultValue={moment(this.state.date)} format={time_format} onChange={(e) => this.handleTimeChange("date", e)} />
+                        开奖:<TimePicker value={moment(this.state.date)} format={time_format} onChange={(e) => this.handleTimeChange("date", e)} />
                     </Col>
                 </Row>
             </div >
@@ -436,7 +437,7 @@ class LottoRecommendation extends React.Component {
                 {
                     recommandationCategories.map((cat) =>
                         <Input key={cat[0]}
-                            addonBefore={cat[1]} defaultValue={this.state[cat[0]]}
+                            addonBefore={cat[1]} value={this.state[cat[0]]}
                             onChange={(e) => this.handleNubmerArrayChange(cat[0], e.target.value)}
                         />
                     )
@@ -451,17 +452,15 @@ class Modification extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            lotterReleaseInfo: {},
+            showConfirmDialog: false,
+            loading: true,
+            lottoDataLoaded: false
+        };
 
-        this.queryLast();
-    }
-
-    queryLast = (e) => {
-        AipHelper.getLatestIssueInfo(info => {
-            if (info) {
-                this.setState(info);
-            }
-        });
+        // query new release
+        this.onResync();
     }
 
     handleSubmit = (e) => {
@@ -470,11 +469,69 @@ class Modification extends Component {
             if (!err) {
                 console.log('Received values of form: ', values);
 
-                // AipHelper.notify(values, (res) => {
-                //     console.log(res);
-                //     alert(res);
-                // })
+                this.setState({ showConfirmDialog: true });
             }
+        });
+    }
+
+    handleConfirmSubmit = () => {
+        this.setState({ showConfirmDialog: false });
+        // AipHelper.notify(values, (res) => {
+        //     console.log(res);
+        //     alert(res);
+        // })
+    }
+
+    handleCancelSubmit = () => {
+        this.setState({ showConfirmDialog: false });
+    }
+
+    _refrshFields = (data) => {
+        this.props.form.setFieldsValue({
+            lottery: data.lottery,
+            next: data.next,
+            recommendation: data.recommendation,
+            dataVersion: data.dataVersion
+        });
+    }
+
+    onResync = (e) => {
+        this.setState({ loading: true });
+        AipHelper.getLatestIssueInfo(info => {
+            if (info) {
+                this.setState({ lotterReleaseInfo: info, lottoDataLoaded: true });
+                this._refrshFields(info);
+            }
+            this.setState({ loading: false });
+        });
+    }
+
+    onSyncToWeb = (e) => {
+        if (!this.state.lotterReleaseInfo || !this.state.lotterReleaseInfo.lottery.issue)
+            return;
+
+        this.setState({ loading: true });
+        AipHelper.syncLottoDetailFromWeb(this.state.lotterReleaseInfo.lottery.issue, info => {
+            if (info) {
+                this.setState({ lotterReleaseInfo: info });
+                this._refrshFields(info);
+            }
+            this.setState({ loading: false });
+        });
+    }
+
+    onCreateNewRelease = (e) => {
+        
+        this.setState({ loading: true });
+        AipHelper.createNewLottoRelease({
+            issue: this.state.lotterReleaseInfo.next.issue,
+            date: this.state.lotterReleaseInfo.next.date
+        }, (info) => {
+            if (info) {
+                this.setState({ lotterReleaseInfo: info, lottoDataLoaded: true });
+                this._refrshFields(info);
+            }
+            this.setState({ loading: false });
         });
     }
 
@@ -493,51 +550,66 @@ class Modification extends Component {
         };
 
         return (
-            <Form style={{ padding: 10 }} onSubmit={this.handleSubmit}>
-
-                <FormItem {...formItemLayout} label="当期">
-                    {
-                        getFieldDecorator("lottery", {
-                            initialValue: this.state.lottery,
-                            rules: [{ required: true, message: 'Please input the lottery!' }]
-                        })(
-                            <LottoDetail />
-                        )
-                    }
-                </FormItem>
-                <FormItem {...formItemLayout} label="推荐">
-                    {
-                        getFieldDecorator("recommendation", {
-                            initialValue: this.state.recommendation,
-                            rules: [{ required: true, message: 'Please input the recommendation!' }]
-                        })(
-                            <LottoRecommendation />
-                        )
-                    }
-                </FormItem>
-                <FormItem {...formItemLayout} label="下期">
-                    {
-                        getFieldDecorator("next", {
-                            initialValue: this.state.next,
-                            rules: [{ required: true, message: 'Please input the next release info!' }]
-                        })(
-                            <LottoNextInfo />
-                        )
-                    }
-                </FormItem>
-                <FormItem {...formItemLayout} label="版本">
-                    {
-                        getFieldDecorator("dataVersion", {
-                            initialValue: this.state.dataVersion,
-                            rules: [{ required: true, message: 'Please input the version!' }]
-                        })(
-                            <LottoVersions />
-                        )
-                    }
-                </FormItem>
-                <Button type="primary" htmlType="submit">Notify</Button>
-
-            </Form>
+            <Spin spinning={this.state.loading} size="large">
+                <Form style={{ padding: 10 }} onSubmit={this.handleSubmit}>
+                    <ButtonGroup>
+                        <Button icon="sync" onClick={this.onResync}></Button>
+                        <Button icon="form" disabled={!this.state.lottoDataLoaded} onClick={this.onSyncToWeb}></Button>
+                        <Button icon="plus" onClick={this.onCreateNewRelease}></Button>
+                    </ButtonGroup>
+                    <FormItem {...formItemLayout} label="当期">
+                        {
+                            getFieldDecorator("lottery", {
+                                initialValue: this.state.lotterReleaseInfo.lottery,
+                                rules: [{ required: true, message: 'Please input the lottery!' }]
+                            })(
+                                <LottoDetail />
+                            )
+                        }
+                    </FormItem>
+                    <FormItem {...formItemLayout} label="推荐">
+                        {
+                            getFieldDecorator("recommendation", {
+                                initialValue: this.state.lotterReleaseInfo.recommendation,
+                                rules: [{ required: true, message: 'Please input the recommendation!' }]
+                            })(
+                                <LottoRecommendation />
+                            )
+                        }
+                    </FormItem>
+                    <FormItem {...formItemLayout} label="下期">
+                        {
+                            getFieldDecorator("next", {
+                                initialValue: this.state.lotterReleaseInfo.next,
+                                rules: [{ required: true, message: 'Please input the next release info!' }]
+                            })(
+                                <LottoNextInfo />
+                            )
+                        }
+                    </FormItem>
+                    <FormItem {...formItemLayout} label="版本">
+                        {
+                            getFieldDecorator("dataVersion", {
+                                initialValue: this.state.lotterReleaseInfo.dataVersion,
+                                rules: [{ required: true, message: 'Please input the version!' }]
+                            })(
+                                <LottoVersions />
+                            )
+                        }
+                    </FormItem>
+                    <Button type="primary" htmlType="submit">Notify</Button>
+                    <Modal
+                        title="Confirm the infomration"
+                        visible={this.state.showConfirmDialog}
+                        onOk={this.handleConfirmSubmit}
+                        onCancel={this.handleCancelSubmit}
+                    >
+                        <p>期号：{this.state.lotterReleaseInfo.lottery ? this.state.lotterReleaseInfo.lottery.issue : ""} </p>
+                        <p>日期：{this.state.lotterReleaseInfo.lottery ? this.state.lotterReleaseInfo.lottery.date : ""} </p>
+                        <p>奖号：{this.state.lotterReleaseInfo.lottery ? this.state.lotterReleaseInfo.lottery.scheme : ""} </p>
+                    </Modal>
+                </Form>
+            </Spin>
         );
     }
 };
