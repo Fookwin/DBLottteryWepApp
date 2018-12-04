@@ -110,7 +110,7 @@ class LottoDetail extends React.Component {
         }
 
         let changedValue = {};
-        changedValue[vname] = date._d;
+        changedValue[vname] = date.format('YYYY-MM-DD HH:mm:ss');
 
         if (!('value' in this.props)) {
             this.setState(changedValue);
@@ -300,13 +300,13 @@ class LottoNextInfo extends React.Component {
         let preDate = moment(this.state[vname]);
         preDate.set({
             'hour': time.get('hour'),
-            'minute': time.get('minute')
+            'minute': time.get('minute')``
         });
 
         let changedValue = {};
-        changedValue[vname] = preDate._d;
+        changedValue[vname] = preDate.format('YYYY-MM-DD HH:mm:ss');
 
-        if (!('value' in this.props)) {
+        if (!('value' in this.props)) { 
             this.setState(changedValue);
         }
 
@@ -333,8 +333,8 @@ class LottoNextInfo extends React.Component {
         });
 
         let changedValue = {
-            'date': newDate._d,
-            'cutOffTime': newCutoff._d
+            'date': newDate.format('YYYY-MM-DD HH:mm:ss'),
+            'cutOffTime': newCutoff.format('YYYY-MM-DD HH:mm:ss')
         };
 
         if (!('value' in this.props)) {
@@ -496,7 +496,9 @@ class Modification extends Component {
     }
 
     onResync = (e) => {
-        this.setState({ loading: true });
+        if (!this.state.loading)
+            this.setState({ loading: true });
+
         AipHelper.getLatestIssueInfo(info => {
             if (info) {
                 this.setState({ lotterReleaseInfo: info, lottoDataLoaded: true });

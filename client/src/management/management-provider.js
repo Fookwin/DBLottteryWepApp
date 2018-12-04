@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-import $ from 'jquery';
 import axios from 'axios';
 
 function getLatestIssueInfo(cb) {
