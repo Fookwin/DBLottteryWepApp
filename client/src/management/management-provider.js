@@ -53,6 +53,34 @@ function getNotificationTemplates(cb) {
     });
 }
 
+function preCommitReleaseChange(updatedData, cb) {
+
+  axios.post('/precommit', updatedData).then(function (res) {
+        // session.data.commitPackage = {
+        //     container: res.data.Container,
+        //     actions: []
+        // };
+
+        // res.data.Files.forEach(function (fileName) {
+        //     session.data.commitPackage.actions.push({
+        //         file: fileName,
+        //         content: undefined,
+        //         state: 'pending'
+        //     });
+        // });
+
+        // $scope.isCommitting = false;
+
+        // $location.url('/publish/commit');
+
+        console.log(res);
+        cb(res.data);
+    }).catch(function (err) {
+      console.log(res);
+      cb();
+    });
+}
+
 function notify(content, cb) {
   axios.post('/notify', { platforms: [1, 2, 3], msg: content }).then(function SuccessCallback(res) {
     return cb({ data: res.data.data });
@@ -61,5 +89,12 @@ function notify(content, cb) {
   });
 }
 
-const ManagementAPIHelper = { getLatestIssueInfo, syncLottoDetailFromWeb, createNewLottoRelease, getNotificationTemplates, notify };
+const ManagementAPIHelper = { 
+  getLatestIssueInfo, 
+  syncLottoDetailFromWeb, 
+  createNewLottoRelease, 
+  preCommitReleaseChange,
+  getNotificationTemplates, 
+  notify 
+};
 export default ManagementAPIHelper;

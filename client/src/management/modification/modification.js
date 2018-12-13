@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Icon, Row, Col, Button, DatePicker, TimePicker, Modal, Spin } from 'antd';
+import { Form, Input, Row, Col, Button, DatePicker, TimePicker, Modal, Spin } from 'antd';
 import moment from 'moment';
 import { isArray } from "util";
 import AipHelper from '../management-provider'
@@ -11,11 +11,11 @@ const ButtonGroup = Button.Group;
 
 const bonous = [1, 2, 3, 4, 5, 6];
 const versions = [
-    ["latestIssue", "最新期号"],
-    ["latestLotteryVersion", "最新开奖"],
-    ["releaseDataVersion", "发布数据"],
+    ["latestIssue", "当期期号"],
+    ["latestLotteryVersion", "当期开奖"],
+    ["releaseDataVersion", "当期信息"],
+    ["attributeDataVersion", "当期属性"],
     ["historyDataVersion", "历史数据"],
-    ["attributeDataVersion", "属性数据"],
     ["attributeTemplateVersion", "属性模板"],
     ["helpContentVersion", "帮助文档"],
     ["matrixDataVersion", "旋转矩阵"]
@@ -70,24 +70,20 @@ class LottoDetail extends React.Component {
 
     handleNumberChange = (vname, value) => {
         let number = parseInt(value, 10);
-        if (isNaN(number)) {
-            return;
+        if (isNaN(number) || number < 0) {
+            number = null;
         }
 
         let changedValue = {};
         changedValue[vname] = number;
-
-        if (!('value' in this.props)) {
-            this.setState(changedValue);
-        }
 
         this.triggerChange(changedValue);
     }
 
     handleBonuChange = (index, value) => {
         let number = parseInt(value, 10);
-        if (isNaN(number)) {
-            return;
+        if (isNaN(number) || number < 0) {
+            number = null;
         }
 
         let bonus = [];
@@ -95,10 +91,6 @@ class LottoDetail extends React.Component {
         bonus[index] = number;
 
         let changedValue = { "bonus": bonus };
-
-        if (!('value' in this.props)) {
-            this.setState(changedValue);
-        }
 
         this.triggerChange(changedValue);
     }
@@ -112,23 +104,44 @@ class LottoDetail extends React.Component {
         let changedValue = {};
         changedValue[vname] = date.format('YYYY-MM-DD HH:mm:ss');
 
-        if (!('value' in this.props)) {
-            this.setState(changedValue);
-        }
+        this.triggerChange(changedValue);
+    }
+
+    handleSchemeChange = (vname, strVal) => {
+
+        // format string
+        let formatted = this._formatScheme(strVal);
+
+        this.handleDetailsChange(vname, formatted);
+    }
+
+    handleDetailsChange = (vname, strVal) => {
+
+        // format string
+        let changedValue = {};
+        changedValue[vname] = strVal;
 
         this.triggerChange(changedValue);
     }
 
-    handleStringChange = (vname, strVal) => {
+    _formatScheme = (original) => {
+        var copyText = original.trim();
+        if (copyText.length === 14 && copyText.indexOf(' ') < 0) {
+            var newText = copyText.slice(0, 2);
+            for (var i = 1; i < 6; ++i) {
+                newText += ' ' + copyText.slice(i * 2, i * 2 + 2);
+            }
 
-        let changedValue = {};
-        changedValue[vname] = strVal;
+            newText += '+' + copyText.slice(12);
 
-        if (!('value' in this.props)) {
-            this.setState(changedValue);
+            return newText;
         }
 
-        this.triggerChange(changedValue);
+        // trim the tail longer than 20
+        if (copyText.length > 20)
+            return copyText.substring(0, 20);
+
+        return copyText;
     }
 
     triggerChange = (changedValue) => {
@@ -145,22 +158,13 @@ class LottoDetail extends React.Component {
             <div>
                 <Row gutter={8}>
                     <Col span={12}>
-                        <Input type="number" placeholder="期号" addonBefore="期号" value={this.state.issue} onChange={(e) => this.handleStringChange("issue", e.target.value)} />
+                        <Input type="number" placeholder="期号" addonBefore="期号" value={this.state.issue} onChange={(e) => this.handleNumberChange("issue", e.target.value)} />
                     </Col>
                     <Col span={12}>
                         <DatePicker placeholder="开奖时间" value={moment(this.state.date)} onChange={(e) => this.handleDateChange("date", e)} />
                     </Col>
                 </Row>
-                <Row gutter={8}>
-                    <Col span={20}>
-                        <Input addonBefore="奖号" placeholder="00 00 00 00 00 00+00" value={this.state.scheme}
-                            onChange={(e) => this.handleStringChange("scheme", e.target.value)}
-                        />
-                    </Col>
-                    <Col span={4}>
-                        <Button><Icon type="check" /></Button>
-                    </Col>
-                </Row>
+                <Input addonBefore="奖号" placeholder="00 00 00 00 00 00+00" value={this.state.scheme} onChange={(e) => this.handleSchemeChange("scheme", e.target.value)} />
                 <Input type="number" addonBefore="奖池" placeholder="奖池" value={this.state.pool} onChange={(e) => this.handleNumberChange("pool", e.target.value)} />
                 <Input type="number" addonBefore="销售" placeholder="销售" value={this.state.bet} onChange={(e) => this.handleNumberChange("bet", e.target.value)} />
                 奖金分布：
@@ -181,7 +185,7 @@ class LottoDetail extends React.Component {
                     )
                 }
                 开奖详情:
-                <TextArea placeholder="详情" value={this.state.details} onChange={(e) => this.handleStringChange("details", e.target.value)} />
+                <TextArea placeholder="详情" value={this.state.details} onChange={(e) => this.handleDetailsChange("details", e.target.value)} />
             </div>
         );
     }
@@ -204,29 +208,25 @@ class LottoVersions extends React.Component {
 
         const value = props.value || {};
         this.state = {
-            attributeDataVersion: value.attributeDataVersion || 0,
-            attributeTemplateVersion: value.attributeTemplateVersion || 0,
-            helpContentVersion: value.helpContentVersion || 0,
-            historyDataVersion: value.historyDataVersion || 0,
-            latestIssue: value.latestIssue || 0,
-            latestLotteryVersion: value.latestLotteryVersion || 0,
-            matrixDataVersion: value.matrixDataVersion || 0,
-            releaseDataVersion: value.releaseDataVersion || 0
+            attributeDataVersion: value.attributeDataVersion,
+            attributeTemplateVersion: value.attributeTemplateVersion,
+            helpContentVersion: value.helpContentVersion,
+            historyDataVersion: value.historyDataVersion,
+            latestIssue: value.latestIssue,
+            latestLotteryVersion: value.latestLotteryVersion,
+            matrixDataVersion: value.matrixDataVersion,
+            releaseDataVersion: value.releaseDataVersion
         };
     }
 
     handleNumberChange = (vname, value) => {
         let number = parseInt(value, 10);
-        if (isNaN(number)) {
-            return;
+        if (isNaN(number) || number < 0) {
+            number = null;
         }
 
         let changedValue = {};
         changedValue[vname] = number;
-
-        if (!('value' in this.props)) {
-            this.setState(changedValue);
-        }
 
         this.triggerChange(changedValue);
     }
@@ -284,10 +284,6 @@ class LottoNextInfo extends React.Component {
         let changedValue = {};
         changedValue[vname] = strVal;
 
-        if (!('value' in this.props)) {
-            this.setState(changedValue);
-        }
-
         this.triggerChange(changedValue);
     }
 
@@ -300,15 +296,11 @@ class LottoNextInfo extends React.Component {
         let preDate = moment(this.state[vname]);
         preDate.set({
             'hour': time.get('hour'),
-            'minute': time.get('minute')``
+            'minute': time.get('minute')
         });
 
         let changedValue = {};
         changedValue[vname] = preDate.format('YYYY-MM-DD HH:mm:ss');
-
-        if (!('value' in this.props)) { 
-            this.setState(changedValue);
-        }
 
         this.triggerChange(changedValue);
     }
@@ -336,10 +328,6 @@ class LottoNextInfo extends React.Component {
             'date': newDate.format('YYYY-MM-DD HH:mm:ss'),
             'cutOffTime': newCutoff.format('YYYY-MM-DD HH:mm:ss')
         };
-
-        if (!('value' in this.props)) {
-            this.setState(changedValue);
-        }
 
         this.triggerChange(changedValue);
     }
@@ -403,23 +391,20 @@ class LottoRecommendation extends React.Component {
 
     handleNubmerArrayChange = (vname, strVal) => {
 
+        let arrayVal;
         try {
-            let arrayVal = JSON.parse("[" + strVal + "]");
+            arrayVal = JSON.parse("[" + strVal + "]");
             if (!isArray(arrayVal))
-                return;
-
-            let changedValue = {};
-            changedValue[vname] = arrayVal;
-
-            if (!('value' in this.props)) {
-                this.setState(changedValue);
-            }
-
-            this.triggerChange(changedValue);
+                arrayVal = strVal; // keep the user input anyway that will report error when do validation.
         }
         catch (ex) {
-
+            arrayVal = strVal; // keep the user input anyway that will report error when do validation.
         }
+
+        let changedValue = {};
+        changedValue[vname] = arrayVal;
+
+        this.triggerChange(changedValue);
     }
 
     triggerChange = (changedValue) => {
@@ -453,14 +438,18 @@ class Modification extends Component {
         super(props);
 
         this.state = {
-            lotterReleaseInfo: {},
+            originalData: {},
+            updatedData: null,
             showConfirmDialog: false,
-            loading: true,
-            lottoDataLoaded: false
+            loading: false,
+            lottoDataLoaded: false,
+            lotteDataChanged: false,
+            releaseInfoChanged: false,
+            dataVersionChanged: false
         };
 
         // query new release
-        this.onResync();
+        //this.onResync();
     }
 
     handleSubmit = (e) => {
@@ -469,30 +458,20 @@ class Modification extends Component {
             if (!err) {
                 console.log('Received values of form: ', values);
 
-                this.setState({ showConfirmDialog: true });
+                this.setState({ updatedData: values, showConfirmDialog: true });
             }
         });
     }
 
     handleConfirmSubmit = () => {
-        this.setState({ showConfirmDialog: false });
-        // AipHelper.notify(values, (res) => {
-        //     console.log(res);
-        //     alert(res);
-        // })
+        AipHelper.preCommitReleaseChange(this.state.updatedData, (res) => {
+            console.log(res);
+            this.setState({ showConfirmDialog: false });
+        });
     }
 
     handleCancelSubmit = () => {
-        this.setState({ showConfirmDialog: false });
-    }
-
-    _refrshFields = (data) => {
-        this.props.form.setFieldsValue({
-            lottery: data.lottery,
-            next: data.next,
-            recommendation: data.recommendation,
-            dataVersion: data.dataVersion
-        });
+        this.setState({ updatedData: null, showConfirmDialog: false });
     }
 
     onResync = (e) => {
@@ -501,40 +480,163 @@ class Modification extends Component {
 
         AipHelper.getLatestIssueInfo(info => {
             if (info) {
-                this.setState({ lotterReleaseInfo: info, lottoDataLoaded: true });
-                this._refrshFields(info);
+                // reset the data and the flags.
+                this.setState({
+                    originalData: info,
+                    lottoDataLoaded: true,
+                    lotteDataChanged: false,
+                    releaseInfoChanged: false,
+                    dataVersionChanged: false
+                });
+
+                this.props.form.setFieldsValue({
+                    lottery: info.lottery,
+                    next: info.next,
+                    recommendation: info.recommendation,
+                    dataVersion: info.dataVersion
+                });
             }
             this.setState({ loading: false });
         });
     }
 
     onSyncToWeb = (e) => {
-        if (!this.state.lotterReleaseInfo || !this.state.lotterReleaseInfo.lottery.issue)
+
+        // cache current data
+        let originalData = this.state.originalData;
+        if (!originalData || !originalData.lottery.issue)
             return;
 
         this.setState({ loading: true });
-        AipHelper.syncLottoDetailFromWeb(this.state.lotterReleaseInfo.lottery.issue, info => {
-            if (info) {
-                this.setState({ lotterReleaseInfo: info });
-                this._refrshFields(info);
+        AipHelper.syncLottoDetailFromWeb(this.state.originalData.lottery.issue, lottoInfo => {
+            if (lottoInfo) {
+                this.setState({ originalData: Object.assign(originalData, { lottery: lottoInfo }) });
+                this.props.form.setFieldsValue({
+                    lottery: lottoInfo
+                });
+                this.onLotteryDataChanged();
             }
             this.setState({ loading: false });
         });
     }
 
     onCreateNewRelease = (e) => {
-        
+
+        // cache current version info
+        let versions = this.state.originalData.dataVersion;
+        let nextInfo = {
+            issue: this.state.originalData.next.issue,
+            date: this.state.originalData.next.date
+        };
+
         this.setState({ loading: true });
-        AipHelper.createNewLottoRelease({
-            issue: this.state.lotterReleaseInfo.next.issue,
-            date: this.state.lotterReleaseInfo.next.date
-        }, (info) => {
+        AipHelper.createNewLottoRelease(nextInfo, (info) => {
             if (info) {
-                this.setState({ lotterReleaseInfo: info, lottoDataLoaded: true });
-                this._refrshFields(info);
+
+                let newData = {
+                    lottery: info.lottery,
+                    next: info.next,
+                    recommendation: info.recommendation,
+                    dataVersion: Object.assign(versions, {
+                        latestIssue: nextInfo.issue,
+                        latestLotteryVersion: 1, // set 1 as the init version.
+                        attributeDataVersion: 1, // set 1 as the init version.
+                        releaseDataVersion: 1 // set 1 as the init version.
+                    })
+                };
+
+                this.setState({
+                    originalData: newData,
+                    lotteDataChanged: true,
+                    releaseInfoChanged: true,
+                    dataVersionChanged: true
+                });
+                this.props.form.setFieldsValue(newData);
             }
             this.setState({ loading: false });
         });
+    }
+
+    onLotteryDataChanged = () => {
+
+        if (!this.state.lotteDataChanged) {
+            // increase the lottery version accordingly
+            let currentVersion = this.props.form.getFieldValue("dataVersion");
+            currentVersion.latestLotteryVersion++;
+
+            this.setState({ dataVersionChanged: true });
+            this.props.form.setFieldsValue({
+                dataVersion: currentVersion
+            });
+        }
+
+        this.setState({ lotteDataChanged: true });
+    }
+
+    onReleaseDataChanged = () => {
+
+        if (!this.state.releaseInfoChanged) {
+            // increase the lottery version accordingly
+            let currentVersion = this.props.form.getFieldValue("dataVersion");
+            currentVersion.releaseDataVersion++;
+
+            this.setState({ dataVersionChanged: true });
+            this.props.form.setFieldsValue({
+                dataVersion: currentVersion
+            });
+        }
+
+        this.setState({ releaseInfoChanged: true });
+    }
+
+    onDataVersionChanged = () => {
+        this.setState({ dataVersionChanged: true });
+    }
+
+    lotteryValidator = (rule, value, callback) => {
+        var scheme = value.scheme;
+
+        // the scheme must be the format as xx xx xx xx xx xx+xx
+        if (scheme.length !== 20)
+            return callback("Invalid Lottery Scheme.");
+
+        if (scheme[17] !== '+')
+            return callback("Invalid Lottery Scheme.");
+
+        var nums = scheme.split(/[ +]+/).map(n => Number(n));
+        if (nums.length !== 7)
+            return callback("Invalid Lottery Scheme.");
+
+        // check each number
+        var validated = nums.filter((n, i) => {
+            if (!n)
+                return false;
+
+            if (i === 6) {
+                return n > 0 && n <= 16;
+            } else {
+                if (n < 1 || n > 33)
+                    return false;
+
+                if (i !== 0) {
+                    return n > nums[i - 1];
+                }
+
+                return true;
+            }
+        });
+
+        if (validated.length !== 7)
+            return callback("Invalid Lottery Scheme.");
+
+        return callback();
+    }
+
+    recommendValidator = (rule, value, callback) => {
+        if (!isArray(value.blueExcludes) || !isArray(value.blueIncludes) || !isArray(value.redExcludes) || !isArray(value.redIncludes))
+            return callback("Invalid Recommended Numbers.");
+
+        return callback();
     }
 
     render() {
@@ -551,64 +653,70 @@ class Modification extends Component {
             },
         };
 
+        let releaseContent = this.state.originalData;
+
         return (
             <Spin spinning={this.state.loading} size="large">
-                <Form style={{ padding: 10 }} onSubmit={this.handleSubmit}>
-                    <ButtonGroup>
-                        <Button icon="sync" onClick={this.onResync}></Button>
-                        <Button icon="form" disabled={!this.state.lottoDataLoaded} onClick={this.onSyncToWeb}></Button>
-                        <Button icon="plus" onClick={this.onCreateNewRelease}></Button>
+                <Form style={{ padding: 3 }} onSubmit={this.handleSubmit}>
+
+                    <ButtonGroup style={{ marginBottom: 10 }}>
+                        <Button icon="sync" onClick={this.onResync}>同步</Button>
+                        <Button icon="cloud-download" disabled={!this.state.lottoDataLoaded} onClick={this.onSyncToWeb}>填充</Button>
+                        <Button icon="plus" disabled={!this.state.lottoDataLoaded} onClick={this.onCreateNewRelease}>添加</Button>
+                        <Button type="primary" icon="check" htmlType="submit"
+                            disabled={!this.state.lotteDataChanged && !this.state.releaseInfoChanged && !this.state.dataVersionChanged}
+                        >提交</Button>
                     </ButtonGroup>
+
                     <FormItem {...formItemLayout} label="当期">
                         {
                             getFieldDecorator("lottery", {
-                                initialValue: this.state.lotterReleaseInfo.lottery,
-                                rules: [{ required: true, message: 'Please input the lottery!' }]
+                                initialValue: releaseContent.lottery,
+                                rules: [{ required: true, message: 'Please input the lottery!' }, { validator: this.lotteryValidator }]
                             })(
-                                <LottoDetail />
+                                <LottoDetail onChange={this.onLotteryDataChanged} />
                             )
                         }
                     </FormItem>
                     <FormItem {...formItemLayout} label="推荐">
                         {
                             getFieldDecorator("recommendation", {
-                                initialValue: this.state.lotterReleaseInfo.recommendation,
-                                rules: [{ required: true, message: 'Please input the recommendation!' }]
+                                initialValue: releaseContent.recommendation,
+                                rules: [{ required: true, message: 'Please input the recommendation!' }, { validator: this.recommendValidator }]
                             })(
-                                <LottoRecommendation />
+                                <LottoRecommendation onChange={this.onReleaseDataChanged} />
                             )
                         }
                     </FormItem>
                     <FormItem {...formItemLayout} label="下期">
                         {
                             getFieldDecorator("next", {
-                                initialValue: this.state.lotterReleaseInfo.next,
+                                initialValue: releaseContent.next,
                                 rules: [{ required: true, message: 'Please input the next release info!' }]
                             })(
-                                <LottoNextInfo />
+                                <LottoNextInfo onChange={this.onReleaseDataChanged} />
                             )
                         }
                     </FormItem>
                     <FormItem {...formItemLayout} label="版本">
                         {
                             getFieldDecorator("dataVersion", {
-                                initialValue: this.state.lotterReleaseInfo.dataVersion,
+                                initialValue: releaseContent.dataVersion,
                                 rules: [{ required: true, message: 'Please input the version!' }]
                             })(
-                                <LottoVersions />
+                                <LottoVersions onChange={this.onDataVersionChanged} />
                             )
                         }
                     </FormItem>
-                    <Button type="primary" htmlType="submit">Notify</Button>
                     <Modal
                         title="Confirm the infomration"
                         visible={this.state.showConfirmDialog}
                         onOk={this.handleConfirmSubmit}
                         onCancel={this.handleCancelSubmit}
                     >
-                        <p>期号：{this.state.lotterReleaseInfo.lottery ? this.state.lotterReleaseInfo.lottery.issue : ""} </p>
-                        <p>日期：{this.state.lotterReleaseInfo.lottery ? this.state.lotterReleaseInfo.lottery.date : ""} </p>
-                        <p>奖号：{this.state.lotterReleaseInfo.lottery ? this.state.lotterReleaseInfo.lottery.scheme : ""} </p>
+                        <p>期号：{this.state.updatedData ? this.state.updatedData.lottery.issue : ""} </p>
+                        <p>日期：{this.state.updatedData ? this.state.updatedData.lottery.date : ""} </p>
+                        <p>奖号：{this.state.updatedData ? this.state.updatedData.lottery.scheme : ""} </p>
                     </Modal>
                 </Form>
             </Spin>
