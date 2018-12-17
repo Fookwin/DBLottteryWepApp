@@ -53,32 +53,87 @@ function getNotificationTemplates(cb) {
     });
 }
 
-function preCommitReleaseChange(updatedData, cb) {
+function getPendingActions(cb) {
+  axios.get('/action/pending').then(function (res) {
+    console.log(res);
+    cb(res.data);
 
-  axios.post('/precommit', updatedData).then(function (res) {
-        // session.data.commitPackage = {
-        //     container: res.data.Container,
-        //     actions: []
-        // };
+  }).catch(function (res) {
+    console.log(res);
+    cb();
+  });
+}
 
-        // res.data.Files.forEach(function (fileName) {
-        //     session.data.commitPackage.actions.push({
-        //         file: fileName,
-        //         content: undefined,
-        //         state: 'pending'
-        //     });
-        // });
+function getActionText(action, cb) {
 
-        // $scope.isCommitting = false;
+  axios.get('/blob/?container=' + $scope.commitPackage.container + '&blob=' + action.file).then(function (res) {
+    console.log(res);
+    cb(res.content);
+  }).catch(function (res) {
+    console.log(res);
+    cb();
+  });
+}
 
-        // $location.url('/publish/commit');
-
-        console.log(res);
-        cb(res.data);
-    }).catch(function (err) {
+function discardAction(container, action, cb) {
+  axios.delete('/action/remove/?container=' + container + '&blob=' + action.file).then(function (res) {
+      console.log(res);
+      cb(res.content);
+    }).catch(function (res) {
       console.log(res);
       cb();
     });
+}
+
+function commitActions(cb) {
+
+  axios.post('/commit', session.data.releaseContent).then(function (res) {
+
+    // if (res.data.Files) {
+    //   $scope.commitPackage.actions.forEach(function (action) {
+    //     if (res.data.Files.find(function (name) { return name === action.file })) {
+    //       action.state = "error";
+    //     } else {
+    //       action.state = "success";
+    //     }
+    //   });
+    // }
+
+    console.log(res);
+    cb(res.data);
+
+  }).catch(function (res) {
+    console.log(res);
+    cb();
+  });
+}
+
+function preCommitReleaseChange(updatedData, cb) {
+
+  axios.post('/precommit', updatedData).then(function (res) {
+    // session.data.commitPackage = {
+    //     container: res.data.Container,
+    //     actions: []
+    // };
+
+    // res.data.Files.forEach(function (fileName) {
+    //     session.data.commitPackage.actions.push({
+    //         file: fileName,
+    //         content: undefined,
+    //         state: 'pending'
+    //     });
+    // });
+
+    // $scope.isCommitting = false;
+
+    // $location.url('/publish/commit');
+
+    console.log(res);
+    cb(res.data);
+  }).catch(function (res) {
+    console.log(res);
+    cb();
+  });
 }
 
 function notify(content, cb) {
@@ -89,12 +144,16 @@ function notify(content, cb) {
   });
 }
 
-const ManagementAPIHelper = { 
-  getLatestIssueInfo, 
-  syncLottoDetailFromWeb, 
-  createNewLottoRelease, 
+const ManagementAPIHelper = {
+  getLatestIssueInfo,
+  syncLottoDetailFromWeb,
+  createNewLottoRelease,
   preCommitReleaseChange,
-  getNotificationTemplates, 
-  notify 
+  getNotificationTemplates,
+  getPendingActions,
+  getActionText,
+  discardAction,
+  commitActions,
+  notify
 };
 export default ManagementAPIHelper;

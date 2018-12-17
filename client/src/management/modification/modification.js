@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Form, Input, Row, Col, Button, DatePicker, TimePicker, Modal, Spin } from 'antd';
+import { Collapse, Form, Input, Row, Col, Button, DatePicker, TimePicker, Modal, Spin } from 'antd';
 import moment from 'moment';
 import { isArray } from "util";
 import AipHelper from '../management-provider'
 
 const { TextArea } = Input;
+const { Panel } = Collapse;
 const FormItem = Form.Item;
 const time_format = 'HH:mm';
 const ButtonGroup = Button.Group;
@@ -441,15 +442,25 @@ class Modification extends Component {
             originalData: {},
             updatedData: null,
             showConfirmDialog: false,
-            loading: false,
+            processing: false,
             lottoDataLoaded: false,
             lotteDataChanged: false,
             releaseInfoChanged: false,
-            dataVersionChanged: false
+            dataVersionChanged: false,
+            pendingActions: {}
         };
 
         // query new release
-        //this.onResync();
+        this._getPendingActions();
+    }
+
+    _getPendingActions = () => {
+        this.setState({ processing: true });
+
+        AipHelper.getPendingActions((res) => {
+            console.log(res);
+            this.setState({ pendingActions: res.data, processing: false });
+        });
     }
 
     handleSubmit = (e) => {
@@ -464,9 +475,11 @@ class Modification extends Component {
     }
 
     handleConfirmSubmit = () => {
+        this.setState({ showConfirmDialog: false, processing: true });
+
         AipHelper.preCommitReleaseChange(this.state.updatedData, (res) => {
             console.log(res);
-            this.setState({ showConfirmDialog: false });
+            this.setState({ pendingActions: res.data, processing: false });
         });
     }
 
@@ -475,8 +488,8 @@ class Modification extends Component {
     }
 
     onResync = (e) => {
-        if (!this.state.loading)
-            this.setState({ loading: true });
+        if (!this.state.processing)
+            this.setState({ processing: true });
 
         AipHelper.getLatestIssueInfo(info => {
             if (info) {
@@ -496,7 +509,7 @@ class Modification extends Component {
                     dataVersion: info.dataVersion
                 });
             }
-            this.setState({ loading: false });
+            this.setState({ processing: false });
         });
     }
 
@@ -507,7 +520,7 @@ class Modification extends Component {
         if (!originalData || !originalData.lottery.issue)
             return;
 
-        this.setState({ loading: true });
+        this.setState({ processing: true });
         AipHelper.syncLottoDetailFromWeb(this.state.originalData.lottery.issue, lottoInfo => {
             if (lottoInfo) {
                 this.setState({ originalData: Object.assign(originalData, { lottery: lottoInfo }) });
@@ -516,7 +529,7 @@ class Modification extends Component {
                 });
                 this.onLotteryDataChanged();
             }
-            this.setState({ loading: false });
+            this.setState({ processing: false });
         });
     }
 
@@ -529,7 +542,7 @@ class Modification extends Component {
             date: this.state.originalData.next.date
         };
 
-        this.setState({ loading: true });
+        this.setState({ processing: true });
         AipHelper.createNewLottoRelease(nextInfo, (info) => {
             if (info) {
 
@@ -553,7 +566,7 @@ class Modification extends Component {
                 });
                 this.props.form.setFieldsValue(newData);
             }
-            this.setState({ loading: false });
+            this.setState({ processing: false });
         });
     }
 
@@ -656,18 +669,14 @@ class Modification extends Component {
         let releaseContent = this.state.originalData;
 
         return (
-            <Spin spinning={this.state.loading} size="large">
-                <Form style={{ padding: 3 }} onSubmit={this.handleSubmit}>
+            <Spin spinning={this.state.processing} size="large">
+                <ButtonGroup style={{ marginBottom: 10 }}>
+                    <Button icon="sync" onClick={this.onResync}>同步当期</Button>
+                    <Button icon="cloud-download" disabled={!this.state.lottoDataLoaded} onClick={this.onSyncToWeb}>自动填充</Button>
+                    <Button icon="plus" disabled={!this.state.lottoDataLoaded} onClick={this.onCreateNewRelease}>创建下期</Button>
+                </ButtonGroup>
 
-                    <ButtonGroup style={{ marginBottom: 10 }}>
-                        <Button icon="sync" onClick={this.onResync}>同步</Button>
-                        <Button icon="cloud-download" disabled={!this.state.lottoDataLoaded} onClick={this.onSyncToWeb}>填充</Button>
-                        <Button icon="plus" disabled={!this.state.lottoDataLoaded} onClick={this.onCreateNewRelease}>添加</Button>
-                        <Button type="primary" icon="check" htmlType="submit"
-                            disabled={!this.state.lotteDataChanged && !this.state.releaseInfoChanged && !this.state.dataVersionChanged}
-                        >提交</Button>
-                    </ButtonGroup>
-
+                <Form style={{ padding: 3 }} onSubmit={this.handleSubmit} hidden={!this.state.lottoDataLoaded}>
                     <FormItem {...formItemLayout} label="当期">
                         {
                             getFieldDecorator("lottery", {
@@ -708,6 +717,9 @@ class Modification extends Component {
                             )
                         }
                     </FormItem>
+                    <Button type="primary" icon="check" htmlType="submit" block
+                        disabled={!this.state.lotteDataChanged && !this.state.releaseInfoChanged && !this.state.dataVersionChanged}
+                    >提交</Button>
                     <Modal
                         title="Confirm the infomration"
                         visible={this.state.showConfirmDialog}
@@ -717,6 +729,21 @@ class Modification extends Component {
                         <p>期号：{this.state.updatedData ? this.state.updatedData.lottery.issue : ""} </p>
                         <p>日期：{this.state.updatedData ? this.state.updatedData.lottery.date : ""} </p>
                         <p>奖号：{this.state.updatedData ? this.state.updatedData.lottery.scheme : ""} </p>
+                    </Modal>
+                    <Modal
+                        title="Pending Actions"
+                        visible={this.state.pendingActions.Files && this.state.pendingActions.Files.length > 0}
+                        onOk={this.handleConfirmSubmit}
+                        onCancel={this.handleCancelSubmit}
+                    >
+                        <Collapse>
+                            <Panel header="This is panel header with arrow icon" key="1">
+                                <p></p>
+                            </Panel>
+                            <Panel showArrow={false} header="This is panel header with no arrow icon" key="2">
+                                <p></p>
+                            </Panel>
+                        </Collapse>
                     </Modal>
                 </Form>
             </Spin>
