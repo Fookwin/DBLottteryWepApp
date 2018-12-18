@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Collapse, Form, Input, Row, Col, Button, DatePicker, TimePicker, Modal, Spin } from 'antd';
 import moment from 'moment';
 import { isArray } from "util";
-import AipHelper from '../management-provider'
+import AipHelper from './management-provider'
 
 const { TextArea } = Input;
 const { Panel } = Collapse;
@@ -669,84 +669,89 @@ class Modification extends Component {
         let releaseContent = this.state.originalData;
 
         return (
-            <Spin spinning={this.state.processing} size="large">
-                <ButtonGroup style={{ marginBottom: 10 }}>
-                    <Button icon="sync" onClick={this.onResync}>同步当期</Button>
-                    <Button icon="cloud-download" disabled={!this.state.lottoDataLoaded} onClick={this.onSyncToWeb}>自动填充</Button>
-                    <Button icon="plus" disabled={!this.state.lottoDataLoaded} onClick={this.onCreateNewRelease}>创建下期</Button>
-                </ButtonGroup>
+            <div style={{ padding: 10 }}>
 
-                <Form style={{ padding: 3 }} onSubmit={this.handleSubmit} hidden={!this.state.lottoDataLoaded}>
-                    <FormItem {...formItemLayout} label="当期">
-                        {
-                            getFieldDecorator("lottery", {
-                                initialValue: releaseContent.lottery,
-                                rules: [{ required: true, message: 'Please input the lottery!' }, { validator: this.lotteryValidator }]
-                            })(
-                                <LottoDetail onChange={this.onLotteryDataChanged} />
-                            )
-                        }
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="推荐">
-                        {
-                            getFieldDecorator("recommendation", {
-                                initialValue: releaseContent.recommendation,
-                                rules: [{ required: true, message: 'Please input the recommendation!' }, { validator: this.recommendValidator }]
-                            })(
-                                <LottoRecommendation onChange={this.onReleaseDataChanged} />
-                            )
-                        }
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="下期">
-                        {
-                            getFieldDecorator("next", {
-                                initialValue: releaseContent.next,
-                                rules: [{ required: true, message: 'Please input the next release info!' }]
-                            })(
-                                <LottoNextInfo onChange={this.onReleaseDataChanged} />
-                            )
-                        }
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="版本">
-                        {
-                            getFieldDecorator("dataVersion", {
-                                initialValue: releaseContent.dataVersion,
-                                rules: [{ required: true, message: 'Please input the version!' }]
-                            })(
-                                <LottoVersions onChange={this.onDataVersionChanged} />
-                            )
-                        }
-                    </FormItem>
-                    <Button type="primary" icon="check" htmlType="submit" block
-                        disabled={!this.state.lotteDataChanged && !this.state.releaseInfoChanged && !this.state.dataVersionChanged}
-                    >提交</Button>
-                    <Modal
-                        title="Confirm the infomration"
-                        visible={this.state.showConfirmDialog}
-                        onOk={this.handleConfirmSubmit}
-                        onCancel={this.handleCancelSubmit}
-                    >
-                        <p>期号：{this.state.updatedData ? this.state.updatedData.lottery.issue : ""} </p>
-                        <p>日期：{this.state.updatedData ? this.state.updatedData.lottery.date : ""} </p>
-                        <p>奖号：{this.state.updatedData ? this.state.updatedData.lottery.scheme : ""} </p>
-                    </Modal>
-                    <Modal
-                        title="Pending Actions"
-                        visible={this.state.pendingActions.Files && this.state.pendingActions.Files.length > 0}
-                        onOk={this.handleConfirmSubmit}
-                        onCancel={this.handleCancelSubmit}
-                    >
-                        <Collapse>
-                            <Panel header="This is panel header with arrow icon" key="1">
-                                <p></p>
-                            </Panel>
-                            <Panel showArrow={false} header="This is panel header with no arrow icon" key="2">
-                                <p></p>
-                            </Panel>
-                        </Collapse>
-                    </Modal>
-                </Form>
-            </Spin>
+                <Spin spinning={this.state.processing} size="large">
+                    <ButtonGroup>
+                        <Button icon="sync" onClick={this.onResync}>同步当期</Button>
+                        <Button icon="cloud-download" disabled={!this.state.lottoDataLoaded} onClick={this.onSyncToWeb}>自动填充</Button>
+                        <Button icon="plus" disabled={!this.state.lottoDataLoaded} onClick={this.onCreateNewRelease}>创建下期</Button>
+                    </ButtonGroup>
+
+                    <Form onSubmit={this.handleSubmit} hidden={!this.state.lottoDataLoaded}>
+                        <div className="modification-form-content">
+                            <FormItem {...formItemLayout} label="当期">
+                                {
+                                    getFieldDecorator("lottery", {
+                                        initialValue: releaseContent.lottery,
+                                        rules: [{ required: true, message: 'Please input the lottery!' }, { validator: this.lotteryValidator }]
+                                    })(
+                                        <LottoDetail onChange={this.onLotteryDataChanged} />
+                                    )
+                                }
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="推荐">
+                                {
+                                    getFieldDecorator("recommendation", {
+                                        initialValue: releaseContent.recommendation,
+                                        rules: [{ required: true, message: 'Please input the recommendation!' }, { validator: this.recommendValidator }]
+                                    })(
+                                        <LottoRecommendation onChange={this.onReleaseDataChanged} />
+                                    )
+                                }
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="下期">
+                                {
+                                    getFieldDecorator("next", {
+                                        initialValue: releaseContent.next,
+                                        rules: [{ required: true, message: 'Please input the next release info!' }]
+                                    })(
+                                        <LottoNextInfo onChange={this.onReleaseDataChanged} />
+                                    )
+                                }
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="版本">
+                                {
+                                    getFieldDecorator("dataVersion", {
+                                        initialValue: releaseContent.dataVersion,
+                                        rules: [{ required: true, message: 'Please input the version!' }]
+                                    })(
+                                        <LottoVersions onChange={this.onDataVersionChanged} />
+                                    )
+                                }
+                            </FormItem>
+                        </div>
+                        <Button type="primary" icon="check" htmlType="submit" block
+                            disabled={!this.state.lotteDataChanged && !this.state.releaseInfoChanged && !this.state.dataVersionChanged}
+                        >提交</Button>
+                        <Modal
+                            title="Confirm the infomration"
+                            visible={this.state.showConfirmDialog}
+                            onOk={this.handleConfirmSubmit}
+                            onCancel={this.handleCancelSubmit}
+                        >
+                            <p>期号：{this.state.updatedData ? this.state.updatedData.lottery.issue : ""} </p>
+                            <p>日期：{this.state.updatedData ? this.state.updatedData.lottery.date : ""} </p>
+                            <p>奖号：{this.state.updatedData ? this.state.updatedData.lottery.scheme : ""} </p>
+                        </Modal>
+                        <Modal
+                            title="Pending Actions"
+                            visible={this.state.pendingActions.Files && this.state.pendingActions.Files.length > 0}
+                            onOk={this.handleConfirmSubmit}
+                            onCancel={this.handleCancelSubmit}
+                        >
+                            <Collapse>
+                                <Panel header="This is panel header with arrow icon" key="1">
+                                    <p></p>
+                                </Panel>
+                                <Panel showArrow={false} header="This is panel header with no arrow icon" key="2">
+                                    <p></p>
+                                </Panel>
+                            </Collapse>
+                        </Modal>
+                    </Form>
+                </Spin>
+            </div>
         );
     }
 };
