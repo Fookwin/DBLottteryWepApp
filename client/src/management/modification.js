@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Collapse, Form, Input, Row, Col, Button, DatePicker, TimePicker, Modal, Spin } from 'antd';
+import { Collapse, Form, Input, Row, Col, Button, DatePicker, TimePicker, Modal, Spin, Icon, List, Tooltip } from 'antd';
 import moment from 'moment';
 import { isArray } from "util";
 import AipHelper from './management-provider'
@@ -442,7 +442,7 @@ class Modification extends Component {
             originalData: {},
             updatedData: null,
             showConfirmDialog: false,
-            processing: false,
+            processing: true, // init as true for obtaining pending actions.
             lottoDataLoaded: false,
             lotteDataChanged: false,
             releaseInfoChanged: false,
@@ -454,16 +454,7 @@ class Modification extends Component {
         this._getPendingActions();
     }
 
-    _getPendingActions = () => {
-        this.setState({ processing: true });
-
-        AipHelper.getPendingActions((res) => {
-            console.log(res);
-            this.setState({ pendingActions: res.data, processing: false });
-        });
-    }
-
-    handleSubmit = (e) => {
+    handlePresubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
@@ -474,17 +465,118 @@ class Modification extends Component {
         });
     }
 
-    handleConfirmSubmit = () => {
+    handleConfirmPresubmit = () => {
         this.setState({ showConfirmDialog: false, processing: true });
 
         AipHelper.preCommitReleaseChange(this.state.updatedData, (res) => {
             console.log(res);
-            this.setState({ pendingActions: res.data, processing: false });
+
+            this.setState({ pendingActions: this._buildPendingActions(res.data), processing: false });
+        });
+    }
+
+    _getPendingActions = () => {
+        if (!this.state.processing)
+            this.setState({ processing: true });
+
+        AipHelper.getPendingActions((res) => {
+            console.log(res);
+            this.setState({ pendingActions: this._buildPendingActions(res.data), processing: false });
+        });
+    }
+
+    _buildPendingActions = (data) => {
+        let pendingActions = {
+            container: data.Container,
+            actions: []
+        };
+
+        data.Files.forEach(function (fileName) {
+            pendingActions.actions.push({
+                file: fileName,
+                content: undefined,
+                state: 'pending'
+            });
+        });
+
+        return pendingActions;
+    }
+
+    _deleteAction = (action) => {
+        console.log("Discarding the action: " + action.file);
+
+        this.setState({ processing: true });
+
+        AipHelper.discardAction(this.state.pendingActions.container, action, () => {
+            let newActions = [];
+            this.state.pendingActions.actions.forEach(function (thisAction) {
+                if (thisAction.file !== action.file) {
+                    newActions.push(thisAction);
+                }
+            });
+            this.setState({ pendingActions: { container: this.state.pendingActions.container, actions: newActions }, processing: false });
+        });
+    }
+
+    _showActionContent = (action) => {
+
+        if (action.content) {
+            return action.content;
+        }
+
+        AipHelper.getActionText(this.state.pendingActions.container, action, content => {
+            let pendingActions = this.state.pendingActions;
+            pendingActions.actions.forEach(function (thisAction) {
+                if (thisAction.file === action.file) {
+                    thisAction.content = content;
+                }
+            });
+            this.setState({ pendingActions: pendingActions });
+        });
+
+        return "loading ...";
+    }
+
+    handleCancelPresubmit = () => {
+        this.setState({ updatedData: null, showConfirmDialog: false });
+    }
+
+    handleConfirmSubmit = () => {
+        this.setState({ processing: true });
+
+        AipHelper.commitActions((resp) => {
+            let newActions = [];
+            this.state.pendingActions.actions.forEach(function (action) {
+                if (resp.Files.find(function (name) { return name === action.file })) {
+                    newActions.push(action);
+                }
+            });
+            this.setState({ pendingActions: { container: this.state.pendingActions.container, actions: newActions }, processing: false });
         });
     }
 
     handleCancelSubmit = () => {
-        this.setState({ updatedData: null, showConfirmDialog: false });
+        this.setState({ processing: true });
+
+        let pendingActions = this.state.pendingActions;
+
+        Promise.all(
+            pendingActions.actions.map(action => (
+                new Promise((resolve, reject) => {
+
+                    AipHelper.discardAction(pendingActions.container, action, (res) => {
+                        if (res)
+                            resolve(action);
+                        else
+                            reject(action);
+                    });
+                }))
+            )
+        ).then((res) => {
+            this._getPendingActions();
+        }).catch((err) => {
+            this._getPendingActions();
+        });
     }
 
     onResync = (e) => {
@@ -678,7 +770,7 @@ class Modification extends Component {
                         <Button icon="plus" disabled={!this.state.lottoDataLoaded} onClick={this.onCreateNewRelease}>创建下期</Button>
                     </ButtonGroup>
 
-                    <Form onSubmit={this.handleSubmit} hidden={!this.state.lottoDataLoaded}>
+                    <Form onSubmit={this.handlePresubmit} hidden={!this.state.lottoDataLoaded}>
                         <div className="modification-form-content">
                             <FormItem {...formItemLayout} label="当期">
                                 {
@@ -727,8 +819,8 @@ class Modification extends Component {
                         <Modal
                             title="Confirm the infomration"
                             visible={this.state.showConfirmDialog}
-                            onOk={this.handleConfirmSubmit}
-                            onCancel={this.handleCancelSubmit}
+                            onOk={this.handleConfirmPresubmit}
+                            onCancel={this.handleCancelPresubmit}
                         >
                             <p>期号：{this.state.updatedData ? this.state.updatedData.lottery.issue : ""} </p>
                             <p>日期：{this.state.updatedData ? this.state.updatedData.lottery.date : ""} </p>
@@ -736,22 +828,27 @@ class Modification extends Component {
                         </Modal>
                         <Modal
                             title="Pending Actions"
-                            visible={this.state.pendingActions.Files && this.state.pendingActions.Files.length > 0}
+                            visible={this.state.pendingActions.actions && this.state.pendingActions.actions.length > 0}
                             onOk={this.handleConfirmSubmit}
                             onCancel={this.handleCancelSubmit}
                         >
-                            <Collapse>
-                                <Panel header="This is panel header with arrow icon" key="1">
-                                    <p></p>
-                                </Panel>
-                                <Panel showArrow={false} header="This is panel header with no arrow icon" key="2">
-                                    <p></p>
-                                </Panel>
-                            </Collapse>
+                            <List
+                                grid={{ gutter: 16, column: 1 }}
+                                dataSource={this.state.pendingActions.actions}
+                                renderItem={action => (
+                                    <List.Item >
+                                        <span>
+                                            <Tooltip title={(e) => this._showActionContent(action)}>
+                                                {action.file}
+                                            </Tooltip>
+                                            <Icon style={{ float: 'right', marginRight: 10 }} type="delete" onClick={(e) => this._deleteAction(action)} />
+                                        </span>
+                                    </List.Item>
+                                )} />
                         </Modal>
                     </Form>
                 </Spin>
-            </div>
+            </div >
         );
     }
 };

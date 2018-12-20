@@ -64,11 +64,11 @@ function getPendingActions(cb) {
   });
 }
 
-function getActionText(action, cb) {
+function getActionText(container, action, cb) {
 
-  axios.get('/blob/?container=' + $scope.commitPackage.container + '&blob=' + action.file).then(function (res) {
+  axios.get('/blob/?container=' + container + '&blob=' + action.file).then(function (res) {
     console.log(res);
-    cb(res.content);
+    cb(res.data.content);
   }).catch(function (res) {
     console.log(res);
     cb();
@@ -77,30 +77,18 @@ function getActionText(action, cb) {
 
 function discardAction(container, action, cb) {
   axios.delete('/action/remove/?container=' + container + '&blob=' + action.file).then(function (res) {
-      console.log(res);
-      cb(res.content);
-    }).catch(function (res) {
-      console.log(res);
-      cb();
-    });
+    console.log(res);
+    cb(res.data);
+  }).catch(function (res) {
+    console.log(res);
+    cb();
+  });
 }
 
 function commitActions(cb) {
-
-  axios.post('/commit', session.data.releaseContent).then(function (res) {
-
-    // if (res.data.Files) {
-    //   $scope.commitPackage.actions.forEach(function (action) {
-    //     if (res.data.Files.find(function (name) { return name === action.file })) {
-    //       action.state = "error";
-    //     } else {
-    //       action.state = "success";
-    //     }
-    //   });
-    // }
-
+  axios.post('/commit').then(function (res) {
     console.log(res);
-    cb(res.data);
+    cb(res.data.data);
 
   }).catch(function (res) {
     console.log(res);
@@ -111,23 +99,6 @@ function commitActions(cb) {
 function preCommitReleaseChange(updatedData, cb) {
 
   axios.post('/precommit', updatedData).then(function (res) {
-    // session.data.commitPackage = {
-    //     container: res.data.Container,
-    //     actions: []
-    // };
-
-    // res.data.Files.forEach(function (fileName) {
-    //     session.data.commitPackage.actions.push({
-    //         file: fileName,
-    //         content: undefined,
-    //         state: 'pending'
-    //     });
-    // });
-
-    // $scope.isCommitting = false;
-
-    // $location.url('/publish/commit');
-
     console.log(res);
     cb(res.data);
   }).catch(function (res) {
