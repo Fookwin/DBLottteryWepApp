@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, Select, Button, notification} from 'antd';
 import AipHelper from './management-provider'
 
 const { TextArea } = Input;
@@ -28,7 +28,18 @@ class Notification extends Component {
 
                 AipHelper.notify(values, (res) => {
                     console.log(res);
-                    alert(res);
+
+                    if (res.data === "success") {
+                        notification['success']({
+                            message: 'Notification',
+                            description: 'The notification has been pushed!',
+                        });
+                    } else {
+                        notification['error']({
+                            message: 'Notification',
+                            description: 'Failed to push the notification!',
+                        });
+                    }
                 })
             }
         });
@@ -74,7 +85,7 @@ class Notification extends Component {
             <Form style={{ padding: 10 }} onSubmit={this.handleSubmit}>
 
                 <FormItem {...formItemLayout} label="Template">
-                    <Select onChange={this.handleTemplateChange} placeholder={ this.state.templates_status } disabled={this.state.templates_disabled}>
+                    <Select onChange={this.handleTemplateChange} placeholder={this.state.templates_status} disabled={this.state.templates_disabled}>
                         {
                             this.state.templates.map(temp => <Option key={temp.Key} value={temp.Key}>{temp.Key}</Option>)
                         }
