@@ -34,7 +34,7 @@ const routers = [{
   path: "/notification",
   icon: "user",
   component: Notification
-},{
+}, {
   key: "diagram",
   name: "Diagram",
   path: "/diagram",
@@ -48,19 +48,19 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false,
+      drawer_visible: false,
     };
   }
 
   showDrawer = () => {
     this.setState({
-      visible: !this.state.visible,
+      drawer_visible: !this.state.drawer_visible,
     });
   };
 
   onClose = () => {
     this.setState({
-      visible: false,
+      drawer_visible: false,
     });
   };
 
@@ -74,7 +74,7 @@ class App extends React.Component {
     return (
       <Router>
         <Layout style={{ height: '100%' }} className="scrollable-container" ref={(node) => { this.container = node; }}>
-          <Drawer title="福盈双色球" placement="left" closable={false} onClose={this.onClose} visible={this.state.visible}>
+          <Drawer title="福盈双色球" placement="left" closable={false} onClose={this.onClose} visible={this.state.drawer_visible}>
             <Menu theme="light" mode="inline" defaultSelectedKeys={[this.getDefaultMenuKey()]} onClick={this.onClose}>
               <Menu.Item key="home"><Link to="/home"><Icon type="user" /><span>Home</span></Link></Menu.Item>
               <SubMenu key="management" title={<span><Icon type="mail" /><span>Management</span></span>}>
@@ -90,8 +90,8 @@ class App extends React.Component {
               <Route key="modification" path="/modification" component={Modification} />
               <Route key="notification" path="/notification" component={Notification} />
               <Route key="diagram" path="/diagram" component={Diagram} />
-              <Affix style={{ position: 'absolute', left: 'calc(100% - 60px)', top: 'calc(100% - 40px)' }}>
-                <Button onClick={this.showDrawer}><Icon type={!this.state.visible ? 'menu-unfold' : 'menu-fold'} /></Button>
+              <Affix style={{ position: 'absolute', left: 'calc(100% - 40px)', top: 'calc(100% - 40px)' }}>
+                <Button className="float-menu-btn" icon={!this.state.drawer_visible ? 'menu-unfold' : 'menu-fold'} onClick={this.showDrawer} />
               </Affix>
             </Content>
           </Layout>
