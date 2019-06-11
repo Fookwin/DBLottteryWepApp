@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { Collapse, Form, Input, Row, Col, Button, DatePicker, TimePicker, Modal, Spin, Icon, List, Tooltip } from 'antd';
+import {  Form, Input, Row, Col, Button, DatePicker, TimePicker, Modal, Spin, Icon, List, Tooltip } from 'antd';
 import moment from 'moment';
 import { isArray } from "util";
 import AipHelper from './management-provider'
 
 const { TextArea } = Input;
-const { Panel } = Collapse;
 const FormItem = Form.Item;
 const time_format = 'HH:mm';
 const ButtonGroup = Button.Group;

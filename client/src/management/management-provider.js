@@ -96,6 +96,17 @@ function commitActions(cb) {
   });
 }
 
+function getUsers(platfrom, period, cb) {
+  axios.get('/users/?platform=' + platfrom + '&scope=' + period).then(function (res) {
+    console.log(res);
+    cb(res.data.data);
+
+  }).catch(function (res) {
+    console.log(res);
+    cb();
+  });
+}
+
 function preCommitReleaseChange(updatedData, cb) {
 
   axios.post('/precommit', updatedData).then(function (res) {
@@ -125,6 +136,7 @@ const ManagementAPIHelper = {
   getActionText,
   discardAction,
   commitActions,
-  notify
+  notify,
+  getUsers
 };
 export default ManagementAPIHelper;
