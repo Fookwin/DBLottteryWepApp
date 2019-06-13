@@ -103,13 +103,16 @@ class Users extends Component {
                     onCancel={this.clearResult}
                 >
                     <List
-                        grid={{ gutter: 16, column: 1 }}
+                        size="small"
                         dataSource={this.state.UserList}
+                        pagination={{
+                            pageSize: 4,
+                        }}
                         renderItem={user => (
                             <List.Item >
                                 <List.Item.Meta
                                     avatar={<Tooltip title={user.DeviceId}><Avatar style={{ backgroundColor: '#87d068' }} icon="user" /></Tooltip>}
-                                    title={<p > At: {user.LastLogin} </p>}
+                                    title={<p > Login At: {user.LastLogin} </p>}
                                     description={<p > Client: {user.ClientVersion}</p>}
                                 />
                             </List.Item>
