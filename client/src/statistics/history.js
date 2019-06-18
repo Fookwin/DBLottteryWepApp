@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Form, Select, Timeline, Button, Modal, List, Tooltip } from 'antd';
+import { Form, Select, Timeline, Button, Modal, Icon, Tooltip } from 'antd';
 import AipHelper from './api-provider';
+import InfiniteScroll from 'react-infinite-scroller';
 
-const pageSize = 10;
+const pageSize = 30;
 class History extends Component {
 
     constructor(props) {
@@ -11,9 +12,9 @@ class History extends Component {
         this.state = {
             Lotteries: [],
             Index: 0,
-            LoadedAll: false
+            loading: false,
+            hasMore: true,
         };
-
     }
 
     componentDidMount() {
@@ -21,14 +22,19 @@ class History extends Component {
     }
 
     LoadMore = () => {
-        if (!this.state.LoadedAll) {
+        if (this.state.hasMore) {
+            let loaded = this.state.Lotteries;
+            this.setState({
+                loading: true,
+            });
+
             AipHelper.getLotteries(this.state.Index, pageSize, (res) => {
                 if (res) {
-                    let loaded = this.state.Lotteries;
                     this.setState({
                         Index: res.NextIndex,
-                        LoadedAll: res.NextIndex < 0 ? true : false,
-                        Lotteries: loaded.concat(res.Lotteries)
+                        hasMore: res.NextIndex < 0 ? false : true,
+                        Lotteries: loaded.concat(res.Lotteries),
+                        loading: false,
                     });
                 }
             });
@@ -39,22 +45,28 @@ class History extends Component {
 
         return (
             <div className="history-container">
-                <Timeline style={{ padding: 10 }} pending={
-                    (
-                        <div>
-                            <label hidden={!this.state.LoadedAll}>-- end --</label>
-                            <button hidden={this.state.LoadedAll} onClick={this.LoadMore}>Load More</button>
-                        </div>
-                    )
-                }>
-                    {
-                        this.state.Lotteries.map(lot => (
-                            <Timeline.Item key={lot.issue}>
-                                <span><p>{lot.issue}</p><h3>{lot.numbers}</h3></span>
-                            </Timeline.Item>
-                        ))
-                    }
-                </Timeline >
+                <InfiniteScroll
+                    initialLoad={false}
+                    pageStart={0}
+                    loadMore={this.LoadMore}
+                    hasMore={!this.state.loading && this.state.hasMore}
+                    useWindow={false}
+                >
+                    <Timeline pending={
+                        (
+                            <label>{!this.state.hasMore ? '-- end --' : 'Loading ...'}</label>
+                        )
+                    }>
+                        {
+                            this.state.Lotteries.map(lot => (
+                                <Timeline.Item key={lot.issue}
+                                    dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color="red">
+                                    <span><p>{lot.issue}</p><h3>{lot.numbers}</h3></span>
+                                </Timeline.Item>
+                            ))
+                        }
+                    </Timeline >
+                </InfiniteScroll>
             </div>
         );
     }
