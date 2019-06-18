@@ -17,6 +17,7 @@ module.exports = function(app) {
     var UserTable = require('./modules/user-table.js');
     var ReleaseManager = require('./api/release-manager.js');
     var SqlManager = require('./api/sql-manager.js');
+    var DataManager = require('./api/data-manager.js');
 
     var _userTable = new UserTable(azure.createTableService(accountName, accountKey), userTableName);
     var _userMgr = new UserManager(_userTable);   
@@ -25,6 +26,7 @@ module.exports = function(app) {
     var _releaseMgr = new ReleaseManager(_blobServer);
 
     var _sqlManager = new SqlManager();
+    var _dataManager = new DataManager();
     
     /** HTTP GET */
     app.get('/users', _userMgr.getUsers.bind(_userMgr));
@@ -39,4 +41,5 @@ module.exports = function(app) {
     app.get('/notifications', _releaseMgr.getNotifications.bind(_releaseMgr));
     app.delete('/action/remove', _releaseMgr.removePendingAction.bind(_releaseMgr));
     app.get('/sql/obmission/:count?', _sqlManager.getObmission.bind(_sqlManager));
+    app.get('/lotto/?', _dataManager.getLotteries.bind(_dataManager));
 };

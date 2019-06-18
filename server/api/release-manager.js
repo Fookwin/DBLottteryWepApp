@@ -1,7 +1,7 @@
 var url = require('url'),
     request = require('request'),
     global = require('../config/global.js'),
-    endPoint = require('../config/config.js')[global.env].endPoint;
+    endPoint = require('../config/config.js')[global.env].endPoint + '/RFxDBManageService.svc';
 
 module.exports = ReleaseManager;
 
