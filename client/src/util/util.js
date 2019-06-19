@@ -1,3 +1,5 @@
+const weekDays = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+
 let getRandomNumber = function random(max) {
     return Math.ceil(Math.ceil(Math.random() * max * 100) / 100);
 }
@@ -62,6 +64,7 @@ const Utils = {
     getRandomNumber,
     getRandomNumbers,
     getMoneyFormat,
-    formateDate
+    formateDate,
+    weekDays
 };
 export default Utils;
