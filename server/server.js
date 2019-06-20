@@ -13,6 +13,7 @@ module.exports = function(app) {
     
     
     // initialize data modules
+    var DataCache = require('./data/data-cache.js')
     var UserManager = require('./api/user-manager.js');
     var UserTable = require('./modules/user-table.js');
     var ReleaseManager = require('./api/release-manager.js');
@@ -26,7 +27,7 @@ module.exports = function(app) {
     var _releaseMgr = new ReleaseManager(_blobServer);
 
     var _sqlManager = new SqlManager();
-    var _dataManager = new DataManager();
+    var _dataManager = new DataManager(DataCache);
     
     /** HTTP GET */
     app.get('/users', _userMgr.getUsers.bind(_userMgr));

@@ -17,7 +17,7 @@
     "express": "3.4.4",
     "hammer": "0.0.5",
     "nconf": "^0.8.4",
-    "request": "^2.72.0",
+    "request": "^2.88.0",
     "stylus": "*",
     "tedious": "^2.3.1"
   }
