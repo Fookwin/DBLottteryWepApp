@@ -16,7 +16,7 @@
     "react-scripts": "1.1.4"
   },
   "engines": {
-    "node": "10.16.0"
+    "node": "10.15.2"
   },
   "scripts": {
     "start": "set PORT=3006 && react-scripts start",
