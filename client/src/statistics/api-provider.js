@@ -3,7 +3,20 @@ import axios from 'axios';
 
 function getLotteries(tail, count, cb) {
 
-  axios.get('/lotto/?tail=' + tail + '&count=' + count)
+  axios.get('/lotto/history/?tail=' + tail + '&count=' + count)
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
+function getLotterry(issue, cb) {
+
+  axios.get(`/lotto/detail/?issue=${issue}`)
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -15,6 +28,7 @@ function getLotteries(tail, count, cb) {
 }
 
 const HistoryAPIHelper = {
-  getLotteries
+  getLotteries,
+  getLotterry,
 };
 export default HistoryAPIHelper;

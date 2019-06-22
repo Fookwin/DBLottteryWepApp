@@ -42,5 +42,6 @@ module.exports = function(app) {
     app.get('/notifications', _releaseMgr.getNotifications.bind(_releaseMgr));
     app.delete('/action/remove', _releaseMgr.removePendingAction.bind(_releaseMgr));
     app.get('/sql/obmission/:count?', _sqlManager.getObmission.bind(_sqlManager));
-    app.get('/lotto/?', _dataManager.getLotteries.bind(_dataManager));
+    app.get('/lotto/history/?', _dataManager.getLotteries.bind(_dataManager));
+    app.get('/lotto/detail/:issue?', _dataManager.getLottery.bind(_dataManager));
 };

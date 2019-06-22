@@ -1,4 +1,4 @@
-const weekDays = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
 let getRandomNumber = function random(max) {
     return Math.ceil(Math.ceil(Math.random() * max * 100) / 100);
@@ -8,7 +8,7 @@ let getRandomNumbers = function (count, max) {
     var nums = [];
     while (nums.length < count) {
         var rN = this.getRandomNumber(max);
-        if (!nums.find(function (num) { return num === rN })) {
+        if (!nums.find((num) => num === rN)) {
             nums.push(rN);
         }
     }
@@ -53,7 +53,7 @@ let formateDate = function (dateTime, format) {
     }
     for (var k in date) {
         if (new RegExp("(" + k + ")").test(format)) {
-            format = format.replace(RegExp.$1, RegExp.$1.length == 1
+            format = format.replace(RegExp.$1, RegExp.$1.length === 1
                 ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
         }
     }

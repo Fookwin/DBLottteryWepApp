@@ -5,6 +5,7 @@ import History from '../statistics/history';
 import Notification from '../management/notification';
 import Modification from '../management/modification';
 import UserManagement from '../management/users';
+import Lotto from '../statistics/lotto';
 import 'antd/dist/antd.css';
 import './App.css';
 import { Affix, Drawer, Button, Layout, Menu, Icon } from 'antd';
@@ -69,6 +70,7 @@ class App extends React.Component {
               <Route key="notification" path="/notification" component={Notification} />
               <Route key="users" path="/users" component={UserManagement} />
               <Route key="diagram" path="/diagram" component={Diagram} />
+              <Route key="lotto" path="/lotto/:issue" component={Lotto} />
               <Affix style={{ position: 'absolute', left: 'calc(100% - 40px)', top: 'calc(100% - 40px)' }}>
                 <Button className="float-menu-btn" icon={!this.state.drawer_visible ? 'menu-unfold' : 'menu-fold'} onClick={this.showDrawer} />
               </Affix>
