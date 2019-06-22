@@ -27,6 +27,10 @@ function NumBall({ num, ball }) {
 
 function LottoPage({ lotto }) {
 
+    if (!lotto) {
+        return (<div />);
+    }
+
     // get red and blue numbers
     let subs = lotto.scheme.split('+');
     let reds = subs[0].split(' ');
