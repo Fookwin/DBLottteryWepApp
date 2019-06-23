@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Row, Col, Card, Skeleton, Avatar, Icon, Table } from 'antd';
+import { Button, Row, Card, Skeleton, Icon, Table } from 'antd';
 import AipHelper from './api-provider';
 import './history.css';
 import Util from '../util/util'
-import { LottoPage, NumBall } from './components';
+import { NumBall } from './components';
 
 const { Meta } = Card;
 class Lotto extends Component {
@@ -42,31 +42,37 @@ class Lotto extends Component {
     BonusPanel = (bonus) => {
         const dataSource = [
             {
+                key: 1,
                 prize: '一等奖',
                 money: Util.getMoneyFormat(bonus[1]),
                 amount: bonus[0] + '注',
             },
             {
+                key: 2,
                 prize: '二等奖',
                 money: Util.getMoneyFormat(bonus[3]),
                 amount: bonus[2] + '注',
             },
             {
+                key: 3,
                 prize: '三等奖',
                 money: Util.getMoneyFormat(bonus[5]),
                 amount: bonus[4] + '注',
             },
             {
+                key: 4,
                 prize: '四等奖',
                 money: Util.getMoneyFormat(bonus[7]),
                 amount: bonus[6] + '注',
             },
             {
+                key: 5,
                 prize: '五等奖',
                 money: Util.getMoneyFormat(bonus[9]),
                 amount: bonus[8] + '注',
             },
             {
+                key: 6,
                 prize: '六等奖',
                 money: Util.getMoneyFormat(bonus[11]),
                 amount: bonus[10] + '注',
@@ -137,6 +143,14 @@ class Lotto extends Component {
         );
     }
 
+    goPrvious = () => {
+
+    }
+
+    goNext = () => {
+
+    }
+
     render() {
         const { issue, loading, lotto } = this.state;
 
@@ -145,7 +159,21 @@ class Lotto extends Component {
                 <Card actions={[<Icon type="setting" />, <Icon type="edit" />, <Icon type="ellipsis" />]}>
                     <Skeleton loading={loading} avatar active>
                         <Meta
-                            title={`第 ${issue} 期`}
+                            title={
+                                <Button.Group style={{ width: '100%' }}>
+                                    <Button type="default">
+                                        <Icon type="left" />
+                                        上一期
+                                        </Button>
+                                    <Button type="default">
+                                        {`第 ${issue} 期`}
+                                    </Button>
+                                    <Button type="default">
+                                        下一期
+                                        <Icon type="right" />
+                                    </Button>
+                                </Button.Group>
+                            }
                             description={this.DetailPage(lotto)}
                         />
                     </Skeleton>

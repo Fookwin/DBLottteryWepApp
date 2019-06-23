@@ -7,7 +7,52 @@ module.exports = DataManager;
 
 function DataManager(cache) {
     this.DataCache = cache;
-    this.state = 1;
+    this.getAllLotteriesPromise = null;
+
+    this.getAllLotteries = (callback) => {                // check if cached
+        if (this.DataCache.Lotteries && this.DataCache.Lotteries.length > 0) {
+            return callback(this.DataCache.Lotteries);
+        }
+
+        if (!this.getAllLotteriesPromise) {
+            this.getAllLotteriesPromise = new Promise((resolve, reject) => {
+
+                // otherwise require from server.
+                const options = {
+                    url: endPoint + '/Lotteries'
+                };
+
+                request(options.url, function postResponse(err, response, body) {
+
+                    // clean the promise
+                    this.getAllLotteriesPromise = null;
+
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    if (response && response.statusCode === 200) {
+                        var result = JSON.parse(body);
+
+                        console.log("SUCCESS: get all lotteries" + JSON.stringify(result));
+                        return resolve(result);
+                    } else {
+                        reject('failed to get next release data.');
+                    }
+                });
+            });
+
+            this.getAllLotteriesPromise.then((result) => {
+                // caching the lotto
+                this.DataCache.Lotteries = result.Lotteries;
+                return callback(this.DataCache.Lotteries);
+            }).catch((err) => {
+                console.log(err);
+                return callback();
+            });
+        }
+
+    }
 }
 
 DataManager.prototype = {
@@ -16,35 +61,24 @@ DataManager.prototype = {
 
         // get parameters
         const urlParams = url.parse(req.originalUrl, true).query;
-        const tail = urlParams.tail || 0;
-        const count = urlParams.count || 30;
+        const tail = parseInt(urlParams.tail) || 0;
+        const count = parseInt(urlParams.count) || 30;
 
-        const options = {
-            url: endPoint + '/Lotteries/?tail=' + tail + '&page=' + count
-        };
-
-        request(options.url, function postResponse(err, response, body) {
-
-            if (err) {
-                return res.status(400).json({ error: err });
+        this.getAllLotteries((all) => {
+            if (!all) {
+                return res.status(400).json({ error: 'failed to get lotteries.' });
             }
 
-            if (response && response.statusCode === 200) {
-                var result = JSON.parse(body);
+            // get the required range
+            const start = tail;
+            const size = Math.min(all.length - start, count);
+            let output = {
+                NextIndex: start + size === all.length ? -1 : start + size,
+                Lotteries: all.slice(start, start + size),
+            };
 
-                console.log("SUCCESS: get lotteries" + JSON.stringify(result));
-
-                // caching the lotto
-                result.Lotteries.forEach(lotto => {
-                    if (!self.DataCache.Lotteries.has(lotto.issue)) {
-                        self.DataCache.Lotteries.set(lotto.issue, lotto);
-                    }
-                });
-
-                res.status(200).json({ error: null, data: result });
-            } else {
-                res.status(400).json({ error: 'failed to get next release data.' });
-            }
+            console.log(`Success: get ${size} lotteries start with ${start}` + JSON.stringify(output));
+            return res.status(200).json({ error: null, data: output });
         });
     },
     getLottery: function (req, res) {
