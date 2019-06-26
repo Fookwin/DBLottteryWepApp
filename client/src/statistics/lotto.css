@@ -1,4 +1,4 @@
-.history-container {
+.lotto-container {
   border-bottom: 1px dashed #e9e9e9;
   border-top: 1px dashed #e9e9e9;
   background-color: white;
@@ -8,10 +8,7 @@
   height: calc(100vh);
 }
 
-.polaroid {
-  margin-left: 5px;
-  padding: 5px;
-  border-radius: 10px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.19);
-  text-align: center;
+.lotto-title {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

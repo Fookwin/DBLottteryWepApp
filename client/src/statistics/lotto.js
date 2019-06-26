@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Row, Card, Skeleton, Icon, Table, } from 'antd';
 import AipHelper from './api-provider';
-import './history.css';
+import './lotto.css';
 import Util from '../util/util'
 import { NumBall } from './components';
 
@@ -138,10 +138,10 @@ class Lotto extends Component {
                 <Row>
                     奖池金额：{Util.getMoneyFormat(lotto.pool)}
                 </Row >
-                <Row style={{ marginTop: 10 }}>
+                <Row style={{ marginTop: 20 }}>
                     {this.BonusPanel(lotto.bonus)}
                 </Row >
-                <Row style={{ marginTop: 10, textAlign: 'left' }}>
+                <Row style={{ marginTop: 20, textAlign: 'left' }}>
                     {lotto.details}
                 </Row>
             </div>
@@ -152,7 +152,7 @@ class Lotto extends Component {
         const { issue, previous, next } = this.state;
 
         return (
-            <Button.Group style={{ width: '100%' }}>
+            <Button.Group className='lotto-title'>
                 <Button type="default" disabled={previous < 0} onClick={this.goPrvious}>
                     <Icon type="left" />
                     上一期
@@ -179,16 +179,14 @@ class Lotto extends Component {
     render() {
         const { loading, lotto, } = this.state;
         return (
-            <div style={{ margin: 5 }}>
-                <Card actions={[<Icon type="setting" />, <Icon type="edit" />, <Icon type="ellipsis" />]}>
-                    <Skeleton loading={loading} avatar active>
-                        <Meta
-                            title={this.TitleControl()}
-                            description={this.DetailPage(lotto)}
-                        />
-                    </Skeleton>
-                </Card>
-            </div>
+            <Card className='lotto-container'>
+                <Skeleton loading={loading} avatar active>
+                    <Meta
+                        title={this.TitleControl()}
+                        description={this.DetailPage(lotto)}
+                    />
+                </Skeleton>
+            </Card>
         );
     }
 }
