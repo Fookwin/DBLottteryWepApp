@@ -51,8 +51,26 @@ function DataManager(cache) {
                 return callback();
             });
         }
+    };
 
-    }
+    this.GetPreviousAndNextIssue = (issue, callback) => {
+        // get the list
+        this.getAllLotteries((all) => {
+            if (!all) {
+                return callback();
+            }
+
+            const index = all.findIndex((lot) => lot.issue === issue);
+            if (index < 0) {
+                return callback();
+            }
+
+            return callback({
+                Previous: index === 0 ? -1 : all[index - 1].issue,
+                Next: index === all.length - 1 ? -1 : all[index + 1].issue
+            });
+        });
+    };
 }
 
 DataManager.prototype = {
@@ -84,9 +102,6 @@ DataManager.prototype = {
     getLottery: function (req, res) {
         self = this;
 
-        console.log("state " + self.state);
-        console.log(JSON.stringify(self.DataCache.Lotteries.get(2019071)));
-
         // get parameters
         const urlParams = url.parse(req.originalUrl, true).query;
         const issue = parseInt(urlParams.issue);
@@ -95,41 +110,52 @@ DataManager.prototype = {
             return res.status(500).json({ error: 'invalid issue.' });
         }
 
-        if (!self.DataCache.Lotteries.has(issue)) {
-            console.log("Failed: not found the lotto in cache for issue " + issue);
-            return res.status(500).json({ error: 'invalid issue.' });
+        // has cached?
+        if (self.DataCache.lottoDetails.has(issue)) {
+            const result = self.DataCache.lottoDetails.get(issue);
+            self.GetPreviousAndNextIssue(issue, (output) => {
+                if (!output) {
+                    return res.status(500).json({ error: 'invalid issue.' });
+                }
+
+                output.Detail = result;
+                console.log("SUCCESS: get the lotto detail from cache" + JSON.stringify(output));
+                return res.status(200).json({ error: null, data: output });
+            });
         }
 
-        console.log("SUCCESS: get lotto for issue " + issue + "\n" + JSON.stringify(self.DataCache.Lotteries.get(issue)));
+        // ask server for the data
+        // otherwise require from server.
+        const options = {
+            url: endPoint + '/Lotteries/detail?issue=' + issue
+        };
 
-        return res.status(200).json({ error: null, data: self.DataCache.Lotteries.get(issue) });
+        request(options.url, function postResponse(err, response, body) {
 
-        // const options = {
-        //     url: endPoint + '/Lotteries/?tail=' + tail + '&page=' + count
-        // };
+            if (err) {
+                return res.status(400).json({ error: err });
+            }
 
-        // request(options.url, function postResponse(err, response, body) {
+            if (response && response.statusCode === 200) {
+                var result = JSON.parse(body);
 
-        //     if (err) {
-        //         return res.status(400).json({ error: err });
-        //     }
+                // cache it
+                self.DataCache.lottoDetails.set(issue, result);
 
-        //     if (response && response.statusCode === 200) {
-        //         var lottoList = JSON.parse(body);
-
-        //         console.log("SUCCESS: get lotteries" + JSON.stringify(lottoList));
-        //         res.status(200).json({ error: null, data: lottoList });
-
-        //         // caching the lotto
-        //         lottoList.forEach(lotto => {
-        //             if (!DataCache.History.Lotteries.has(lotto.issue)) {
-        //                 DataCache.History.Lotteries.set(lotto.issue, lotto);
-        //             }
-        //         });
-        //     } else {
-        //         res.status(400).json({ error: 'failed to get next release data.' });
-        //     }
-        // });
+                self.GetPreviousAndNextIssue(issue, (output) => {
+                    if (!output) {
+                        return res.status(500).json({ error: 'invalid issue.' });
+                    }
+    
+                    output.Detail = result;
+                    console.log("SUCCESS: get the lotto detail from server" + JSON.stringify(output));
+                    return res.status(200).json({ error: null, data: output });
+                });
+            } else {
+                console.log("Failed: no valid response from server ");
+                return res.status(400).json({ error: 'no valid response from server' });
+            }
+        });
     }
 };
 

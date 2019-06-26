@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Row, Card, Skeleton, Icon, Table } from 'antd';
+import { Button, Row, Card, Skeleton, Icon, Table, } from 'antd';
 import AipHelper from './api-provider';
 import './history.css';
 import Util from '../util/util'
@@ -14,26 +14,31 @@ class Lotto extends Component {
         this.state = {
             issue: props.match.params.issue,
             loading: false,
-            lotto: null
+            lotto: null,
+            previous: -1,
+            next: -1,
         };
     }
 
     componentDidMount() {
-        this.LoadLotto();
+        this.LoadLotto(this.state.issue);
     }
 
-    LoadLotto = () => {
+    LoadLotto = (issue) => {
 
         this.setState({
             loading: true,
         });
 
-        AipHelper.getLotterry(this.state.issue, (res) => {
+        AipHelper.getLotterry(issue, (res) => {
             if (res) {
                 console.log(res);
                 this.setState({
+                    issue: issue,
                     loading: false,
-                    lotto: res
+                    lotto: res.Detail,
+                    previous: res.Previous,
+                    next: res.Next,
                 });
             }
         });
@@ -143,37 +148,42 @@ class Lotto extends Component {
         );
     }
 
-    goPrvious = () => {
+    TitleControl = () => {
+        const { issue, previous, next } = this.state;
 
+        return (
+            <Button.Group style={{ width: '100%' }}>
+                <Button type="default" disabled={previous < 0} onClick={this.goPrvious}>
+                    <Icon type="left" />
+                    上一期
+                </Button>
+                <Button type="default">
+                    {`第 ${issue} 期`}
+                </Button>
+                <Button type="default" disabled={next < 0} onClick={this.goNext}>
+                    下一期
+                    <Icon type="right" />
+                </Button>
+            </Button.Group>
+        );
+    }
+
+    goPrvious = () => {
+        this.LoadLotto(this.state.previous);
     }
 
     goNext = () => {
-
+        this.LoadLotto(this.state.next);
     }
 
     render() {
-        const { issue, loading, lotto } = this.state;
-
+        const { loading, lotto, } = this.state;
         return (
             <div style={{ margin: 5 }}>
                 <Card actions={[<Icon type="setting" />, <Icon type="edit" />, <Icon type="ellipsis" />]}>
                     <Skeleton loading={loading} avatar active>
                         <Meta
-                            title={
-                                <Button.Group style={{ width: '100%' }}>
-                                    <Button type="default">
-                                        <Icon type="left" />
-                                        上一期
-                                        </Button>
-                                    <Button type="default">
-                                        {`第 ${issue} 期`}
-                                    </Button>
-                                    <Button type="default">
-                                        下一期
-                                        <Icon type="right" />
-                                    </Button>
-                                </Button.Group>
-                            }
+                            title={this.TitleControl()}
                             description={this.DetailPage(lotto)}
                         />
                     </Skeleton>
