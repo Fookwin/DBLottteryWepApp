@@ -59,7 +59,7 @@ class History extends Component {
         }
 
         return (
-            <Timeline.Item key={lot.issue} color='darkgrey'>
+            <Timeline.Item key={lot.issue} color='darkgrey' onClick={() => this.ShowLottoDetail(lot.issue)}>
                 <LottoPage lotto={lot} />
             </Timeline.Item>
         );

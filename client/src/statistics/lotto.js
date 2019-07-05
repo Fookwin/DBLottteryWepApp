@@ -126,7 +126,7 @@ class Lotto extends Component {
                 <Row>
                     开奖时间：{myDate.toLocaleDateString()} {Util.weekDays[myDate.getDay()]}
                 </Row>
-                <Row style={{ margin: 10 }}>
+                <Row style={{ margin: 5 }}>
                     {
                         reds.map(red => <NumBall key={red} num={red} ball='red-ball' />)
                     }
