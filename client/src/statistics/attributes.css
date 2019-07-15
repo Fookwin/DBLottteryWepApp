@@ -7,3 +7,16 @@
   overflow-y: auto;
   height: calc(100vh);
 }
+
+.category-panel {
+  background: '#f7f7f7';
+  border-radius: 4px;
+  margin-bottom: 12px;
+  border: 0;
+  overflow: 'hidden';
+}
+
+.recommandation-card {
+  text-align: left;
+  margin-bottom: 10px !important;
+}
