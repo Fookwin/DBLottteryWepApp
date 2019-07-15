@@ -105,7 +105,7 @@ class Attributes extends Component {
                                         />
                                     }
                                     title={`${attri.Display} = ${attri.Expression}`}
-                                    description={`平均遗漏：${attri.AverageOmission}期 当前遗漏：${attri.ImmediateOmission}期`}
+                                    description={`平均遗漏：${attri.AverageOmission} 期 | 当前遗漏：${attri.ImmediateOmission} 期`}
                                 />
                             </Card>
                         })
