@@ -27,8 +27,22 @@ function getLotterry(issue, cb) {
     });
 }
 
+function getAttributes(cb) {
+
+  axios.get('/attributes')
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
 const HistoryAPIHelper = {
   getLotteries,
   getLotterry,
+  getAttributes,
 };
 export default HistoryAPIHelper;

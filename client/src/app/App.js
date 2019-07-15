@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Diagram from "../diagram/diagram";
 import History from '../statistics/history';
+import Attributes from '../statistics/attributes';
 import Notification from '../management/notification';
 import Modification from '../management/modification';
 import UserManagement from '../management/users';
@@ -53,6 +54,7 @@ class App extends React.Component {
               <Menu.Item key="home"><Link to="/home"><Icon type="user" /><span>Home</span></Link></Menu.Item>
               <SubMenu key="statistics" title={<span><Icon type="mail" /><span>Statistics</span></span>}>
                 <Menu.Item key="history"><Link to="/history"><Icon type="user" /><span>History</span></Link></Menu.Item>
+                <Menu.Item key="attributes"><Link to="/attributes"><Icon type="user" /><span>Attributes</span></Link></Menu.Item>
               </SubMenu>
               <Menu.Item key="diagram"><Link to="/diagram"><Icon type="user" /><span>Daigram</span></Link></Menu.Item>
               <SubMenu key="management" title={<span><Icon type="mail" /><span>Management</span></span>}>
@@ -66,6 +68,7 @@ class App extends React.Component {
             <Content className="layout-container">
               <Route key="home" path="/home" component={Home} />
               <Route key="history" path="/history" component={History} />
+              <Route key="attributes" path="/attributes" component={Attributes} />
               <Route key="modification" path="/modification" component={Modification} />
               <Route key="notification" path="/notification" component={Notification} />
               <Route key="users" path="/users" component={UserManagement} />

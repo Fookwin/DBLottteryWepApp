@@ -1,7 +1,8 @@
 class DataCache {
     constructor() {
         this.Lotteries = null;
-        this.lottoDetails = new Map();
+        this.LottoDetails = new Map();
+        this.Attributes = null;
     }
 }
 

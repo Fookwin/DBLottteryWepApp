@@ -1,7 +1,8 @@
 let url = require('url'),
     request = require('request'),
     global = require('../config/global.js'),
-    endPoint = require('../config/config.js')[global.env].endPoint + '/RFxDBHistoryService.svc';
+    lotto_endPoint = require('../config/config.js')[global.env].endPoint + '/RFxDBHistoryService.svc';
+    attri_endPoint = require('../config/config.js')[global.env].endPoint + '/RFxDBAttributeService.svc';
 
 module.exports = DataManager;
 
@@ -19,7 +20,7 @@ function DataManager(cache) {
 
                 // otherwise require from server.
                 const options = {
-                    url: endPoint + '/Lotteries'
+                    url: lotto_endPoint + '/Lotteries'
                 };
 
                 request(options.url, function postResponse(err, response, body) {
@@ -111,8 +112,8 @@ DataManager.prototype = {
         }
 
         // has cached?
-        if (self.DataCache.lottoDetails.has(issue)) {
-            const result = self.DataCache.lottoDetails.get(issue);
+        if (self.DataCache.LottoDetails.has(issue)) {
+            const result = self.DataCache.LottoDetails.get(issue);
             self.GetPreviousAndNextIssue(issue, (output) => {
                 if (!output) {
                     return res.status(500).json({ error: 'invalid issue.' });
@@ -127,7 +128,7 @@ DataManager.prototype = {
         // ask server for the data
         // otherwise require from server.
         const options = {
-            url: endPoint + '/Lotteries/detail?issue=' + issue
+            url: lotto_endPoint + '/Lotteries/detail?issue=' + issue
         };
 
         request(options.url, function postResponse(err, response, body) {
@@ -140,17 +141,51 @@ DataManager.prototype = {
                 var result = JSON.parse(body);
 
                 // cache it
-                self.DataCache.lottoDetails.set(issue, result);
+                self.DataCache.LottoDetails.set(issue, result);
 
                 self.GetPreviousAndNextIssue(issue, (output) => {
                     if (!output) {
                         return res.status(500).json({ error: 'invalid issue.' });
                     }
-    
+
                     output.Detail = result;
                     console.log("SUCCESS: get the lotto detail from server" + JSON.stringify(output));
                     return res.status(200).json({ error: null, data: output });
                 });
+            } else {
+                console.log("Failed: no valid response from server ");
+                return res.status(400).json({ error: 'no valid response from server' });
+            }
+        });
+    },
+    getAttributes: function (req, res) {
+        self = this;
+
+        // has cached?
+        if (self.DataCache.Attributes) {
+            console.log("SUCCESS: get attributes from cache");
+            return res.status(200).json({ error: null, data: self.DataCache.Attributes });
+        }
+
+        // ask server for the data
+        // otherwise require from server.
+        const options = {
+            url: attri_endPoint + '/Attribute'
+        };
+
+        request(options.url, function postResponse(err, response, body) {
+
+            if (err) {
+                return res.status(400).json({ error: err });
+            }
+
+            if (response && response.statusCode === 200) {
+                var result = JSON.parse(body);
+
+                // cache it
+                self.DataCache.Attributes = result;
+                console.log("SUCCESS: get attributes from server" + JSON.stringify(self.DataCache.Attributes));
+                return res.status(200).json({ error: null, data: self.DataCache.Attributes });
             } else {
                 console.log("Failed: no valid response from server ");
                 return res.status(400).json({ error: 'no valid response from server' });

@@ -44,4 +44,5 @@ module.exports = function(app) {
     app.get('/sql/obmission/:count?', _sqlManager.getObmission.bind(_sqlManager));
     app.get('/lotto/history/?', _dataManager.getLotteries.bind(_dataManager));
     app.get('/lotto/detail/:issue?', _dataManager.getLottery.bind(_dataManager));
+    app.get('/attributes', _dataManager.getAttributes.bind(_dataManager));
 };
