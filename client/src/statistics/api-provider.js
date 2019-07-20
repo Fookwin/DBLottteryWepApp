@@ -40,9 +40,23 @@ function getAttributes(cb) {
     });
 }
 
+function getAttribute(name, cb) {
+
+  axios.get('/attribute/?name=' + name)
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
 const HistoryAPIHelper = {
   getLotteries,
   getLotterry,
   getAttributes,
+  getAttribute,
 };
 export default HistoryAPIHelper;

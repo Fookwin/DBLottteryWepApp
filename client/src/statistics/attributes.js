@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Divider, List, Icon, Card, Collapse, Button, Spin, Progress } from 'antd';
+import { Divider, List, Icon, Collapse, Button, Spin } from 'antd';
 import AipHelper from './api-provider';
+import { StatePanel } from './components';
 import './attributes.css';
 
 const { Panel } = Collapse;
-const { Meta } = Card;
 
 class Attributes extends Component {
 
@@ -59,11 +59,10 @@ class Attributes extends Component {
                     let matrix = state.Value.split(',');
                     if (!matrix.find((val, inx) => val < this.state.Filters[inx])) {
                         states.push({
-                            Display: attri.Display,
-                            Expression: state.Expression,
-                            AverageOmission: matrix[3],
-                            ImmediateOmission: matrix[5],
-                            ProtentialEnergy: matrix[6],
+                            Key: attri.Name,
+                            State: state,
+                            Title:`${attri.Display} = ${state.Expression}`,
+                            ProtentialEnergy: matrix[6]
                         })
                     }
                 });
@@ -86,29 +85,7 @@ class Attributes extends Component {
                 <Divider>异常属性</Divider>
                 <Spin spinning={this.state.loading} size="large">
                     {
-                        Recommendation.map(attri => {
-                            return <Card className='recommandation-card' key={attri.Display}>
-                                <Meta
-                                    avatar={
-                                        <Progress
-                                            strokeColor={{
-                                                '0%': 'rgb(150, 0, 0)',
-                                                '50%': 'rgb(200, 0, 0)',
-                                                '100%': 'rgb(255, 0, 0)',
-                                            }}
-                                            strokeWidth={15}
-                                            strokeLinecap='square'
-                                            format={percent => `${percent}`}
-                                            percent={Math.round(Math.min(attri.ProtentialEnergy, 14.9) * 100 / 15)}
-                                            type="dashboard"
-                                            width={60}
-                                        />
-                                    }
-                                    title={`${attri.Display} = ${attri.Expression}`}
-                                    description={`平均遗漏：${attri.AverageOmission} 期 | 当前遗漏：${attri.ImmediateOmission} 期`}
-                                />
-                            </Card>
-                        })
+                        Recommendation.map(item => <StatePanel key={item.Key} state={item.State} title={item.Title} clickFunc={() => this.ShowAttributeDetail(item.Key)}/>)
                     }
                 </Spin>
                 <Divider>全部属性</Divider>
@@ -132,7 +109,7 @@ class Attributes extends Component {
                                     dataSource={cat.Attributes}
                                     renderItem={attri => (
                                         <List.Item>
-                                            <Button>{attri.Display}</Button>
+                                            <Button onClick={() => this.ShowAttributeDetail(attri.Name)}>{attri.Display}</Button>
                                         </List.Item>
                                     )}
                                 />

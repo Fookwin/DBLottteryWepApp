@@ -1,8 +1,9 @@
 import React from "react";
 import Util from '../util/util'
 import './components.css';
-import { Row, Col } from 'antd';
+import { Progress, Row, Col, Statistic, Card, Rate } from 'antd';
 
+const { Meta } = Card;
 function NumBall({ num, ball }) {
 
     return (
@@ -54,7 +55,58 @@ function LottoPage({ lotto }) {
     );
 }
 
+function StatePanel({ state, title, clickFunc }) {
+    const matrix = state.Value.split(',');
+    const data = {
+        AverageOmission: matrix[3] < 0 ? matrix[4] : matrix[3],
+        ImmediateOmission: matrix[5],
+        ProtentialEnergy: matrix[6],
+        MaxOmission: matrix[4],
+    };
+    const score = Math.round(Math.min(data.ProtentialEnergy, 14.9) / 3);
+    const averagePercent = (data.AverageOmission / data.MaxOmission) * 100;
+    const currentPercent = (data.ImmediateOmission / data.MaxOmission) * 100;
+
+    return (
+        <Card className='recommandation-card'
+            actions={[<Rate disabled allowHalf defaultValue={score} />]}
+            onClick={clickFunc}
+            bodyStyle={{ padding: 18}}
+        >
+            <Meta
+                avatar={
+                    <Progress
+                        strokeColor='red'
+                        strokeWidth={10}
+                        strokeLinecap='square'
+                        format={() => `${Math.round(data.ProtentialEnergy)}倍`}
+                        percent={currentPercent}
+                        successPercent={averagePercent}
+                        type="circle"
+                        width={90}
+                    />
+                }
+                title={title}
+                description={
+                    <Row>
+                        <Col span={8}>
+                            <Statistic title="平均遗漏" valueStyle={{ color: 'green' }} value={data.AverageOmission} suffix=" 期" />
+                        </Col>
+                        <Col span={8}>
+                            <Statistic title="最大遗漏" valueStyle={{ color: 'dimgrey' }} value={data.MaxOmission} suffix="期" />
+                        </Col>
+                        <Col span={8}>
+                            <Statistic title="当前遗漏" valueStyle={{ color: 'red' }} value={data.ImmediateOmission} suffix="期" />
+                        </Col>
+                    </Row>
+                }
+            />
+        </Card >
+    );
+}
+
 export {
     NumBall,
-    LottoPage
+    LottoPage,
+    StatePanel,
 }

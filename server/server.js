@@ -45,4 +45,5 @@ module.exports = function(app) {
     app.get('/lotto/history/?', _dataManager.getLotteries.bind(_dataManager));
     app.get('/lotto/detail/:issue?', _dataManager.getLottery.bind(_dataManager));
     app.get('/attributes', _dataManager.getAttributes.bind(_dataManager));
+    app.get('/attribute/:name?', _dataManager.getAttribute.bind(_dataManager));
 };
