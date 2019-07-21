@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {  Form, Input, Row, Col, Button, DatePicker, TimePicker, Modal, Spin, Icon, List, Tooltip } from 'antd';
 import moment from 'moment';
 import { isArray } from "util";
-import AipHelper from './management-provider'
+import AipHelper from '../util/api-helper'
 
 const { TextArea } = Input;
 const FormItem = Form.Item;

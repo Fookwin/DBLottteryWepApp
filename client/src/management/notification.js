@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Form, Input, Select, Button, notification} from 'antd';
-import AipHelper from './management-provider'
+import AipHelper from '../util/api-helper'
 
 const { TextArea } = Input;
 const FormItem = Form.Item;

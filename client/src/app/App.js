@@ -8,6 +8,7 @@ import Modification from '../management/modification';
 import UserManagement from '../management/users';
 import Lotto from '../statistics/lotto';
 import Attribute from '../statistics/attribute';
+import Help from '../help/help';
 import 'antd/dist/antd.css';
 import './App.css';
 import { Affix, Drawer, Button, Layout, Menu, Icon } from 'antd';
@@ -68,6 +69,7 @@ class App extends React.Component {
           <Layout>
             <Content className="layout-container">
               <Route key="home" path="/home" component={Home} />
+              <Route key="help" path="/help/:id" component={Help} />
               <Route key="history" path="/history" component={History} />
               <Route key="attributes" path="/attributes" component={Attributes} />
               <Route key="modification" path="/modification" component={Modification} />

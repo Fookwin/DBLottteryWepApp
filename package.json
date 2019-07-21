@@ -10,15 +10,12 @@
     "node": "10.15.2"
   },
   "dependencies": {
-    "async": "^2.0.0-rc.5",
     "azure": "*",
     "azure-storage": "^1.0.1",
     "ejs": "*",
     "express": "3.4.4",
-    "hammer": "0.0.5",
     "nconf": "^0.8.4",
     "request": "^2.88.0",
-    "stylus": "*",
     "tedious": "^2.3.1"
   }
 }

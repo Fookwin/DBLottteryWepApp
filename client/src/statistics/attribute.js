@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Divider, Spin, } from 'antd';
-import AipHelper from './api-provider';
+import { Divider, Spin, Typography, Icon } from 'antd';
+import AipHelper from '../util/api-helper';
 import { StatePanel } from './components';
 import './attribute.css';
 
+const { Title } = Typography;
 class Attribute extends Component {
 
     constructor(props) {
@@ -37,13 +38,17 @@ class Attribute extends Component {
         });
     }
 
+    goHelp = () => {
+        window.location = `/help/${this.state.attribute.HID}`;
+    }
+
     render() {
         const { loading, attribute, } = this.state;
         const { States, Display } = attribute || { States: [] };
 
         return (
             <div className='attribute-container'>
-                <Divider>{Display}</Divider>
+                <Divider><Title type='secondary' level={4}>{Display}  <Icon type="question-circle" onClick={this.goHelp} /></Title></Divider>
                 <Spin spinning={loading} size="large">
                     {
                         States.map(state => <StatePanel key={state.Expression} state={state} title={`${Display} = ${state.Expression}`} />)

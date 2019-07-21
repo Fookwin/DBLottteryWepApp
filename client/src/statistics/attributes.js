@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Divider, List, Icon, Collapse, Button, Spin } from 'antd';
-import AipHelper from './api-provider';
+import { Divider, List, Icon, Collapse, Button, Spin, Typography } from 'antd';
+import AipHelper from '../util/api-helper';
 import { StatePanel } from './components';
 import './attributes.css';
 
 const { Panel } = Collapse;
-
+const { Title } = Typography;
 class Attributes extends Component {
 
     constructor(props) {
@@ -61,7 +61,7 @@ class Attributes extends Component {
                         states.push({
                             Key: attri.Name,
                             State: state,
-                            Title:`${attri.Display} = ${state.Expression}`,
+                            Title: `${attri.Display} = ${state.Expression}`,
                             ProtentialEnergy: matrix[6]
                         })
                     }
@@ -76,19 +76,23 @@ class Attributes extends Component {
         window.location = `/attribute/${attri}`;
     }
 
+    goHelp = () => {
+        window.location = '/help/29'; // HID = 29
+    }
+
     render() {
         let { Attributes, Recommendation } = this.state;
         let categories = Attributes.Categories || [];
 
         return (
             <div className="attributes-container">
-                <Divider>异常属性</Divider>
+                <Divider><Title type='warning' level={4}>异常属性  <Icon type="question-circle" onClick={this.goHelp} /></Title></Divider>
                 <Spin spinning={this.state.loading} size="large">
                     {
-                        Recommendation.map(item => <StatePanel key={item.Key} state={item.State} title={item.Title} clickFunc={() => this.ShowAttributeDetail(item.Key)}/>)
+                        Recommendation.map(item => <StatePanel key={item.Key} state={item.State} title={item.Title} clickFunc={() => this.ShowAttributeDetail(item.Key)} />)
                     }
                 </Spin>
-                <Divider>全部属性</Divider>
+                <Divider><Title type='secondary' level={4}>全部属性</Title></Divider>
                 {
                     categories.map(cat => {
                         return <Collapse

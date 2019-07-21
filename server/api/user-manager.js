@@ -1,11 +1,11 @@
 var azure = require('azure-storage'),
-    async = require('async'),
     url = require('url');
     
 module.exports = UserManager;
 
-function UserManager(tb) {
+function UserManager(tb, userTableName) {
     this.table = tb;
+    this.tableName = userTableName;
 }
 
 UserManager.prototype = {
@@ -28,7 +28,7 @@ UserManager.prototype = {
                 .where('PartitionKey eq ? && LastLogin >= ?', platform, laterThan)
                 .select('DeviceId', 'LastLogin', 'ClientVersion');
             
-        self.table.find(query, function itemsFound(error, items) {
+        self.table.find(self.tableName, query, function itemsFound(error, items) {
             if (error) {
                 console.error('ERR ' + 'Fail to get users registered on platform ' + platform + '. Error: ' + error);
                 return res.status (200).json({error: error, data: []}); 

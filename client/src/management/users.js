@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Form, Select, Avatar, Button, Modal, List, Tooltip } from 'antd';
-import AipHelper from './management-provider'
+import AipHelper from '../util/api-helper'
 
 const FormItem = Form.Item;
 const Option = Select.Option;

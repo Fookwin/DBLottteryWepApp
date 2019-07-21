@@ -1,34 +1,38 @@
-module.exports = function(app) {
-    
+module.exports = function (app) {
+
     var azure = require('azure-storage');
     var nconf = require('nconf');
-    
+
     // read configrtion...
-    nconf.env().file({file: 'config.json', search : true});
-    
+    nconf.env().file({ file: 'config.json', search: true });
+
     var userTableName = nconf.get('USER_TABLE'),
+        helpTopicTableName = nconf.get('HELP_TOPIC_TABLE'),
+        helpItemTableName = nconf.get('HELP_ITEM_TABLE'),
         partitionKey = nconf.get('STORAGE_PK'),
         accountName = nconf.get('STORAGE_AN'),
         accountKey = nconf.get('STORAGE_AK');
-    
-    
+
+
     // initialize data modules
     var DataCache = require('./data/data-cache.js')
     var UserManager = require('./api/user-manager.js');
-    var UserTable = require('./modules/user-table.js');
+    var HelpManager = require('./api/help-manager.js');
+    var AzureTable = require('./modules/azure-table');
     var ReleaseManager = require('./api/release-manager.js');
     var SqlManager = require('./api/sql-manager.js');
     var DataManager = require('./api/data-manager.js');
 
-    var _userTable = new UserTable(azure.createTableService(accountName, accountKey), userTableName);
-    var _userMgr = new UserManager(_userTable);   
+    var _azureTable = new AzureTable(azure.createTableService(accountName, accountKey));
+    var _userMgr = new UserManager(_azureTable, userTableName);
+    var _helpMgr = new HelpManager(_azureTable, helpTopicTableName, helpItemTableName);
 
-    var _blobServer = azure.createBlobService(accountName, accountKey) 
+    var _blobServer = azure.createBlobService(accountName, accountKey)
     var _releaseMgr = new ReleaseManager(_blobServer);
 
     var _sqlManager = new SqlManager();
     var _dataManager = new DataManager(DataCache);
-    
+
     /** HTTP GET */
     app.get('/users', _userMgr.getUsers.bind(_userMgr));
     app.get('/lotto/last', _releaseMgr.getLastReleaseData.bind(_releaseMgr));
@@ -46,4 +50,5 @@ module.exports = function(app) {
     app.get('/lotto/detail/:issue?', _dataManager.getLottery.bind(_dataManager));
     app.get('/attributes', _dataManager.getAttributes.bind(_dataManager));
     app.get('/attribute/:name?', _dataManager.getAttribute.bind(_dataManager));
+    app.get('/help/:id?', _helpMgr.getTopic.bind(_helpMgr));
 };

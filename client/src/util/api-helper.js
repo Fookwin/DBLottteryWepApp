@@ -126,7 +126,72 @@ function notify(content, cb) {
   });
 }
 
-const ManagementAPIHelper = {
+function getLotteries(tail, count, cb) {
+
+  axios.get('/lotto/history/?tail=' + tail + '&count=' + count)
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
+function getLotterry(issue, cb) {
+
+  axios.get(`/lotto/detail/?issue=${issue}`)
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
+function getAttributes(cb) {
+
+  axios.get('/attributes')
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
+function getAttribute(name, cb) {
+
+  axios.get('/attribute/?name=' + name)
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
+function getHelp(id, cb) {
+
+  axios.get('/help/?id=' + id)
+    .then(res => {
+      console.log(res);
+      cb(res.data.data);
+    })
+    .catch(res => {
+      console.log(res);
+      cb();
+    });
+}
+
+const APIHelper = {
   getLatestIssueInfo,
   syncLottoDetailFromWeb,
   createNewLottoRelease,
@@ -137,6 +202,11 @@ const ManagementAPIHelper = {
   discardAction,
   commitActions,
   notify,
-  getUsers
+  getUsers,
+  getLotteries,
+  getLotterry,
+  getAttributes,
+  getAttribute,
+  getHelp,
 };
-export default ManagementAPIHelper;
+export default APIHelper;

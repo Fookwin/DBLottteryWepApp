@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Timeline, Badge } from 'antd';
-import AipHelper from './api-provider';
+import AipHelper from '../util/api-helper';
 import InfiniteScroll from 'react-infinite-scroller';
 import './history.css';
 import { LottoPage } from './components';

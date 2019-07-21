@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Button, Row, Card, Skeleton, Icon, Table, } from 'antd';
-import AipHelper from './api-provider';
+import { Button, Row, Card, Skeleton, Icon, Table, Typography, Divider, } from 'antd';
+import AipHelper from '../util/api-helper';
 import './lotto.css';
 import Util from '../util/util'
 import { NumBall } from './components';
 
 const { Meta } = Card;
+const { Title } = Typography;
 class Lotto extends Component {
 
     constructor(props) {
@@ -111,6 +112,10 @@ class Lotto extends Component {
         );
     }
 
+    goHelp = () => {
+        window.location = '/help/27'; // HID = 27
+    }
+
     DetailPage = (lotto) => {
         if (!lotto) {
             return <div />;
@@ -123,6 +128,7 @@ class Lotto extends Component {
 
         return (
             <div>
+                <Divider><Title type='secondary' level={4}>开奖详情  <Icon type="question-circle" onClick={this.goHelp} /></Title></Divider>
                 <Row>
                     开奖时间：{myDate.toLocaleDateString()} {Util.weekDays[myDate.getDay()]}
                 </Row>
