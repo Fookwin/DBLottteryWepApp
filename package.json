@@ -12,12 +12,14 @@
   "dependencies": {
     "azure": "*",
     "azure-storage": "^1.0.1",
-    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "ejs": "*",
     "express": "3.4.4",
     "nconf": "^0.8.4",
     "request": "^2.88.0",
     "tedious": "^2.3.1"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0"
   }
 }
