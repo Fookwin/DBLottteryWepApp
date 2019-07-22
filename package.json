@@ -7,7 +7,7 @@
     "email": "pi3011314@126.com"
   },
   "engines": {
-    "node": "10.15.2"
+    "node": ">=10.0.0"
   },
   "dependencies": {
     "azure": "*",
