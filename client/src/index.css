@@ -2,7 +2,7 @@ html body {
   display: block;
   margin: 0px;
   height:100%;
-  overflow:hidden;
+  overflow-y:scroll;
   font-family: sans-serif;
 }
 

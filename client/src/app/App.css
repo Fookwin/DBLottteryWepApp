@@ -49,6 +49,7 @@
   border: 0px;
   background-color: #fafafa;
   text-align: center;
+  height: calc(100vh) - 200px;
 }
 
 .float-menu-btn {

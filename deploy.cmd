@@ -116,7 +116,7 @@ IF EXIST "%DEPLOYMENT_TARGET%\client\package.json" (
 :: 5. Build client
 IF EXIST "%DEPLOYMENT_TARGET%\node_modules" (
   pushd "%DEPLOYMENT_TARGET%\client"
-  call .\node_modules\.bin\react-scripts.cmd build
+  call .\node_modules\.bin\react-app-rewired.cmd build
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
 )

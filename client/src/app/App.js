@@ -12,15 +12,16 @@ import Help from '../help/help';
 import 'antd/dist/antd.css';
 import './App.css';
 import { Affix, Drawer, Button, Layout, Menu, Icon } from 'antd';
+import { enquireScreen } from 'enquire-js';
+import Home from '../home/index';
 
 const { Content } = Layout;
 const { SubMenu } = Menu;
 
-const Home = () => (
-  <div>
-    <h2>Home</h2>
-  </div>
-);
+let isMobile;
+enquireScreen((b) => {
+  isMobile = b;
+});
 
 class App extends React.Component {
 
@@ -28,7 +29,15 @@ class App extends React.Component {
     super(props);
     this.state = {
       drawer_visible: false,
+      isMobile,
     };
+  }
+
+  componentDidMount() {
+    // 适配手机屏幕;
+    enquireScreen((b) => {
+      this.setState({ isMobile: !!b });
+    });
   }
 
   showDrawer = () => {
@@ -50,40 +59,18 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-        <Layout style={{ height: '100%' }} className="scrollable-container" ref={(node) => { this.container = node; }}>
-          <Drawer title="福盈双色球" placement="left" closable={false} onClose={this.onClose} visible={this.state.drawer_visible}>
-            <Menu theme="light" mode="inline" defaultSelectedKeys={[this.getDefaultMenuKey()]} onClick={this.onClose}>
-              <Menu.Item key="home"><Link to="/home"><Icon type="user" /><span>Home</span></Link></Menu.Item>
-              <SubMenu key="statistics" title={<span><Icon type="mail" /><span>Statistics</span></span>}>
-                <Menu.Item key="history"><Link to="/history"><Icon type="user" /><span>History</span></Link></Menu.Item>
-                <Menu.Item key="attributes"><Link to="/attributes"><Icon type="user" /><span>Attributes</span></Link></Menu.Item>
-              </SubMenu>
-              <Menu.Item key="diagram"><Link to="/diagram"><Icon type="user" /><span>Daigram</span></Link></Menu.Item>
-              <SubMenu key="management" title={<span><Icon type="mail" /><span>Management</span></span>}>
-                <Menu.Item key="modification"><Link to="/modification"><Icon type="user" /><span>Modification</span></Link></Menu.Item>
-                <Menu.Item key="notification"><Link to="/notification"><Icon type="user" /><span>Notification</span></Link></Menu.Item>
-                <Menu.Item key="users"><Link to="/users"><Icon type="user" /><span>Users</span></Link></Menu.Item>
-              </SubMenu>
-            </Menu>
-          </Drawer>
-          <Layout>
-            <Content className="layout-container">
-              <Route key="home" path="/home" component={Home} />
-              <Route key="help" path="/help/:id" component={Help} />
-              <Route key="history" path="/history" component={History} />
-              <Route key="attributes" path="/attributes" component={Attributes} />
-              <Route key="modification" path="/modification" component={Modification} />
-              <Route key="notification" path="/notification" component={Notification} />
-              <Route key="users" path="/users" component={UserManagement} />
-              <Route key="diagram" path="/diagram" component={Diagram} />
-              <Route key="lotto" path="/lotto/:issue" component={Lotto} />
-              <Route key="attribute" path="/attribute/:name" component={Attribute} />
-              <Affix style={{ position: 'absolute', left: 'calc(100% - 40px)', top: 'calc(100% - 40px)' }}>
-                <Button className="float-menu-btn" icon={!this.state.drawer_visible ? 'menu-unfold' : 'menu-fold'} onClick={this.showDrawer} />
-              </Affix>
-            </Content>
-          </Layout>
-        </Layout>
+        <div >
+          <Route key="home" exact path="/" component={Home} />
+          <Route key="help" path="/help/:id" component={Help} />
+          <Route key="history" path="/history" component={History} />
+          <Route key="attributes" path="/attributes" component={Attributes} />
+          <Route key="modification" path="/modification" component={Modification} />
+          <Route key="notification" path="/notification" component={Notification} />
+          <Route key="users" path="/users" component={UserManagement} />
+          <Route key="diagram" path="/diagram" component={Diagram} />
+          <Route key="lotto" path="/lotto/:issue" component={Lotto} />
+          <Route key="attribute" path="/attribute/:name" component={Attribute} />
+        </div>
       </Router>
     );
   }
