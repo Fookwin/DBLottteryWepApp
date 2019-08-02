@@ -3,7 +3,7 @@ import axios from 'axios';
 
 function getLatestIssueInfo(cb) {
 
-  axios.get('/lotto/last')
+  axios.get('/api/v1/lotto/last')
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -16,7 +16,7 @@ function getLatestIssueInfo(cb) {
 
 function syncLottoDetailFromWeb(issue, cb) {
 
-  axios.get('/lotto/offical/?issue=' + issue)
+  axios.get('/api/v1/lotto/offical/?issue=' + issue)
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -29,7 +29,7 @@ function syncLottoDetailFromWeb(issue, cb) {
 
 function createNewLottoRelease(nextLottoData, cb) {
 
-  axios.post('/lotto/new', nextLottoData)
+  axios.post('/api/v1/lotto/new', nextLottoData)
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -42,7 +42,7 @@ function createNewLottoRelease(nextLottoData, cb) {
 
 function getNotificationTemplates(cb) {
 
-  axios.get('/notifications')
+  axios.get('/api/v1/notifications')
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -54,7 +54,7 @@ function getNotificationTemplates(cb) {
 }
 
 function getPendingActions(cb) {
-  axios.get('/action/pending').then(function (res) {
+  axios.get('/api/v1/action/pending').then(function (res) {
     console.log(res);
     cb(res.data);
 
@@ -66,7 +66,7 @@ function getPendingActions(cb) {
 
 function getActionText(container, action, cb) {
 
-  axios.get('/blob/?container=' + container + '&blob=' + action.file).then(function (res) {
+  axios.get('/api/v1/blob/?container=' + container + '&blob=' + action.file).then(function (res) {
     console.log(res);
     cb(res.data.content);
   }).catch(function (res) {
@@ -76,7 +76,7 @@ function getActionText(container, action, cb) {
 }
 
 function discardAction(container, action, cb) {
-  axios.delete('/action/remove/?container=' + container + '&blob=' + action.file).then(function (res) {
+  axios.delete('/api/v1/action/remove/?container=' + container + '&blob=' + action.file).then(function (res) {
     console.log(res);
     cb(res.data);
   }).catch(function (res) {
@@ -86,7 +86,7 @@ function discardAction(container, action, cb) {
 }
 
 function commitActions(cb) {
-  axios.post('/commit').then(function (res) {
+  axios.post('/api/v1/commit').then(function (res) {
     console.log(res);
     cb(res.data.data);
 
@@ -97,7 +97,7 @@ function commitActions(cb) {
 }
 
 function getUsers(platfrom, period, cb) {
-  axios.get('/users/?platform=' + platfrom + '&scope=' + period).then(function (res) {
+  axios.get('/api/v1/users/?platform=' + platfrom + '&scope=' + period).then(function (res) {
     console.log(res);
     cb(res.data.data);
 
@@ -109,7 +109,7 @@ function getUsers(platfrom, period, cb) {
 
 function preCommitReleaseChange(updatedData, cb) {
 
-  axios.post('/precommit', updatedData).then(function (res) {
+  axios.post('/api/v1/precommit', updatedData).then(function (res) {
     console.log(res);
     cb(res.data);
   }).catch(function (res) {
@@ -119,7 +119,7 @@ function preCommitReleaseChange(updatedData, cb) {
 }
 
 function notify(content, cb) {
-  axios.post('/notify', { platforms: [1, 2, 3], msg: content }).then(function SuccessCallback(res) {
+  axios.post('/api/v1/notify', { platforms: [1, 2, 3], msg: content }).then(function SuccessCallback(res) {
     return cb({ data: res.data.data });
   }, function errCallback(res) {
     return cb({ err: res.data.err });
@@ -128,7 +128,7 @@ function notify(content, cb) {
 
 function getLotteries(tail, count, cb) {
 
-  axios.get('/lotto/history/?tail=' + tail + '&count=' + count)
+  axios.get('/api/v1/lotto/history/?tail=' + tail + '&count=' + count)
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -141,7 +141,7 @@ function getLotteries(tail, count, cb) {
 
 function getLotterry(issue, cb) {
 
-  axios.get(`/lotto/detail/?issue=${issue}`)
+  axios.get(`/api/v1/lotto/detail/?issue=${issue}`)
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -154,7 +154,7 @@ function getLotterry(issue, cb) {
 
 function getAttributes(cb) {
 
-  axios.get('/attributes')
+  axios.get('/api/v1/attributes')
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -167,7 +167,7 @@ function getAttributes(cb) {
 
 function getAttribute(name, cb) {
 
-  axios.get('/attribute/?name=' + name)
+  axios.get('/api/v1/attribute/?name=' + name)
     .then(res => {
       console.log(res);
       cb(res.data.data);
@@ -180,7 +180,7 @@ function getAttribute(name, cb) {
 
 function getHelp(id, cb) {
 
-  axios.get('/help/?id=' + id)
+  axios.get('/api/v1/help/?id=' + id)
     .then(res => {
       console.log(res);
       cb(res.data.data);

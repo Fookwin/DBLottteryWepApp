@@ -34,21 +34,21 @@ module.exports = function (app) {
     var _dataManager = new DataManager(DataCache);
 
     /** HTTP GET */
-    app.get('/users', _userMgr.getUsers.bind(_userMgr));
-    app.get('/lotto/last', _releaseMgr.getLastReleaseData.bind(_releaseMgr));
-    app.get('/lotto/offical/:issue?', _releaseMgr.getOfficalLotteryData.bind(_releaseMgr));
-    app.post('/lotto/new', _releaseMgr.buildNewReleaseData.bind(_releaseMgr));
-    app.post('/notify', _releaseMgr.postNotification.bind(_releaseMgr));
-    app.post('/precommit', _releaseMgr.preCommitRelease.bind(_releaseMgr));
-    app.get('/blob', _releaseMgr.getBlobText.bind(_releaseMgr));
-    app.get('/action/pending', _releaseMgr.getPendingActions.bind(_releaseMgr));
-    app.post('/commit', _releaseMgr.commitRelease.bind(_releaseMgr));
-    app.get('/notifications', _releaseMgr.getNotifications.bind(_releaseMgr));
-    app.delete('/action/remove', _releaseMgr.removePendingAction.bind(_releaseMgr));
-    app.get('/sql/obmission/:count?', _sqlManager.getObmission.bind(_sqlManager));
-    app.get('/lotto/history/?', _dataManager.getLotteries.bind(_dataManager));
-    app.get('/lotto/detail/:issue?', _dataManager.getLottery.bind(_dataManager));
-    app.get('/attributes', _dataManager.getAttributes.bind(_dataManager));
-    app.get('/attribute/:name?', _dataManager.getAttribute.bind(_dataManager));
-    app.get('/help/:id?', _helpMgr.getTopic.bind(_helpMgr));
+    app.get('/api/v1/users', _userMgr.getUsers.bind(_userMgr));
+    app.get('/api/v1/lotto/last', _releaseMgr.getLastReleaseData.bind(_releaseMgr));
+    app.get('/api/v1/lotto/offical/:issue?', _releaseMgr.getOfficalLotteryData.bind(_releaseMgr));
+    app.post('/api/v1/lotto/new', _releaseMgr.buildNewReleaseData.bind(_releaseMgr));
+    app.post('/api/v1/notify', _releaseMgr.postNotification.bind(_releaseMgr));
+    app.post('/api/v1/precommit', _releaseMgr.preCommitRelease.bind(_releaseMgr));
+    app.get('/api/v1/blob', _releaseMgr.getBlobText.bind(_releaseMgr));
+    app.get('/api/v1/action/pending', _releaseMgr.getPendingActions.bind(_releaseMgr));
+    app.post('/api/v1/commit', _releaseMgr.commitRelease.bind(_releaseMgr));
+    app.get('/api/v1/notifications', _releaseMgr.getNotifications.bind(_releaseMgr));
+    app.delete('/api/v1/action/remove', _releaseMgr.removePendingAction.bind(_releaseMgr));
+    app.get('/api/v1/sql/obmission/:count?', _sqlManager.getObmission.bind(_sqlManager));
+    app.get('/api/v1/lotto/history/?', _dataManager.getLotteries.bind(_dataManager));
+    app.get('/api/v1/lotto/detail/:issue?', _dataManager.getLottery.bind(_dataManager));
+    app.get('/api/v1/attributes', _dataManager.getAttributes.bind(_dataManager));
+    app.get('/api/v1/attribute/:name?', _dataManager.getAttribute.bind(_dataManager));
+    app.get('/api/v1/help/:id?', _helpMgr.getTopic.bind(_helpMgr));
 };

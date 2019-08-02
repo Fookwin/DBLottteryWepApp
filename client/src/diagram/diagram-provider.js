@@ -439,7 +439,7 @@ function DrawDiagram(cb) {
     drawGrids('#headerBlock', headerGrids);
 
     // get the data from service.
-    axios.get('/sql/obmission/?count=30')
+    axios.get('/api/v1/sql/obmission/?count=30')
     .then(response =>  {
         console.log(response);
 
