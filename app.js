@@ -18,7 +18,8 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.static(path.join(__dirname, 'client/build')));
+//app.use(express.static(path.join(__dirname, 'client/build')));
+app.use('/static', express.static(path.join(__dirname, 'client/build/static')));
 
 // development only
 if ('development' == app.get('env')) {
@@ -28,8 +29,11 @@ if ('development' == app.get('env')) {
 // initialize the server
 var apiServer = require('./server/server.js')(app);
 
-app.get('/', function (req, res) {
-    res.sendfile(path.join(__dirname, 'client/build', 'index.html'));
+// app.get('/', function (req, res) {
+//     res.sendfile(path.join(__dirname, 'client/build', 'index.html'));
+// });
+app.get('*', function(req, res) {
+    res.sendfile('index.html', {root: path.join(__dirname, 'client/build/')});
 });
 
 http.createServer(app).listen(app.get('port'), function () {

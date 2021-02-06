@@ -12,7 +12,7 @@ export const Nav00DataSource = {
       { name: 'item0', a: { children: '最新消息', href: '\history' } },
       { name: 'item1', a: { children: '数据分析', href: '\attributes' } },
       { name: 'item2', a: { children: '选号推荐', href: '\diagram' } },
-      { name: 'item3', a: { children: 'APP下载', href: '\modification' } },
+      { name: 'item3', a: { children: 'APP下载', href: '\m' } },
     ],
   },
   mobileMenu: { className: 'header0-mobile-menu' },
