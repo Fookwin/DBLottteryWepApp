@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - dblotterywebapp(staging)
+name: Build and deploy Node.js app to Azure Web App - dblotterywebapp(staging)
 
 on:
   push:
@@ -16,21 +16,21 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
-    - name: Set up .NET Core
-      uses: actions/setup-dotnet@v1
+    - name: Set up Node.js version
+      uses: actions/setup-node@v1
       with:
-        dotnet-version: '5.0.x'
+        node-version: '10.6'
 
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm run build --if-present
+        npm run test --if-present
 
-    - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-    - name: Deploy to Azure Web App
+    - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'dblotterywebapp'
         slot-name: 'staging'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_6cb497baa334446e9bcc4c3359445b65 }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_d5cfd4d733924e82ac6bb49d4bf0ef2d }}
+        package: .
