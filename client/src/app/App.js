@@ -61,15 +61,15 @@ class App extends React.Component {
       <Router>
         <div >
           <Route key="home" exact path="/" component={Home} />
-          <Route key="help" path="/help/:id" component={Help} />
-          <Route key="history" path="/history" component={History} />
-          <Route key="attributes" path="/attributes" component={Attributes} />
-          <Route key="modification" path="/modification" component={Modification} />
-          <Route key="notification" path="/notification" component={Notification} />
-          <Route key="users" path="/users" component={UserManagement} />
-          <Route key="diagram" path="/diagram" component={Diagram} />
-          <Route key="lotto" path="/lotto/:issue" component={Lotto} />
-          <Route key="attribute" path="/attribute/:name" component={Attribute} />
+          <Route key="help" exact path="/help/:id" component={Help} />
+          <Route key="history" exact path="/history" component={History} />
+          <Route key="attributes" exact path="/attributes" component={Attributes} />
+          <Route key="modification" exact path="/modification" component={Modification} />
+          <Route key="notification" exact path="/notification" component={Notification} />
+          <Route key="users" exact path="/users" component={UserManagement} />
+          <Route key="diagram" exact path="/diagram" component={Diagram} />
+          <Route key="lotto" exact path="/lotto/:issue" component={Lotto} />
+          <Route key="attribute" exact path="/attribute/:name" component={Attribute} />
         </div>
       </Router>
     );

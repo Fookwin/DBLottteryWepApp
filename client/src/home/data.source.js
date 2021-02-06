@@ -9,10 +9,10 @@ export const Nav00DataSource = {
   Menu: {
     className: 'header0-menu',
     children: [
-      { name: 'item0', a: { children: '导航一', href: '' } },
-      { name: 'item1', a: { children: '导航二', href: '' } },
-      { name: 'item2', a: { children: '导航三', href: '' } },
-      { name: 'item3', a: { children: '导航四', href: '' } },
+      { name: 'item0', a: { children: '最新消息', href: '\history' } },
+      { name: 'item1', a: { children: '数据分析', href: '\attributes' } },
+      { name: 'item2', a: { children: '选号推荐', href: '\diagram' } },
+      { name: 'item3', a: { children: 'APP下载', href: '\modification' } },
     ],
   },
   mobileMenu: { className: 'header0-mobile-menu' },
@@ -24,7 +24,7 @@ export const Banner00DataSource = {
     className: 'banner0-title jyfyzwmpbtk-editor_css',
     children: (
       <>
-        <p>泽时雨</p>
+        <p>福盈双色球</p>
       </>
     ),
   },
@@ -32,7 +32,7 @@ export const Banner00DataSource = {
     className: 'banner0-content',
     children: (
       <>
-        <p>数据+AI 预测未来</p>
+        <p>数据+AI 预见未来</p>
       </>
     ),
   },
@@ -60,8 +60,8 @@ export const Content00DataSource = {
             children:
               'https://zos.alipayobjects.com/rmsportal/WBnVOjtIlGWbzyQivuyq.png',
           },
-          title: { className: 'content0-title', children: '一站式业务接入' },
-          content: { children: '支付、结算、核算接入产品效率翻四倍' },
+          title: { className: 'content0-title', children: '开奖信息推送' },
+          content: { children: '及时推送, 信息准确，内容详尽' },
         },
       },
       {
@@ -77,9 +77,9 @@ export const Content00DataSource = {
           },
           title: {
             className: 'content0-title',
-            children: '一站式事中风险监控',
+            children: '历史数据分析',
           },
-          content: { children: '在所有需求配置环节事前风险控制和质量控制能力' },
+          content: { children: '多维度数据统计和分析' },
         },
       },
       {
@@ -93,26 +93,11 @@ export const Content00DataSource = {
             children:
               'https://zos.alipayobjects.com/rmsportal/EkXWVvAaFJKCzhMmQYiX.png',
           },
-          title: { className: 'content0-title', children: '一站式数据运营' },
-          content: { children: '沉淀产品接入效率和运营小二工作效率数据' },
+          title: { className: 'content0-title', children: '号码辅助优选' },
+          content: { children: '捕捉异常属性，优化号码选择' },
         },
       },
     ],
-  },
-};
-export const Content10DataSource = {
-  wrapper: { className: 'home-page-wrapper content1-wrapper' },
-  OverPack: { className: 'home-page content1', playScale: 0.3 },
-  imgWrapper: { className: 'content1-img', md: 10, xs: 24 },
-  img: {
-    children: 'https://zos.alipayobjects.com/rmsportal/nLzbeGQLPyBJoli.png',
-  },
-  textWrapper: { className: 'content1-text', md: 14, xs: 24 },
-  title: { className: 'content1-title', children: '企业资源管理' },
-  content: {
-    className: 'content1-content',
-    children:
-      '云资源集中编排、弹性伸缩、持续发布和部署，高可用及容灾。云资源集中编排、弹性伸缩、持续发布和部署，高可用及容灾。云资源集中编排、弹性伸缩、持续发布和部署，高可用及容灾。',
   },
 };
 export const Content30DataSource = {
@@ -124,13 +109,8 @@ export const Content30DataSource = {
     children: [
       {
         name: 'title',
-        children: '蚂蚁金融云提供专业的服务',
+        children: '',
         className: 'title-h1',
-      },
-      {
-        name: 'content',
-        className: 'title-content',
-        children: '基于阿里云强大的基础资源',
       },
     ],
   },
@@ -196,67 +176,7 @@ export const Content30DataSource = {
               '分布式云环境集中监控，统一资源及应用状态视图，智能分析及故障定位。',
           },
         },
-      },
-      {
-        name: 'block3',
-        className: 'content3-block',
-        md: 8,
-        xs: 24,
-        children: {
-          icon: {
-            className: 'content3-icon',
-            children:
-              'https://zos.alipayobjects.com/rmsportal/MNdlBNhmDBLuzqp.png',
-          },
-          textWrapper: { className: 'content3-text' },
-          title: { className: 'content3-title', children: '移动' },
-          content: {
-            className: 'content3-content',
-            children:
-              '一站式移动金融APP开发及全面监控；丰富可用组件，动态发布和故障热修复。',
-          },
-        },
-      },
-      {
-        name: 'block4',
-        className: 'content3-block',
-        md: 8,
-        xs: 24,
-        children: {
-          icon: {
-            className: 'content3-icon',
-            children:
-              'https://zos.alipayobjects.com/rmsportal/UsUmoBRyLvkIQeO.png',
-          },
-          textWrapper: { className: 'content3-text' },
-          title: { className: 'content3-title', children: '分布式中间件' },
-          content: {
-            className: 'content3-content',
-            children:
-              '金融级联机交易处理中间件，大规模分布式计算机，数万笔/秒级并发能力，严格保证交易数据统一性。',
-          },
-        },
-      },
-      {
-        name: 'block5',
-        className: 'content3-block',
-        md: 8,
-        xs: 24,
-        children: {
-          icon: {
-            className: 'content3-icon',
-            children:
-              'https://zos.alipayobjects.com/rmsportal/ipwaQLBLflRfUrg.png',
-          },
-          textWrapper: { className: 'content3-text' },
-          title: { className: 'content3-title', children: '大数据' },
-          content: {
-            className: 'content3-content',
-            children:
-              '一站式、全周期大数据协同工作平台，PB级数据处理、毫秒级数据分析工具。',
-          },
-        },
-      },
+      }, 
     ],
   },
 };
@@ -268,7 +188,7 @@ export const Footer00DataSource = {
     children: (
       <>
         <span>
-          ©2018 <a href="https://motion.ant.design">Ant Motion</a> All Rights
+          ©2019 <a href="https://www.fookwin.com">Fookwin</a> All Rights
           Reserved
         </span>
       </>
