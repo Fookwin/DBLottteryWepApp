@@ -107,10 +107,10 @@ ReleaseManager.prototype = {
                     lottery: self.getEmptyLottery(req.body.issue, req.body.date),
                     next: nextReleaseInfo,
                     recommendation: {
-                        redExcludes: redNums.slice(2).sort(function (a, b) { return a > b; }),
-                        redIncludes: redNums.slice(0, 2).sort(function (a, b) { return a > b; }),
-                        blueIncludes: blueNums.slice(0, 1).sort(function (a, b) { return a > b; }),
-                        blueExcludes: blueNums.slice(1).sort(function (a, b) { return a > b; })
+                        redExcludes: redNums.slice(2).sort(function (a, b) { return a - b; }),
+                        redIncludes: redNums.slice(0, 2).sort(function (a, b) { return a - b; }),
+                        blueIncludes: blueNums.slice(0, 1).sort(function (a, b) { return a - b; }),
+                        blueExcludes: blueNums.slice(1).sort(function (a, b) { return a - b; })
                     },
                     dataVersion: undefined // leave emtpy for input.
                 };
