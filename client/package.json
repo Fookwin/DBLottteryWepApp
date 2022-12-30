@@ -11,7 +11,7 @@
     "enquire-js": "^0.2.1",
     "jquery": "^3.4.1",
     "less": "^3.9.0",
-    "less-loader": "^5.0.0",
+    "less-loader": "^11.1.0",
     "rc-banner-anim": "^2.2.9",
     "rc-queue-anim": "^1.6.12",
     "rc-scroll-anim": "^2.5.9",
@@ -22,7 +22,7 @@
     "react-infinite-scroller": "^1.2.4",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^5.0.1",
     "typescript": "^3.5.3"
   },
   "engines": {
